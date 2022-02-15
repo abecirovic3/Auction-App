@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class AuctionAppBackendApplication {
+public class AuctionApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AuctionAppBackendApplication.class, args);
+		SpringApplication.run(AuctionApplication.class, args);
 	}
 
 	@GetMapping
