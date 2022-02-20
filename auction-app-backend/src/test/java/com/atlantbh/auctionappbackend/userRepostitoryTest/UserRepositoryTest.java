@@ -28,7 +28,8 @@ public class UserRepositoryTest {
                 "Ajdin",
                 "Becirovic",
                 "email@email.com",
-                "password"
+                "password",
+                "ROLE_USER"
         );
 
         User savedUser = userRepository.save(user);
