@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.security;
 
+import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
 import com.atlantbh.auctionappbackend.filter.CustomAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.CustomAuthorizationFilter;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -25,28 +26,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
     private final Algorithm signAlgorithm;
-
-    private static final String[] AUTH_WHITELIST = {
-            "/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/v2/api-docs/**",
-            "/swagger-ui/**",
-            "/api/v1/user/login/**",
-            "/api/v1/user/register/**",
-            "/api/v1/user/token/refresh/**"
-    };
+    private final String apiPrefix;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, JwtConfig jwtConfig, Algorithm signAlgorithm) {
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          PasswordEncoder passwordEncoder,
+                          JwtConfig jwtConfig, Algorithm signAlgorithm,
+                          String apiPrefix, String[] authWhitelist) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;
         this.signAlgorithm = signAlgorithm;
+        this.apiPrefix = apiPrefix;
     }
 
     @Override
@@ -56,15 +47,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO need to find a way to use API_PREFIX from application.properties
         CustomAuthenticationFilter customAuthenticationFilter =
                 new CustomAuthenticationFilter(authenticationManagerBean(), jwtConfig, signAlgorithm);
-        customAuthenticationFilter.setFilterProcessesUrl("/api/v1/user/login");
+        customAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/user/login");
 
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll();
+                .antMatchers(AuthWhitelistConfig.getAuthWhitelist()).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(
