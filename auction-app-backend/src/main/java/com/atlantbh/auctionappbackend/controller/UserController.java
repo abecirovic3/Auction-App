@@ -1,7 +1,7 @@
 package com.atlantbh.auctionappbackend.controller;
 
-import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.domain.User;
+import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -25,10 +25,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private final UserService userService;
+    private final JwtConfig jwtConfig;
+    private final Algorithm signAlgorithm;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtConfig jwtConfig, Algorithm signAlgorithm) {
         this.userService = userService;
+        this.jwtConfig = jwtConfig;
+        this.signAlgorithm = signAlgorithm;
     }
 
     @PostMapping(path = "/register")
@@ -39,11 +43,10 @@ public class UserController {
     @GetMapping(path = "/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
             try {
-                String refreshToken = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
+                String refreshToken = authorizationHeader.substring(jwtConfig.getTokenPrefix().length());
+                JWTVerifier verifier = JWT.require(signAlgorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
                 String username = decodedJWT.getSubject();
                 User user = userService.getUser(username);
@@ -51,10 +54,10 @@ public class UserController {
                 authorities.add(user.getRole());
                 String accessToken = JWT.create()
                         .withSubject(user.getEmail())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + jwtConfig.getTokenExpAfterMin() * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", authorities)
-                        .sign(algorithm);
+                        .sign(signAlgorithm);
 
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", accessToken);
