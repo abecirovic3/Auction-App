@@ -25,7 +25,8 @@ public class AuthWhitelistConfig {
                 apiPrefix + "/user/register",
                 apiPrefix + "/user/register/**",
                 apiPrefix + "/user/token/refresh",
-                apiPrefix + "/user/token/refresh/**"
+                apiPrefix + "/user/token/refresh/**",
+                apiPrefix + "/health"
         };
     }
 
