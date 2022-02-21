@@ -9,6 +9,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public String processRegister(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> processRegister(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
