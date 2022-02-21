@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.controller;
 
+import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.service.UserService;
 import com.auth0.jwt.JWT;
@@ -20,7 +21,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(path = "${API_PREFIX}/user")
+@RequestMapping(path = "${application.api.prefix}/user")
 public class UserController {
 
     private final UserService userService;
