@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity(name = "User")
 @Table(
@@ -37,6 +38,11 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    private Long streetId;
+    private LocalDate dateOfBirth;
+    private String phoneNumber;
+    private String photoUrl;
 
     public User() {
     }
@@ -115,5 +121,37 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public Long getStreetId() {
+        return streetId;
+    }
+
+    public void setStreetId(Long streetId) {
+        this.streetId = streetId;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
