@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.filter;
 
+import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -26,6 +27,15 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
+
+    private final JwtConfig jwtConfig;
+    private final Algorithm signAlgorithm;
+
+    public CustomAuthorizationFilter(JwtConfig jwtConfig, Algorithm signAlgorithm) {
+        this.jwtConfig = jwtConfig;
+        this.signAlgorithm = signAlgorithm;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/api/v1/user/login") ||
@@ -34,11 +44,11 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            if (authorizationHeader != null && authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
                 try {
-                    String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-                    JWTVerifier verifier = JWT.require(algorithm).build();
+                    String token = authorizationHeader.substring(jwtConfig.getTokenPrefix().length());
+//                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    JWTVerifier verifier = JWT.require(signAlgorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);

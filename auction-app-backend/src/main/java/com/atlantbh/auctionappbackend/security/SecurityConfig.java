@@ -2,6 +2,7 @@ package com.atlantbh.auctionappbackend.security;
 
 import com.atlantbh.auctionappbackend.filter.CustomAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.CustomAuthorizationFilter;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtConfig jwtConfig;
+    private final Algorithm signAlgorithm;
 
     private static final String[] AUTH_WHITELIST = {
             "/api-docs",
@@ -39,9 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, JwtConfig jwtConfig, Algorithm signAlgorithm) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtConfig = jwtConfig;
+        this.signAlgorithm = signAlgorithm;
     }
 
     @Override
@@ -53,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // TODO need to find a way to use API_PREFIX from application.properties
         CustomAuthenticationFilter customAuthenticationFilter =
-                new CustomAuthenticationFilter(authenticationManagerBean());
+                new CustomAuthenticationFilter(authenticationManagerBean(), jwtConfig, signAlgorithm);
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/user/login");
 
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
@@ -63,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(
-                new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                new CustomAuthorizationFilter(jwtConfig, signAlgorithm), UsernamePasswordAuthenticationFilter.class
         );
     }
 
