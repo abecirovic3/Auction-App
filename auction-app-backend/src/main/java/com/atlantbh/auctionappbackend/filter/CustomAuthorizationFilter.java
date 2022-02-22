@@ -17,7 +17,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collection;
+import java.util.ArrayList;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -35,7 +39,11 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+                                        HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        FilterChain filterChain
+    ) throws ServletException, IOException {
         if (Arrays.asList(AuthWhitelistConfig.getAuthWhitelist()).contains(request.getServletPath())) {
             filterChain.doFilter(request, response);
         } else {

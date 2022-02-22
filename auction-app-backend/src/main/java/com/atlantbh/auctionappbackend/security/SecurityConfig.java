@@ -29,10 +29,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final String apiPrefix;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService,
-                          PasswordEncoder passwordEncoder,
-                          JwtConfig jwtConfig, Algorithm signAlgorithm,
-                          String apiPrefix, String[] authWhitelist) {
+    public SecurityConfig(
+                            UserDetailsService userDetailsService,
+                            PasswordEncoder passwordEncoder,
+                            JwtConfig jwtConfig, Algorithm signAlgorithm,
+                            String apiPrefix, String[] authWhitelist
+    ) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;

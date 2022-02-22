@@ -28,14 +28,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     private final JwtConfig jwtConfig;
     private final Algorithm signAlgorithm;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, Algorithm signAlgorithm) {
+    public CustomAuthenticationFilter(
+                                        AuthenticationManager authenticationManager,
+                                        JwtConfig jwtConfig,
+                                        Algorithm signAlgorithm
+    ) {
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
         this.signAlgorithm = signAlgorithm;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(
+                                                    HttpServletRequest request,
+                                                    HttpServletResponse response
+    ) throws AuthenticationException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         System.out.println("AttemptAuth: Email: " + email + " Password: " + password);
@@ -45,7 +52,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+    protected void successfulAuthentication(
+                                                HttpServletRequest request,
+                                                HttpServletResponse response,
+                                                FilterChain chain,
+                                                Authentication authentication
+    ) throws IOException {
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         String accessToken = JWT.create()
