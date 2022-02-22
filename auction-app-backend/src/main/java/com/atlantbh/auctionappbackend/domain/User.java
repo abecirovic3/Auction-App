@@ -1,6 +1,13 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
 import java.time.LocalDate;
 
 @Entity(name = "User")
@@ -39,7 +46,6 @@ public class User {
     @Column(nullable = false)
     private String role;
 
-    private Long streetId;
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private String photoUrl;
@@ -112,25 +118,6 @@ public class User {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
-    public Long getStreetId() {
-        return streetId;
-    }
-
-    public void setStreetId(Long streetId) {
-        this.streetId = streetId;
-    }
-
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
@@ -153,5 +140,16 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
