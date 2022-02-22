@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -29,6 +30,10 @@ import java.util.HashMap;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping(path = "${application.api.prefix}/user")
@@ -46,11 +51,22 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<User> processRegister(@RequestBody User user) {
+    public ResponseEntity<User> processRegister(@RequestBody @Valid User user) {
         return new ResponseEntity<>(
                 userService.registerUser(user),
                 HttpStatus.OK
         );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("status", "error");
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        return errors;
     }
 
     @GetMapping(path = "/token/refresh")

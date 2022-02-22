@@ -2,7 +2,6 @@ package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,8 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -48,31 +45,8 @@ public class UserService implements UserDetailsService {
     }
 
     public User registerUser(User user) {
-        List<String> errMessages = new LinkedList<>();
 
-        if (isEmpty(user.getFirstName()))
-            errMessages.add("First Name is required");
-        if (isEmpty(user.getLastName()))
-            errMessages.add("Last Name is required");
-        if (isEmpty(user.getEmail()))
-            errMessages.add("Email is required");
-        if (isEmpty(user.getPassword()))
-            errMessages.add("Password is required");
-
-        if (errMessages.size() != 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    String.join(", ", errMessages)
-            );
-        }
-
-        if (!EmailValidator.getInstance().isValid(user.getEmail())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Email is not valid"
-            );
-        }
-
+        // TODO: find a way to use custom constraint to check if email is already used
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -83,10 +57,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("ROLE_USER");
         return userRepository.save(user);
-    }
-
-    private boolean isEmpty(String s) {
-        return s == null || s.isBlank();
     }
 
     public User getUser(String email) {

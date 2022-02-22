@@ -1,5 +1,7 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.atlantbh.auctionappbackend.constraint.EmailPreference;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -8,6 +10,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity(name = "User")
@@ -32,25 +38,36 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "First name is required")
     private String firstName;
 
     @Column(nullable = false)
+    @NotBlank(message = "Last name is required")
     private String lastName;
 
     @Column(nullable = false)
+    @NotBlank(message = "Email is required")
+    @EmailPreference
     private String email;
 
     @Column(nullable = false)
+    @NotBlank(message = "Password is required")
     private String password;
 
     @Column(nullable = false)
     private String role;
 
+    @Past(message = "Date of birth is not valid")
     private LocalDate dateOfBirth;
+
+    // TODO: implement better phone number validation
+    @Size(min = 10, message = "Phone number is not valid")
     private String phoneNumber;
+
     private String photoUrl;
 
     public User() {
+        // No args constructor serves a purpose
     }
 
     public User(Long id, String firstName, String lastName, String email, String password, String role) {
