@@ -32,8 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(
                             UserDetailsService userDetailsService,
                             PasswordEncoder passwordEncoder,
-                            JwtConfig jwtConfig, Algorithm signAlgorithm,
-                            String apiPrefix, String[] authWhitelist
+                            JwtConfig jwtConfig,
+                            Algorithm signAlgorithm,
+                            String apiPrefix
     ) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
