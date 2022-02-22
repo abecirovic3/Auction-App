@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,9 +46,8 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public ResponseEntity<Map<String, String>> registerUser(User user) {
+    public User registerUser(User user) {
         List<String> errMessages = new LinkedList<>();
-        Map<String, String> response = new HashMap<>();
 
         if (isEmpty(user.getFirstName()))
             errMessages.add("First Name is required");
@@ -59,38 +59,29 @@ public class UserService implements UserDetailsService {
             errMessages.add("Password is required");
 
         if (errMessages.size() != 0) {
-            response.put("error", String.join(", ", errMessages));
-            return new ResponseEntity<>(
-                    response,
-                    HttpStatus.BAD_REQUEST
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    String.join(", ", errMessages)
             );
         }
 
         if (!EmailValidator.getInstance().isValid(user.getEmail())) {
-            response.put("error", "Email is not valid");
-            return new ResponseEntity<>(
-                    response,
-                    HttpStatus.BAD_REQUEST
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email is not valid"
             );
         }
 
         if (userRepository.findByEmail(user.getEmail()) != null) {
-            response.put("error", "User with email " + user.getEmail() + " already exists");
-            return new ResponseEntity<>(
-                    response,
-                    HttpStatus.BAD_REQUEST
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User with email " + user.getEmail() + " already exists"
             );
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("ROLE_USER");
-        userRepository.save(user);
-
-        response.put("success", "User " + user.getEmail() + " is registered");
-        return new ResponseEntity<>(
-                response,
-                HttpStatus.OK
-        );
+        return userRepository.save(user);
     }
 
     private boolean isEmpty(String s) {

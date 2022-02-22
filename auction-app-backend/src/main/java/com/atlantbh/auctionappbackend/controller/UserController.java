@@ -9,13 +9,19 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -37,8 +43,11 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<Map<String, String>> processRegister(@RequestBody User user) {
-        return userService.registerUser(user);
+    public ResponseEntity<User> processRegister(@RequestBody User user) {
+        return new ResponseEntity<>(
+                userService.registerUser(user),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping(path = "/token/refresh")
