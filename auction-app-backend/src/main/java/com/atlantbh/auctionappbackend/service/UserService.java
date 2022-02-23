@@ -2,6 +2,7 @@ package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
@@ -31,7 +33,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            System.out.println("User not found in the database");
+            log.error("User not found in the database");
             throw new UsernameNotFoundException("User not found in the database");
         }
 

@@ -4,6 +4,7 @@ import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -45,7 +47,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     ) throws AuthenticationException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        System.out.println("AttemptAuth: Email: " + email + " Password: " + password);
+
+        log.info("AttemptAuth: Email: " + email + " Password: " + password);
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(email, password);
         return authenticationManager.authenticate(authenticationToken);
