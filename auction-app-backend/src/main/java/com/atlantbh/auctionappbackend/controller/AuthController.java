@@ -82,12 +82,11 @@ public class AuthController {
                         authorities
                 );
 
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", accessToken);
-                tokens.put("refresh_token", refreshToken);
-
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                new ObjectMapper().writeValue(
+                        response.getOutputStream(),
+                        jwtUtil.getTokensResponseBody(accessToken, refreshToken)
+                );
 
             } catch (JWTVerificationException e) {
                 log.error("Refresh token is not valid");

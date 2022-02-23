@@ -64,4 +64,11 @@ public class JwtUtil {
         responseBody.put("error", msg);
         return responseBody;
     }
+
+    public Map<String, String> getTokensResponseBody(String accessToken, String refreshToken) {
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", accessToken);
+        tokens.put("refresh_token", refreshToken);
+        return tokens;
+    }
 }
