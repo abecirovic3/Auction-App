@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                                 jwtConfig,
                                                 signAlgorithm
                 );
-        customAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/user/login");
+        customAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/auth/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);

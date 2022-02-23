@@ -20,12 +20,12 @@ public class AuthWhitelistConfig {
                 "/webjars/**",
                 "/v2/api-docs/**",
                 "/swagger-ui/**",
-                apiPrefix + "/user/login",
-                apiPrefix + "/user/login/**",
-                apiPrefix + "/user/register",
-                apiPrefix + "/user/register/**",
-                apiPrefix + "/user/token/refresh",
-                apiPrefix + "/user/token/refresh/**",
+                apiPrefix + "/auth/login",
+                apiPrefix + "/auth/login/**",
+                apiPrefix + "/auth/register",
+                apiPrefix + "/auth/register/**",
+                apiPrefix + "/auth/token/refresh",
+                apiPrefix + "/auth/token/refresh/**",
                 apiPrefix + "/health"
         };
     }

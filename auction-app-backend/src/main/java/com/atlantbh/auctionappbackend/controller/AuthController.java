@@ -36,15 +36,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
-@RequestMapping(path = "${application.api.prefix}/user")
-public class UserController {
+@RequestMapping(path = "${application.api.prefix}/auth")
+public class AuthController {
 
     private final UserService userService;
     private final JwtConfig jwtConfig;
     private final Algorithm signAlgorithm;
 
     @Autowired
-    public UserController(UserService userService, JwtConfig jwtConfig, Algorithm signAlgorithm) {
+    public AuthController(UserService userService, JwtConfig jwtConfig, Algorithm signAlgorithm) {
         this.userService = userService;
         this.jwtConfig = jwtConfig;
         this.signAlgorithm = signAlgorithm;
@@ -71,8 +71,8 @@ public class UserController {
 
     @GetMapping(path = "/token/refresh")
     public void refreshToken(
-                                HttpServletRequest request,
-                                HttpServletResponse response
+            HttpServletRequest request,
+            HttpServletResponse response
     ) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
@@ -112,4 +112,5 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
     }
+
 }
