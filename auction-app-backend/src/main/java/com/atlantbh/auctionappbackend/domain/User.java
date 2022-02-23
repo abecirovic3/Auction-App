@@ -11,8 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -39,10 +39,12 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "First name is required")
+    @Pattern(regexp = "^[\\p{L} .'-]+$", message = "First Name is invalid")
     private String firstName;
 
     @Column(nullable = false)
     @NotBlank(message = "Last name is required")
+    @Pattern(regexp = "^[\\p{L} .'-]+$", message = "Last Name is invalid")
     private String lastName;
 
     @Column(nullable = false)
@@ -67,7 +69,7 @@ public class User {
     private String photoUrl;
 
     public User() {
-        // No args constructor serves a purpose
+        // No args constructor needed by **framework**
     }
 
     public User(Long id, String firstName, String lastName, String email, String password, String role) {
