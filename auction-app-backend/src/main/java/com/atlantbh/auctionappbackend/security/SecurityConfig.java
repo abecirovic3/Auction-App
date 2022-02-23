@@ -24,22 +24,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
-    private final Algorithm signAlgorithm;
     private final String apiPrefix;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     public SecurityConfig(
-                            UserDetailsService userDetailsService,
-                            PasswordEncoder passwordEncoder,
-                            JwtConfig jwtConfig,
-                            Algorithm signAlgorithm,
-                            String apiPrefix
-    ) {
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder,
+            JwtConfig jwtConfig,
+            String apiPrefix,
+            JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;
-        this.signAlgorithm = signAlgorithm;
         this.apiPrefix = apiPrefix;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -50,23 +49,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter =
-                new CustomAuthenticationFilter(
-                                                authenticationManagerBean(),
-                                                jwtConfig,
-                                                signAlgorithm
-                );
+                new CustomAuthenticationFilter(authenticationManagerBean(), jwtUtil, jwtConfig);
         customAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/auth/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests()
-                .antMatchers(AuthWhitelistConfig.getAuthWhitelist()).permitAll();
+        http.authorizeRequests().antMatchers(AuthWhitelistConfig.getAuthWhitelist()).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(
-                                new CustomAuthorizationFilter(jwtConfig, signAlgorithm),
-                                UsernamePasswordAuthenticationFilter.class
-        );
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
