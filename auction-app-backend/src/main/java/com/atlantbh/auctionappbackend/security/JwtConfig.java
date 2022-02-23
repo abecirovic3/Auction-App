@@ -3,6 +3,8 @@ package com.atlantbh.auctionappbackend.security;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Date;
+
 @Configuration
 @ConfigurationProperties(prefix = "application.jwt")
 public class JwtConfig {
@@ -42,5 +44,13 @@ public class JwtConfig {
 
     public void setRefreshTokenExpAfterMin(Integer refreshTokenExpAfterMin) {
         this.refreshTokenExpAfterMin = refreshTokenExpAfterMin;
+    }
+
+    public Date getTokenExpDate() {
+        return new Date(System.currentTimeMillis() + tokenExpAfterMin * 60000);
+    }
+
+    public Date getRefreshTokenExpDate() {
+        return new Date(System.currentTimeMillis() + refreshTokenExpAfterMin * 60000);
     }
 }
