@@ -3,7 +3,6 @@ package com.atlantbh.auctionappbackend.security;
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
 import com.atlantbh.auctionappbackend.filter.CustomAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.CustomAuthorizationFilter;
-import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +28,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SecurityConfig(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder,
-            JwtConfig jwtConfig,
-            String apiPrefix,
-            JwtUtil jwtUtil) {
+                            UserDetailsService userDetailsService,
+                            PasswordEncoder passwordEncoder,
+                            JwtConfig jwtConfig,
+                            String apiPrefix,
+                            JwtUtil jwtUtil
+    ) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;

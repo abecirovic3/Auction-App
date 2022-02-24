@@ -48,7 +48,6 @@ public class UserService implements UserDetailsService {
 
     public User registerUser(User user) {
 
-        // TODO: find a way to use custom constraint to check if email is already used
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

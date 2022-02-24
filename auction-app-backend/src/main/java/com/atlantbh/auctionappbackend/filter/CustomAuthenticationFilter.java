@@ -16,8 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -30,32 +28,29 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     private final JwtUtil jwtUtil;
     private final JwtConfig jwtConfig;
 
-    public CustomAuthenticationFilter(
-            AuthenticationManager authenticationManager,
-            JwtUtil jwtUtil,
-            JwtConfig jwtConfig) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, JwtConfig jwtConfig) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.jwtConfig = jwtConfig;
     }
 
     @Override
-    public Authentication attemptAuthentication(
-                                                    HttpServletRequest request,
-                                                    HttpServletResponse response
-    ) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         log.info("AttemptAuth: Email: " + email + " Password: " + password);
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(email, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(
+                                                HttpServletRequest request,
+                                                HttpServletResponse response,
+                                                AuthenticationException failed
+    ) throws IOException, ServletException {
         response.setStatus(FORBIDDEN.value());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(
@@ -76,20 +71,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
         String accessToken = jwtUtil.createToken(
-                                                    user.getUsername(),
-                                                    request.getRequestURL().toString(),
-                                                    jwtConfig.getTokenExpDate(),
-                                                    user.getAuthorities()
-                                                        .stream().map(
-                                                            GrantedAuthority::getAuthority).collect(Collectors.toList()
-                                                        )
+                user.getUsername(),
+                request.getRequestURL().toString(),
+                jwtConfig.getTokenExpDate(),
+                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
         );
 
         String refreshToken = jwtUtil.createToken(
-                                                    user.getUsername(),
-                                                    request.getRequestURL().toString(),
-                                                    jwtConfig.getRefreshTokenExpDate(),
-                                            null
+                user.getUsername(),
+                request.getRequestURL().toString(),
+                jwtConfig.getRefreshTokenExpDate(),
+                null
         );
 
         response.setContentType(APPLICATION_JSON_VALUE);
