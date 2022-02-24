@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,31 +13,49 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.Arrays;
+import java.util.List;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(false)
 public class UserRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private UserRepository userRepository;
+
+    private final User dummy = new User("John", "Doe", "john@doe.com", "passwod", "ROLE_USER");
+
+    @BeforeEach
+    void initUseCase() {
+        List<User> customers = List.of(
+                dummy
+        );
+        userRepository.saveAll(customers);
+    }
+
+    @AfterEach
+    public void destroyAll(){
+        userRepository.deleteAll();
+    }
 
     @Test
     public void testCreateUser() {
-        User user = new User(
-                "Ajdin",
-                "Becirovic",
-                "email@email.com",
-                "password",
-                "ROLE_USER"
-        );
+        User savedUser = userRepository.save(dummy);
 
-        User savedUser = userRepository.save(user);
+        assertThat(dummy.getEmail()).isEqualTo(savedUser.getEmail());
+    }
 
-        User existUser = entityManager.find(User.class, savedUser.getId());
+    @Test
+    public void testFinAllUsers() {
+        List<User> users = userRepository.findAll();
+        assertThat(users.size()).isGreaterThanOrEqualTo(1);
+    }
 
-        assertThat(user.getEmail()).isEqualTo(existUser.getEmail());
+    @Test
+    public void testFindByEmail() {
+        User foundUser = userRepository.findByEmail(dummy.getEmail());
+        assertThat(foundUser).isNotNull();
+        assertThat(foundUser.getFirstName()).isEqualTo(dummy.getFirstName());
     }
 }
