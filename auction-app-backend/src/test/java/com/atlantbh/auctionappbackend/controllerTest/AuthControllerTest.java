@@ -1,4 +1,4 @@
-package com.atlantbh.auctionappbackend.authControllerTest;
+package com.atlantbh.auctionappbackend.controllerTest;
 
 import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.controller.AuthController;

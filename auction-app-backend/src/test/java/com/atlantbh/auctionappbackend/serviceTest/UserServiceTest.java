@@ -1,4 +1,4 @@
-package com.atlantbh.auctionappbackend.userServiceTest;
+package com.atlantbh.auctionappbackend.serviceTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
