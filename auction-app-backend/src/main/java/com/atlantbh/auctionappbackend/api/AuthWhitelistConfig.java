@@ -9,7 +9,7 @@ public class AuthWhitelistConfig {
     private static String[] authWhitelist;
 
     @Autowired
-    public AuthWhitelistConfig(String apiPrefix) {
+    public AuthWhitelistConfig(ApiConfig apiConfig) {
         authWhitelist = new String[] {
                 "/api-docs",
                 "/swagger-resources",
@@ -20,13 +20,13 @@ public class AuthWhitelistConfig {
                 "/webjars/**",
                 "/v2/api-docs/**",
                 "/swagger-ui/**",
-                apiPrefix + "/auth/login",
-                apiPrefix + "/auth/login/**",
-                apiPrefix + "/auth/register",
-                apiPrefix + "/auth/register/**",
-                apiPrefix + "/auth/token/refresh",
-                apiPrefix + "/auth/token/refresh/**",
-                apiPrefix + "/health"
+                apiConfig.getPrefix() + "/auth/login",
+                apiConfig.getPrefix() + "/auth/login/**",
+                apiConfig.getPrefix() + "/auth/register",
+                apiConfig.getPrefix() + "/auth/register/**",
+                apiConfig.getPrefix() + "/auth/token/refresh",
+                apiConfig.getPrefix() + "/auth/token/refresh/**",
+                apiConfig.getPrefix() + "/health"
         };
     }
 

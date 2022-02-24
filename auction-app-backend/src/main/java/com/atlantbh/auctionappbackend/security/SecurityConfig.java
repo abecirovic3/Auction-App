@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.security;
 
+import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
 import com.atlantbh.auctionappbackend.filter.JwtAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.JwtAuthorizationFilter;
@@ -23,21 +24,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
-    private final String apiPrefix;
+    private final ApiConfig apiConfig;
     private final JwtUtil jwtUtil;
 
     @Autowired
     public SecurityConfig(
-                            UserDetailsService userDetailsService,
-                            PasswordEncoder passwordEncoder,
-                            JwtConfig jwtConfig,
-                            String apiPrefix,
-                            JwtUtil jwtUtil
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder,
+            JwtConfig jwtConfig,
+            ApiConfig apiConfig,
+            JwtUtil jwtUtil
     ) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;
-        this.apiPrefix = apiPrefix;
+        this.apiConfig = apiConfig;
         this.jwtUtil = jwtUtil;
     }
 
@@ -50,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter =
                 new JwtAuthenticationFilter(authenticationManagerBean(), jwtUtil, jwtConfig);
-        jwtAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/auth/login");
+        jwtAuthenticationFilter.setFilterProcessesUrl(apiConfig.getPrefix() + "/auth/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
