@@ -20,12 +20,19 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * Authorization Filter class used to authorize user requests
+ * <p>
+ * Provides method for request filtering. If a request is made to a non whitelisted path, a token verification process
+ * is triggered. If token verification is successful the request is authorized, otherwise the request is
+ * blocked, and a 403 status code is returned.
+ */
 @Slf4j
-public class CustomAuthorizationFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    public CustomAuthorizationFilter(JwtUtil jwtUtil) {
+    public JwtAuthorizationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 

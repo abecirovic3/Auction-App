@@ -21,14 +21,25 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * Authentication Filter Class used to authenticate user.
+ * <p>
+ * Provides method to authenticate user by username (in our case email) and password.
+ * <p>
+ * Provides method to process successful authentication.
+ * If authentication is successful an access and a refresh token are created and returned as JSON via the response object
+ * <p>
+ * Provides method to process unsuccessful authentication.
+ * If authentication is unsuccessful a JSON response is returned with an appropriate message and status code 403.
+ */
 @Slf4j
-public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final JwtConfig jwtConfig;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, JwtConfig jwtConfig) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, JwtConfig jwtConfig) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.jwtConfig = jwtConfig;

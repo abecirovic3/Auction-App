@@ -1,8 +1,8 @@
 package com.atlantbh.auctionappbackend.security;
 
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
-import com.atlantbh.auctionappbackend.filter.CustomAuthenticationFilter;
-import com.atlantbh.auctionappbackend.filter.CustomAuthorizationFilter;
+import com.atlantbh.auctionappbackend.filter.JwtAuthenticationFilter;
+import com.atlantbh.auctionappbackend.filter.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,16 +48,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter =
-                new CustomAuthenticationFilter(authenticationManagerBean(), jwtUtil, jwtConfig);
-        customAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/auth/login");
+        JwtAuthenticationFilter jwtAuthenticationFilter =
+                new JwtAuthenticationFilter(authenticationManagerBean(), jwtUtil, jwtConfig);
+        jwtAuthenticationFilter.setFilterProcessesUrl(apiPrefix + "/auth/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers(AuthWhitelistConfig.getAuthWhitelist()).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(jwtAuthenticationFilter);
+        http.addFilterBefore(new JwtAuthorizationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
