@@ -60,7 +60,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User getUser(String email) {
+    public User getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User not found in the database");

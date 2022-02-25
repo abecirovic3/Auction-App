@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
@@ -38,8 +39,9 @@ public class JwtUtil {
         tokenBuilder.withSubject(subject);
         tokenBuilder.withExpiresAt(expDate);
         tokenBuilder.withIssuer(issuer);
-        if (authorities != null)
+        if (authorities != null) {
             tokenBuilder.withClaim("roles", authorities);
+        }
         return tokenBuilder.sign(signAlgorithm);
     }
 
@@ -57,11 +59,7 @@ public class JwtUtil {
     }
 
     public Collection<SimpleGrantedAuthority> getGrantedAuthorities(String[] roles) {
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        stream(roles).forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role));
-        });
-        return authorities;
+        return stream(roles).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     public Map<String, String> getErrorResponseBody(String msg) {

@@ -43,7 +43,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                                         FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if (Arrays.asList(AuthWhitelistConfig.getAuthWhitelist()).contains(request.getServletPath())) {
+        if (isWhitelistRoute(request)) {
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -51,11 +51,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 try {
                     String token = jwtUtil.getTokenFromHeader(authorizationHeader);
                     DecodedJWT decodedJWT = jwtUtil.verifyToken(token);
-                    String username = decodedJWT.getSubject();
+                    String email = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
-                                    username,
+                                    email,
                                     null,
                                     jwtUtil.getGrantedAuthorities(roles)
                             );
@@ -75,5 +75,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             }
         }
+    }
+
+    private boolean isWhitelistRoute(HttpServletRequest request) {
+        return Arrays.asList(AuthWhitelistConfig.getAuthWhitelist()).contains(request.getServletPath());
     }
 }

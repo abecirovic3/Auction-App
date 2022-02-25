@@ -50,8 +50,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
-        log.info("AttemptAuth: Email: " + email + " Password: " + password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         return authenticationManager.authenticate(authenticationToken);
     }

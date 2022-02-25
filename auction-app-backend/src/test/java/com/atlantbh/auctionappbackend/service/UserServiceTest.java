@@ -1,10 +1,9 @@
-package com.atlantbh.auctionappbackend.serviceTest;
+package com.atlantbh.auctionappbackend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
-import com.atlantbh.auctionappbackend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,7 +59,7 @@ public class UserServiceTest {
 
         when(userRepository.findByEmail(any(String.class))).thenReturn(user);
 
-        User fetchedUser = userService.getUser("test@user.com");
+        User fetchedUser = userService.getUserByEmail("test@user.com");
 
         assertThat(fetchedUser.getPassword()).isEqualTo("whatever");
     }

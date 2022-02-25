@@ -1,4 +1,4 @@
-package com.atlantbh.auctionappbackend.controllerTest;
+package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.UserRepository;

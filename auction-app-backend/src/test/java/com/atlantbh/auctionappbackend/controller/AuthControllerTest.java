@@ -1,7 +1,6 @@
-package com.atlantbh.auctionappbackend.controllerTest;
+package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.api.ApiConfig;
-import com.atlantbh.auctionappbackend.controller.AuthController;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.security.JwtUtil;

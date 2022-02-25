@@ -1,4 +1,4 @@
-package com.atlantbh.auctionappbackend.repostitoryTest;
+package com.atlantbh.auctionappbackend.repostitory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

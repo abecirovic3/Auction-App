@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -73,14 +70,12 @@ public class AuthController {
             try {
                 String refreshToken = jwtUtil.getTokenFromHeader(authorizationHeader);
                 String email = jwtUtil.verifyToken(refreshToken).getSubject();
-                User user = userService.getUser(email);
-                List<String> authorities = new ArrayList<>();
-                authorities.add(user.getRole());
+                User user = userService.getUserByEmail(email);
                 String accessToken = jwtUtil.createToken(
                         user.getEmail(),
                         request.getRequestURL().toString(),
                         jwtConfig.getTokenExpDate(),
-                        authorities
+                        Collections.singletonList(user.getRole())
                 );
 
                 response.setContentType(APPLICATION_JSON_VALUE);
@@ -93,7 +88,7 @@ public class AuthController {
                 log.error("Refresh token is not valid");
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Refresh token is not valid"
+                        e.getMessage()
                 );
             }
 
