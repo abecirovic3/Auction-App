@@ -4,7 +4,7 @@ import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
 import com.atlantbh.auctionappbackend.filter.JwtAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.JwtAuthorizationFilter;
-import com.atlantbh.auctionappbackend.utils.JwtUtil;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,21 +26,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
     private final ApiConfig apiConfig;
-    private final JwtUtil jwtUtil;
+    private final Algorithm signAlgorithm;
 
     @Autowired
     public SecurityConfig(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder,
-            JwtConfig jwtConfig,
-            ApiConfig apiConfig,
-            JwtUtil jwtUtil
+                            UserDetailsService userDetailsService,
+                            PasswordEncoder passwordEncoder,
+                            JwtConfig jwtConfig,
+                            ApiConfig apiConfig,
+                            Algorithm signAlgorithm
     ) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;
         this.apiConfig = apiConfig;
-        this.jwtUtil = jwtUtil;
+        this.signAlgorithm = signAlgorithm;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter =
-                new JwtAuthenticationFilter(authenticationManagerBean(), jwtUtil, jwtConfig);
+                new JwtAuthenticationFilter(authenticationManagerBean(), signAlgorithm, jwtConfig);
         jwtAuthenticationFilter.setFilterProcessesUrl(apiConfig.getPrefix() + "/auth/login");
 
         http.csrf().disable();
@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(AuthWhitelistConfig.getAuthWhitelist()).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(jwtAuthenticationFilter);
-        http.addFilterBefore(new JwtAuthorizationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthorizationFilter(jwtConfig, signAlgorithm), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

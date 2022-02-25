@@ -2,6 +2,7 @@ package com.atlantbh.auctionappbackend.filter;
 
 import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,12 +37,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final Algorithm signAlgorithm;
     private final JwtConfig jwtConfig;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, JwtConfig jwtConfig) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, Algorithm signAlgorithm, JwtConfig jwtConfig) {
         this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+        this.signAlgorithm = signAlgorithm;
         this.jwtConfig = jwtConfig;
     }
 
@@ -64,7 +65,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(
                 response.getOutputStream(),
-                jwtUtil.getErrorResponseBody("Failed Authentication, Bad Credentials")
+                JwtUtil.getErrorResponseBody("Failed Authentication, Bad Credentials")
         );
     }
 
@@ -79,14 +80,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
-        String accessToken = jwtUtil.createToken(
+        String accessToken = JwtUtil.createToken(
+                signAlgorithm,
                 user.getUsername(),
                 request.getRequestURL().toString(),
                 jwtConfig.getTokenExpDate(),
                 user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
         );
 
-        String refreshToken = jwtUtil.createToken(
+        String refreshToken = JwtUtil.createToken(
+                signAlgorithm,
                 user.getUsername(),
                 request.getRequestURL().toString(),
                 jwtConfig.getRefreshTokenExpDate(),

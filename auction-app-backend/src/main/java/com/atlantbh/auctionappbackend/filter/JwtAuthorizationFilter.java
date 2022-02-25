@@ -1,7 +1,9 @@
 package com.atlantbh.auctionappbackend.filter;
 
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
+import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +32,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtConfig jwtConfig;
+    private final Algorithm signAlgorithm;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public JwtAuthorizationFilter(JwtConfig jwtConfig, Algorithm signAlgorithm) {
+        this.jwtConfig = jwtConfig;
+        this.signAlgorithm = signAlgorithm;
     }
 
     @Override
@@ -47,17 +51,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
-            if (authorizationHeader != null && jwtUtil.isAuthorizationHeaderValid(authorizationHeader)) {
+            if (authorizationHeader != null && JwtUtil.isAuthorizationHeaderValid(jwtConfig.getTokenPrefix(), authorizationHeader)) {
                 try {
-                    String token = jwtUtil.getTokenFromHeader(authorizationHeader);
-                    DecodedJWT decodedJWT = jwtUtil.verifyToken(token);
+                    String token = JwtUtil.getTokenFromHeader(jwtConfig.getTokenPrefix(), authorizationHeader);
+                    DecodedJWT decodedJWT = JwtUtil.verifyToken(signAlgorithm, token);
                     String email = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     email,
                                     null,
-                                    jwtUtil.getGrantedAuthorities(roles)
+                                    JwtUtil.getGrantedAuthorities(roles)
                             );
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
@@ -67,7 +71,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     response.setContentType(APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(
                             response.getOutputStream(),
-                            jwtUtil.getErrorResponseBody("Token Verification Failed")
+                            JwtUtil.getErrorResponseBody("Token Verification Failed")
                     );
                 }
 

@@ -1,6 +1,5 @@
 package com.atlantbh.auctionappbackend.utils;
 
-import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -8,9 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
@@ -22,22 +19,18 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.stream;
 
 @Slf4j
-@Component
 public class JwtUtil {
-
-    private final JwtConfig jwtConfig;
-    private final Algorithm signAlgorithm;
 
     private static final String ACCESS_TOKEN = "access_token";
     private static final String REFRESH_TOKEN = "refresh_token";
 
-    @Autowired
-    public JwtUtil(JwtConfig jwtConfig, Algorithm signAlgorithm) {
-        this.jwtConfig = jwtConfig;
-        this.signAlgorithm = signAlgorithm;
-    }
-
-    public String createToken(String subject, String issuer, Date expDate, List<String> authorities) {
+    public static String createToken(
+                                        Algorithm signAlgorithm,
+                                        String subject,
+                                        String issuer,
+                                        Date expDate,
+                                        List<String> authorities
+    ) {
         JWTCreator.Builder tokenBuilder = JWT.create();
         tokenBuilder.withSubject(subject);
         tokenBuilder.withExpiresAt(expDate);
@@ -48,24 +41,24 @@ public class JwtUtil {
         return tokenBuilder.sign(signAlgorithm);
     }
 
-    public DecodedJWT verifyToken(String token) throws JWTVerificationException {
+    public static DecodedJWT verifyToken(Algorithm signAlgorithm, String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(signAlgorithm).build();
         return verifier.verify(token);
     }
 
-    public String getTokenFromHeader(String header) {
-        return header.replace(jwtConfig.getTokenPrefix(), "");
+    public static String getTokenFromHeader(String tokenPrefix, String header) {
+        return header.replace(tokenPrefix, "");
     }
 
-    public boolean isAuthorizationHeaderValid(String header) {
-        return header.startsWith(jwtConfig.getTokenPrefix());
+    public static boolean isAuthorizationHeaderValid(String tokenPrefix, String header) {
+        return header.startsWith(tokenPrefix);
     }
 
-    public Collection<SimpleGrantedAuthority> getGrantedAuthorities(String[] roles) {
+    public static Collection<SimpleGrantedAuthority> getGrantedAuthorities(String[] roles) {
         return stream(roles).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
-    public Map<String, String> getErrorResponseBody(String msg) {
+    public static Map<String, String> getErrorResponseBody(String msg) {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("error", msg);
         return responseBody;

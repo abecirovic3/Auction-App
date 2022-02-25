@@ -4,6 +4,7 @@ import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import com.atlantbh.auctionappbackend.service.UserService;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -35,13 +38,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtUtil jwtUtil;
+    private final Algorithm signAlgorithm;
     private final JwtConfig jwtConfig;
 
     @Autowired
-    public AuthController(UserService userService, JwtUtil jwtUtil, JwtConfig jwtConfig) {
+    public AuthController(UserService userService, Algorithm signAlgorithm, JwtConfig jwtConfig) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
+        this.signAlgorithm = signAlgorithm;
         this.jwtConfig = jwtConfig;
     }
 
@@ -66,12 +69,13 @@ public class AuthController {
     @GetMapping(path = "/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && jwtUtil.isAuthorizationHeaderValid(authorizationHeader)) {
+        if (authorizationHeader != null && JwtUtil.isAuthorizationHeaderValid(jwtConfig.getTokenPrefix(), authorizationHeader)) {
             try {
-                String refreshToken = jwtUtil.getTokenFromHeader(authorizationHeader);
-                String email = jwtUtil.verifyToken(refreshToken).getSubject();
+                String refreshToken = JwtUtil.getTokenFromHeader(jwtConfig.getTokenPrefix(), authorizationHeader);
+                String email = JwtUtil.verifyToken(signAlgorithm, refreshToken).getSubject();
                 User user = userService.getUserByEmail(email);
-                String accessToken = jwtUtil.createToken(
+                String accessToken = JwtUtil.createToken(
+                        signAlgorithm,
                         user.getEmail(),
                         request.getRequestURL().toString(),
                         jwtConfig.getTokenExpDate(),
