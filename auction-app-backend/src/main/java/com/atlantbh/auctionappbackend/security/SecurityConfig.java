@@ -4,6 +4,7 @@ import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
 import com.atlantbh.auctionappbackend.filter.JwtAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.JwtAuthorizationFilter;
+import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
 package com.atlantbh.auctionappbackend.filter;
 
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
-import com.atlantbh.auctionappbackend.security.JwtUtil;
+import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.atlantbh.auctionappbackend.filter;
 
 import com.atlantbh.auctionappbackend.security.JwtConfig;
-import com.atlantbh.auctionappbackend.security.JwtUtil;
+import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(
                 response.getOutputStream(),
-                jwtUtil.getTokensResponseBody(accessToken, refreshToken)
+                JwtUtil.getTokensResponseBody(accessToken, refreshToken)
         );
     }
 }

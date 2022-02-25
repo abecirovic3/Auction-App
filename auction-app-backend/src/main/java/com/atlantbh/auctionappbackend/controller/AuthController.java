@@ -2,7 +2,7 @@ package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
-import com.atlantbh.auctionappbackend.security.JwtUtil;
+import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import com.atlantbh.auctionappbackend.service.UserService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,7 +81,7 @@ public class AuthController {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(
                         response.getOutputStream(),
-                        jwtUtil.getTokensResponseBody(accessToken, refreshToken)
+                        JwtUtil.getTokensResponseBody(accessToken, refreshToken)
                 );
 
             } catch (JWTVerificationException e) {

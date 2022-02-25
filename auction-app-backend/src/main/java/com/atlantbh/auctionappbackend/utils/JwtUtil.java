@@ -1,5 +1,6 @@
-package com.atlantbh.auctionappbackend.security;
+package com.atlantbh.auctionappbackend.utils;
 
+import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +27,9 @@ public class JwtUtil {
 
     private final JwtConfig jwtConfig;
     private final Algorithm signAlgorithm;
+
+    private static final String ACCESS_TOKEN = "access_token";
+    private static final String REFRESH_TOKEN = "refresh_token";
 
     @Autowired
     public JwtUtil(JwtConfig jwtConfig, Algorithm signAlgorithm) {
@@ -68,10 +71,10 @@ public class JwtUtil {
         return responseBody;
     }
 
-    public Map<String, String> getTokensResponseBody(String accessToken, String refreshToken) {
+    public static Map<String, String> getTokensResponseBody(String accessToken, String refreshToken) {
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", accessToken);
-        tokens.put("refresh_token", refreshToken);
+        tokens.put(ACCESS_TOKEN, accessToken);
+        tokens.put(REFRESH_TOKEN, refreshToken);
         return tokens;
     }
 }
