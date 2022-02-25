@@ -16,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.atlantbh.auctionappbackend.security.ApplicationUserRole.USER;
+
 @Slf4j
 @Service
 public class UserService implements UserDetailsService {
@@ -56,7 +58,7 @@ public class UserService implements UserDetailsService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("ROLE_USER");
+        user.setRole(USER.getRole());
         return userRepository.save(user);
     }
 
