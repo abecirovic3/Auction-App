@@ -5,6 +5,8 @@ import com.atlantbh.auctionappbackend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -12,13 +14,23 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * This test class is used for AuthController tests.
+ * No mocking is used in any of the tests.
+ * Before the tests are executed, the server is started and listens on a random port for requests.
+ * After all tests are done, the server is shut down.
+ * In memory H2 database is used instead of real database.
+ */
+
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class AuthControllerNonMockTest {
 
     @LocalServerPort
@@ -26,9 +38,6 @@ public class AuthControllerNonMockTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -39,20 +48,14 @@ public class AuthControllerNonMockTest {
     }
 
     @Test
-    public void greetingShouldReturnDefaultMessage() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/api/v1/health",
-                String.class)).contains("OK");
-    }
-
-    @Test
     public void testRegisterUserSuccess() {
         User user = new User(1L,"Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
-        String resp = this.restTemplate.postForObject(
+        String response = this.restTemplate.postForObject(
                 "http://localhost:" + port + "/api/v1/auth/register",
                 user,
                 String.class
         );
-        assertThat(resp.contains("\"firstName\":\"Foo\",\"lastName\":\"Bar\",\"email\":\"foo@bar.org.com\"")).isTrue();
+        assertThat(response.contains("\"firstName\":\"Foo\",\"lastName\":\"Bar\",\"email\":\"foo@bar.org.com\"")).isTrue();
     }
 
     @Test
