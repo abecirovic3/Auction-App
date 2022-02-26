@@ -20,13 +20,11 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final User dummy = new User("John", "Doe", "john@doe.com", "passwod", "ROLE_USER");
+    private final User testUser = new User("John", "Doe", "john@doe.com", "passwod", "ROLE_USER");
 
     @BeforeEach
     void initUseCase() {
-        List<User> customers = List.of(
-                dummy
-        );
+        List<User> customers = List.of(testUser);
         userRepository.saveAll(customers);
     }
 
@@ -37,9 +35,9 @@ public class UserRepositoryTest {
 
     @Test
     public void testCreateUser() {
-        User savedUser = userRepository.save(dummy);
+        User savedUser = userRepository.save(testUser);
 
-        assertThat(dummy.getEmail()).isEqualTo(savedUser.getEmail());
+        assertThat(testUser.getEmail()).isEqualTo(savedUser.getEmail());
     }
 
     @Test
@@ -50,8 +48,8 @@ public class UserRepositoryTest {
 
     @Test
     public void testFindByEmail() {
-        User foundUser = userRepository.findByEmail(dummy.getEmail());
+        User foundUser = userRepository.findByEmail(testUser.getEmail());
         assertThat(foundUser).isNotNull();
-        assertThat(foundUser.getFirstName()).isEqualTo(dummy.getFirstName());
+        assertThat(foundUser.getFirstName()).isEqualTo(testUser.getFirstName());
     }
 }

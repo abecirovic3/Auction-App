@@ -24,6 +24,8 @@ public class UserServiceTest {
 
     private UserService userService;
 
+    private final User testUser = new User("Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");;
+
     @BeforeEach
     void initUseCase() {
         userService = new UserService(userRepository, new BCryptPasswordEncoder());
@@ -31,44 +33,40 @@ public class UserServiceTest {
 
     @Test
     public void testRegisterUserSuccess() {
-        User user = new User("Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
 
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        User registeredUser = userService.registerUser(testUser);
 
-        User registeredUser = userService.registerUser(user);
-        assertThat(registeredUser.getEmail()).isEqualTo(user.getEmail());
+        assertThat(registeredUser.getEmail()).isEqualTo(testUser.getEmail());
     }
 
     @Test
     public void testRegisterExistingUser() {
-        User user = new User("Sabit", "Iz Tarčina", "sabit@tarcin_city.com", "tajna", "ROLE_USER");
-
-        when(userRepository.findByEmail(any(String.class))).thenReturn(user);
+        when(userRepository.findByEmail(any(String.class))).thenReturn(testUser);
 
         try {
-            userService.registerUser(user);
+            userService.registerUser(testUser);
         } catch (ResponseStatusException e) {
             assertThat(e.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
-            assertThat(e.getReason()).isEqualTo("User with email " + user.getEmail() + " already exists");
+            assertThat(e.getReason()).isEqualTo("User with email " + testUser.getEmail() + " already exists");
         }
     }
 
     @Test
-    public void testGetUserSuccess() {
-        User user = new User("Test", "User", "test@user.com", "whatever", "ROLE_USER");
+    public void testGetUserByEmailSuccess() {
+        when(userRepository.findByEmail(any(String.class))).thenReturn(testUser);
 
-        when(userRepository.findByEmail(any(String.class))).thenReturn(user);
+        User fetchedUser = userService.getUserByEmail("foo@bar.org.com");
 
-        User fetchedUser = userService.getUserByEmail("test@user.com");
-
-        assertThat(fetchedUser.getPassword()).isEqualTo("whatever");
+        assertThat(fetchedUser.getPassword()).isEqualTo(testUser.getPassword());
     }
 
     @Test
     public void testLoadUserByUsernameSuccess() {
-        User user = new User("Rocky", "Balboa", "rocky@balboa.com", "Adrian", "ROLE_USER");
-        when(userRepository.findByEmail(any(String.class))).thenReturn(user);
-        UserDetails loadedUser = userService.loadUserByUsername(user.getEmail());
-        assertThat(loadedUser.getUsername()).isEqualTo(user.getEmail());
+        when(userRepository.findByEmail(any(String.class))).thenReturn(testUser);
+
+        UserDetails loadedUser = userService.loadUserByUsername(testUser.getEmail());
+
+        assertThat(loadedUser.getUsername()).isEqualTo(testUser.getEmail());
     }
 }

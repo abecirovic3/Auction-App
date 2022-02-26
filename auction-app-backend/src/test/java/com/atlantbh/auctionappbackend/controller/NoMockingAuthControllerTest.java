@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import static com.atlantbh.auctionappbackend.security.ApplicationUserRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -31,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class AuthControllerNonMockTest {
+public class NoMockingAuthControllerTest {
 
     @LocalServerPort
     private int port;
@@ -42,6 +43,8 @@ public class AuthControllerNonMockTest {
     @Autowired
     private UserRepository userRepository;
 
+    private final User testUser = new User(1L, "foo", "bar", "foo@bar.com", "password", USER.getRole());
+
     @BeforeEach
     public void destroyAll(){
         userRepository.deleteAll();
@@ -49,22 +52,23 @@ public class AuthControllerNonMockTest {
 
     @Test
     public void testRegisterUserSuccess() {
-        User user = new User(1L,"Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
         String response = this.restTemplate.postForObject(
                 "http://localhost:" + port + "/api/v1/auth/register",
-                user,
+                testUser,
                 String.class
         );
-        assertThat(response.contains("\"firstName\":\"Foo\",\"lastName\":\"Bar\",\"email\":\"foo@bar.org.com\"")).isTrue();
+        assertThat(response.contains(
+                        "\"firstName\":\"" + testUser.getFirstName()
+                        + "\",\"lastName\":\"" + testUser.getLastName()
+                        + "\",\"email\":\"" + testUser.getEmail() + "\"")).isTrue();
     }
 
     @Test
     public void testRegisterUserInvalidRequest() {
-        User user = new User(1L,"Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
-        user.setFirstName("");
+        testUser.setFirstName("");
         String resp = this.restTemplate.postForObject(
                 "http://localhost:" + port + "/api/v1/auth/register",
-                user,
+                testUser,
                 String.class
         );
 
@@ -73,15 +77,14 @@ public class AuthControllerNonMockTest {
 
     @Test
     public void testLoginUserSuccess() {
-        User user = new User(1L,"Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
         this.restTemplate.postForObject(
                 "http://localhost:" + port + "/api/v1/auth/register",
-                user,
+                testUser,
                 String.class
         );
 
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/login?email=" + user.getEmail() + "&password=" + user.getPassword(),
+                "http://localhost:" + port + "/api/v1/auth/login?email=" + testUser.getEmail() + "&password=" + testUser.getPassword(),
                 null,
                 String.class
         );
@@ -92,10 +95,8 @@ public class AuthControllerNonMockTest {
 
     @Test
     public void testLoginUserFail() {
-        User user = new User(1L,"Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
-
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/login?email=" + user.getEmail() + "&password=pogresan",
+                "http://localhost:" + port + "/api/v1/auth/login?email=" + testUser.getEmail() + "&password=wrong",
                 null,
                 String.class
         );
@@ -105,15 +106,14 @@ public class AuthControllerNonMockTest {
 
     @Test
     public void testRefreshTokenSuccess() {
-        User user = new User(1L,"Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");
         this.restTemplate.postForObject(
                 "http://localhost:" + port + "/api/v1/auth/register",
-                user,
+                testUser,
                 String.class
         );
 
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/login?email=" + user.getEmail() + "&password=" + user.getPassword(),
+                "http://localhost:" + port + "/api/v1/auth/login?email=" + testUser.getEmail() + "&password=" + testUser.getPassword(),
                 null,
                 String.class
         );
