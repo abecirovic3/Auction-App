@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme, StyledEngineProvider  } from "@mui/material/styles";
 
-import "./login-style.css";
+import "../../css/form-style.css";
 
 import facebookIcon from "../../img/facebook.svg";
 import googleIcon from "../../img/google.svg";

@@ -6,11 +6,10 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme, StyledEngineProvider  } from "@mui/material/styles";
 
+import "../../css/form-style.css"
+
 import facebookIcon from "../../img/facebook.svg";
 import googleIcon from "../../img/google.svg";
-import "./login-style.css";
-
-import { ReactComponent as Logo } from "../../img/google.svg";
 
 const theme = createTheme({
     palette: {
@@ -32,12 +31,12 @@ const Login = () => {
                             <Stack spacing={4}>
                                 <Stack spacing={2}>
                                     <label htmlFor="email">Email</label>
-                                    <TextField id="email" variant="outlined" fullWidth={true} />
+                                    <TextField id="email" variant="outlined" type="email" />
                                 </Stack>
 
                                 <Stack spacing={2}>
                                     <label htmlFor="password">Password</label>
-                                    <TextField id="password" variant="outlined" type="password" fullWidth={true} />
+                                    <TextField id="password" variant="outlined" type="password" />
                                 </Stack>
                             </Stack>
 
@@ -45,19 +44,19 @@ const Login = () => {
                         </Stack>
 
                         <Stack spacing={2}>
-                            <Button className="element-height" color={"primary"} variant="contained">LOGIN</Button>
+                            <Button color={"primary"} variant="contained">Login</Button>
 
-                            <Stack id="social-media-stack" direction="row" spacing={2} alignItems={"center"}>
-                                <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Google logo" />}>
+                            <Stack id="social-media-stack" direction="row" spacing={2}>
+                                <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Facebook" />}>
                                     Login With Facebook
                                 </Button>
-                                <Button variant="outlined" startIcon={<img src={googleIcon} alt="Google logo" />}>
+                                <Button variant="outlined" startIcon={<img src={googleIcon} alt="Google" />}>
                                     Login With Gmail
                                 </Button>
                             </Stack>
                         </Stack>
 
-                        <Button id="passwordBtn" size="small">Forgot password?</Button>
+                        <Button className="standardText" size="small">Forgot password?</Button>
                     </Stack>
                 </Container>
             </ThemeProvider>
