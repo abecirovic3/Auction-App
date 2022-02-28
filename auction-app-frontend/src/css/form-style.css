@@ -45,11 +45,16 @@ h5 {
     justify-content: space-evenly;
 }
 
-#passwordBtn {
+.standardText {
     text-transform: none;
 }
 
 .MuiCheckbox-root {
     padding-left: 0;
     color: var(--border-color);
+}
+
+#registerInfoLabel {
+    color: #9B9B9B;
+    justify-content: center;
 }
