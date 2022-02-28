@@ -16,7 +16,7 @@ h5 {
     background-color: var(--background-color);
 }
 
-#login-container {
+.form-container {
     padding: 0 0 20px;
     margin-top: 30px;
     border: 1px solid #D8D8D8;
@@ -34,7 +34,7 @@ h5 {
     height: 3.5em;
 }
 
-#social-media-stack .MuiButton-root {
+.social-media-stack .MuiButton-root {
     width: 50%;
     border-color: var(--border-color);
     text-transform: capitalize;
@@ -54,7 +54,8 @@ h5 {
     color: var(--border-color);
 }
 
-#registerInfoLabel {
+#registerInfoLabel,
+#lostPasswordMsg {
     color: #9B9B9B;
     justify-content: center;
 }
