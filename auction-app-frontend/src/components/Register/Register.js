@@ -22,7 +22,7 @@ const Register = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <Container id="login-container" maxWidth="sm">
+                <Container className="form-container" maxWidth="sm">
                     <h5>Register</h5>
 
                     <Stack width="80%" margin="auto" spacing={5}>
@@ -51,7 +51,7 @@ const Register = () => {
                         <Stack spacing={2}>
                             <Button color={"primary"} variant="contained">Register</Button>
 
-                            <Stack id="social-media-stack" direction="row" spacing={2} >
+                            <Stack className="social-media-stack" direction="row" spacing={2} >
                                 <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Facebook" />}>
                                     Signup With Facebook
                                 </Button>

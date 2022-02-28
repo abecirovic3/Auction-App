@@ -23,7 +23,7 @@ const Login = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <Container id="login-container" maxWidth="sm">
+                <Container className="form-container" maxWidth="sm">
                     <h5>Login</h5>
 
                     <Stack width="80%" margin="auto" spacing={4}>
@@ -46,7 +46,7 @@ const Login = () => {
                         <Stack spacing={2}>
                             <Button color={"primary"} variant="contained">Login</Button>
 
-                            <Stack id="social-media-stack" direction="row" spacing={2}>
+                            <Stack className="social-media-stack" direction="row" spacing={2}>
                                 <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Facebook" />}>
                                     Login With Facebook
                                 </Button>
