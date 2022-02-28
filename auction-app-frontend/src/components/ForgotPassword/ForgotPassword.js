@@ -2,11 +2,7 @@ import {createTheme, StyledEngineProvider, ThemeProvider} from "@mui/material/st
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
-import facebookIcon from "../../img/facebook.svg";
-import googleIcon from "../../img/google.svg";
 
 const theme = createTheme({
     palette: {

@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme, StyledEngineProvider  } from "@mui/material/styles";
+import { useNavigate } from 'react-router-dom';
 
 import "../../css/form-style.css";
 
@@ -19,6 +20,8 @@ const theme = createTheme({
 })
 
 const Register = () => {
+    const navigate = useNavigate();
+
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
@@ -62,7 +65,14 @@ const Register = () => {
                         </Stack>
                         <FormControlLabel
                             id="registerInfoLabel"
-                            control={<Button className="standardText" >Login</Button>}
+                            control={
+                                <Button
+                                    onClick={() => {navigate("/login")}}
+                                    className="standardText"
+                                >
+                                    Login
+                                </Button>
+                            }
                             label="Already have an account?"
                             labelPlacement="start"
                         />

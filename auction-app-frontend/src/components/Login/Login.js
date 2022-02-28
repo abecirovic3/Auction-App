@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme, StyledEngineProvider  } from "@mui/material/styles";
+import { useNavigate } from 'react-router-dom';
 
 import "../../css/form-style.css"
 
@@ -20,6 +21,9 @@ const theme = createTheme({
 })
 
 const Login = () => {
+
+    const navigate = useNavigate();
+
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
@@ -56,7 +60,13 @@ const Login = () => {
                             </Stack>
                         </Stack>
 
-                        <Button className="standardText" size="small">Forgot password?</Button>
+                        <Button
+                            onClick={() => {navigate("/forgotpassword")}}
+                            className="standardText"
+                            size="small"
+                        >
+                            Forgot password?
+                        </Button>
                     </Stack>
                 </Container>
             </ThemeProvider>
