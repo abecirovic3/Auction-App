@@ -12,9 +12,23 @@ import MainTheme from "../../Themes/MainTheme";
 import facebookIcon from "../../img/facebook.svg";
 import googleIcon from "../../img/google.svg";
 
+import AuthService from "../../services/AuthService";
+
 const Login = () => {
 
     const navigate = useNavigate();
+
+    const handleSubmit = () => {
+        AuthService.login("abecirovic@email.com", "password")
+            .then(
+                response => {
+                    console.log(response);
+                },
+                err => {
+                    console.log(err);
+                }
+            );
+    }
 
     return (
         <StyledEngineProvider injectFirst>
@@ -41,7 +55,7 @@ const Login = () => {
                             </Stack>
 
                             <Stack spacing={2}>
-                                <Button color={"primary"} variant="contained">Login</Button>
+                                <Button onClick={() => {handleSubmit()}} color={"primary"} variant="contained">Login</Button>
 
                                 <Stack className="social-media-stack" direction="row" spacing={2}>
                                     <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Facebook" />}>
