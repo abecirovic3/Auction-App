@@ -13,21 +13,45 @@ import facebookIcon from "../../img/facebook.svg";
 import googleIcon from "../../img/google.svg";
 
 import AuthService from "../../services/AuthService";
+import {useState} from "react";
 
 const Login = () => {
-
     const navigate = useNavigate();
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+        const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+        let err = {};
+
+        if (!email.match(emailRegex))
+            err.email = "Please enter a valid email";
+        if (password.length < 8)
+            err.password = "Please enter a valid password";
+
+        setErrors(err);
+
+        return Object.values(err).every(e => e === "");
+    }
+
     const handleSubmit = () => {
-        AuthService.login("abecirovic@email.com", "password")
-            .then(
-                response => {
-                    console.log(response);
-                },
-                err => {
-                    console.log(err);
-                }
-            );
+        if (validate()) {
+            AuthService.login(email, password)
+                .then(
+                    response => {
+                        navigate("/");
+                    },
+                    err => {
+                        setErrors({
+                            email: "Please check if you entered correct email",
+                            password: "Please check if you entered correct password"
+                        });
+                    }
+                );
+        }
     }
 
     return (
@@ -42,12 +66,28 @@ const Login = () => {
                                 <Stack spacing={4}>
                                     <Stack spacing={2}>
                                         <label htmlFor="email">Email</label>
-                                        <TextField id="email" variant="outlined" type="email" />
+                                        <TextField
+                                            id="email"
+                                            variant="outlined"
+                                            type="email"
+                                            value={email}
+                                            onChange={e => setEmail(e.target.value)}
+                                            error={!!errors.email}
+                                            helperText={errors.email}
+                                        />
                                     </Stack>
 
                                     <Stack spacing={2}>
                                         <label htmlFor="password">Password</label>
-                                        <TextField id="password" variant="outlined" type="password" />
+                                        <TextField
+                                            id="password"
+                                            variant="outlined"
+                                            type="password"
+                                            value={password}
+                                            onChange={e => setPassword(e.target.value)}
+                                            error={!!errors.password}
+                                            helperText={errors.password}
+                                        />
                                     </Stack>
                                 </Stack>
 
