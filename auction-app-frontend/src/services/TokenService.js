@@ -1,31 +1,49 @@
 const getLocalRefreshToken = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    let { user } = getUser();
     return user?.refresh_token;
 };
 
 const getLocalAccessToken = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    let { user } = getUser();
     return user?.access_token;
 };
 
 const updateLocalAccessToken = (token) => {
-    let user = JSON.parse(localStorage.getItem("user"));
+    let {user, rememberUser} = getUser();
     user.access_token = token;
-    localStorage.setItem("user", JSON.stringify(user));
+    if (rememberUser) {
+        localStorage.setItem("user", JSON.stringify(user));
+    } else {
+        sessionStorage.setItem("user", JSON.stringify(user));
+    }
 };
 
 const updateLocalRefreshToken = (token) => {
-    let user = JSON.parse(localStorage.getItem("user"));
+    let {user, rememberUser} = getUser();
     user.refresh_token = token;
-    localStorage.setItem("user", JSON.stringify(user));
+    if (rememberUser) {
+        localStorage.setItem("user", JSON.stringify(user));
+    } else {
+        sessionStorage.setItem("user", JSON.stringify(user));
+    }
 };
 
 const getUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(localStorage.getItem("user"));
+    let rememberUser = true;
+    if (!user) {
+        user = JSON.parse(sessionStorage.getItem("user"));
+        rememberUser = false;
+    }
+    return {user, rememberUser};
 };
 
-const setUser = (user) => {
-    localStorage.setItem("user", JSON.stringify(user));
+const setUser = (user, rememberUser) => {
+    if (rememberUser) {
+        localStorage.setItem("user", JSON.stringify(user));
+    } else {
+        sessionStorage.setItem("user", JSON.stringify(user));
+    }
 };
 
 const removeUser = () => {

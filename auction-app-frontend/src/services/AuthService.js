@@ -1,12 +1,12 @@
 import api from './Api';
 import TokenService from "./TokenService";
 
-const login = (email, password) => {
+const login = (email, password, rememberMe) => {
     return api
         .post(`/auth/login?email=${email}&password=${password}`, {})
         .then(response => {
             if (response.data.access_token) {
-                TokenService.setUser(response.data);
+                TokenService.setUser(response.data, rememberMe);
             }
             return response.data;
         });

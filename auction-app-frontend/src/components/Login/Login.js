@@ -20,6 +20,7 @@ const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
 
     const [errors, setErrors] = useState({});
 
@@ -39,7 +40,7 @@ const Login = () => {
 
     const handleSubmit = () => {
         if (validate()) {
-            AuthService.login(email, password)
+            AuthService.login(email, password, rememberMe)
                 .then(
                     response => {
                         navigate("/");
@@ -91,7 +92,15 @@ const Login = () => {
                                     </Stack>
                                 </Stack>
 
-                                <FormControlLabel control={<Checkbox />} label="Remember me" />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            value={rememberMe}
+                                            onChange={e => setRememberMe(e.currentTarget.checked)}
+                                        />
+                                    }
+                                    label="Remember me"
+                                />
                             </Stack>
 
                             <Stack spacing={2}>
