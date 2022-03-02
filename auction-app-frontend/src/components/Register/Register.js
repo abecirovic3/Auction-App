@@ -46,9 +46,7 @@ const Register = () => {
         if (validate()) {
             AuthService.register(firstName, lastName, email, password)
                 .then(response => {
-                    console.log(response);
-                    console.log(response.data);
-                    navigate("/login")
+                    navigate("/login");
 
                 }, err => {
                     if (err.response.data.hasOwnProperty("message")) {

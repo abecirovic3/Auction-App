@@ -117,7 +117,7 @@ const Login = () => {
                             </Stack>
 
                             <Button
-                                onClick={() => {navigate("/forgotpassword")}}
+                                onClick={() => {navigate("/forgot-password")}}
                                 className="standardText"
                                 size="small"
                             >
