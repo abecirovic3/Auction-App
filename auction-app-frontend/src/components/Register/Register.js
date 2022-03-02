@@ -14,6 +14,9 @@ import {useState} from "react";
 
 import AuthService from "../../services/AuthService";
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setRegistered } from '../../features/register/registerSlice';
+
 const Register = () => {
     const navigate = useNavigate();
 
@@ -23,6 +26,9 @@ const Register = () => {
     const [password, setPassword] = useState("");
 
     const [errors, setErrors] = useState({});
+
+    const userRegistered = useSelector((state) => state.register.userRegistered);
+    const dispatch = useDispatch();
 
     const validate = () => {
         const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -46,6 +52,7 @@ const Register = () => {
         if (validate()) {
             AuthService.register(firstName, lastName, email, password)
                 .then(response => {
+                    dispatch(setRegistered(true));
                     navigate("/login");
 
                 }, err => {

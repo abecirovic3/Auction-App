@@ -15,6 +15,10 @@ import googleIcon from "../../img/google.svg";
 import AuthService from "../../services/AuthService";
 import {useState} from "react";
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setRegistered } from '../../features/register/registerSlice';
+import Alert from "../Alert/Alert";
+
 const Login = () => {
     const navigate = useNavigate();
 
@@ -23,6 +27,9 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
 
     const [errors, setErrors] = useState({});
+
+        const userRegistered = useSelector((state) => state.register.userRegistered);
+        const dispatch = useDispatch();
 
     const validate = () => {
         const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -43,6 +50,7 @@ const Login = () => {
             AuthService.login(email, password, rememberMe)
                 .then(
                     response => {
+                        dispatch(setRegistered(false));
                         navigate("/");
                     },
                     err => {
@@ -58,6 +66,7 @@ const Login = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={MainTheme}>
+                {userRegistered && <Alert type="alert-success" displayText="Register was successful" />}
                 <div className="form-style">
                     <Container className="form-container" maxWidth="sm">
                         <h5>Login</h5>
