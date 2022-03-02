@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const registerSlice = createSlice({
     name: 'register',
@@ -10,9 +10,8 @@ export const registerSlice = createSlice({
             state.userRegistered = action.payload
         }
     },
-})
+});
 
-// Action creators are generated for each case reducer function
-export const { setRegistered } = registerSlice.actions
+export const { setRegistered } = registerSlice.actions;
 
-export default registerSlice.reducer
+export default registerSlice.reducer;

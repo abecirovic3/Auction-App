@@ -1,20 +1,21 @@
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
+import {
+    TextField,
+    FormControlLabel,
+    Button,
+    Stack,
+    Container
+} from "@mui/material";
 import { ThemeProvider, StyledEngineProvider  } from "@mui/material/styles";
-import { useNavigate } from 'react-router-dom';
 
-import "../../css/form.scss"
+import "../../assets/style/form.scss"
 import MainTheme from "../../Themes/MainTheme";
-import facebookIcon from "../../img/facebook.svg";
-import googleIcon from "../../img/google.svg";
-import {useState} from "react";
-
 import AuthService from "../../services/AuthService";
+import facebookIcon from "../../assets/img/facebook.svg";
+import googleIcon from "../../assets/img/google.svg";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { setRegistered } from '../../features/register/registerSlice';
 
 const Register = () => {
@@ -27,7 +28,6 @@ const Register = () => {
 
     const [errors, setErrors] = useState({});
 
-    const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
 
     const validate = () => {

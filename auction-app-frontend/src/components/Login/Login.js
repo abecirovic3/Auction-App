@@ -1,23 +1,25 @@
-import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
+import {
+    TextField,
+    Checkbox,
+    FormControlLabel,
+    Button,
+    Stack,
+    Container
+} from "@mui/material";
+
 import { ThemeProvider, StyledEngineProvider  } from "@mui/material/styles";
-import { useNavigate } from 'react-router-dom';
 
-import "../../css/form.scss"
+import "../../assets/style/form.scss"
 import MainTheme from "../../Themes/MainTheme";
-import facebookIcon from "../../img/facebook.svg";
-import googleIcon from "../../img/google.svg";
-
 import AuthService from "../../services/AuthService";
-import {useState} from "react";
+import facebookIcon from "../../assets/img/facebook.svg";
+import googleIcon from "../../assets/img/google.svg";
+import Alert from "../Alert/Alert";
 
+import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRegistered } from '../../features/register/registerSlice';
-import Alert from "../Alert/Alert";
 
 const Login = () => {
     const navigate = useNavigate();
