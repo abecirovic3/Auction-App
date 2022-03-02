@@ -1,7 +1,13 @@
 @use 'base';
 
 .form-style {
+    //solves material-ui bootstrap conflict
+    legend {
+        width: auto
+    }
+
     h5 {
+        font-weight: 700;
         font-size: 24px;
         margin-top: 0;
         padding: 20px;
@@ -18,7 +24,7 @@
     .MuiInputBase-root {
         color: #9B9B9B;
         background-color: base.$background-color;
-        border-color: base.$border-color;
+        border: base.$border-color;
     }
 
     .MuiButton-root,
