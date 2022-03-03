@@ -6,20 +6,21 @@ import {
     Stack,
     Container
 } from "@mui/material";
-
 import { ThemeProvider, StyledEngineProvider  } from "@mui/material/styles";
-
-import "../../assets/style/form.scss"
-import MainTheme from "../../Themes/MainTheme";
-import AuthService from "../../services/AuthService";
-import facebookIcon from "../../assets/img/facebook.svg";
-import googleIcon from "../../assets/img/google.svg";
-
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
 import { setRegistered } from '../../features/register/registerSlice';
+import AuthService from "../../services/AuthService";
+
 import CustomAlert from "../Alert/CustomAlert";
+
+import facebookIcon from "../../assets/img/facebook.svg";
+import googleIcon from "../../assets/img/google.svg";
+
+import MainTheme from "../../Themes/MainTheme";
+import "../../assets/style/form.scss"
 
 const Login = () => {
     const navigate = useNavigate();
@@ -30,8 +31,8 @@ const Login = () => {
 
     const [errors, setErrors] = useState({});
 
-        const userRegistered = useSelector((state) => state.register.userRegistered);
-        const dispatch = useDispatch();
+    const userRegistered = useSelector((state) => state.register.userRegistered);
+    const dispatch = useDispatch();
 
     const validate = () => {
         const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;

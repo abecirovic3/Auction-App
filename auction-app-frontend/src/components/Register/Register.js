@@ -6,17 +6,18 @@ import {
     Container
 } from "@mui/material";
 import { ThemeProvider, StyledEngineProvider  } from "@mui/material/styles";
-
-import "../../assets/style/form.scss"
-import MainTheme from "../../Themes/MainTheme";
-import AuthService from "../../services/AuthService";
-import facebookIcon from "../../assets/img/facebook.svg";
-import googleIcon from "../../assets/img/google.svg";
-
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+
 import { setRegistered } from '../../features/register/registerSlice';
+import AuthService from "../../services/AuthService";
+
+import facebookIcon from "../../assets/img/facebook.svg";
+import googleIcon from "../../assets/img/google.svg";
+
+import MainTheme from "../../Themes/MainTheme";
+import "../../assets/style/form.scss"
 
 const Register = () => {
     const navigate = useNavigate();

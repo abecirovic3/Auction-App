@@ -1,13 +1,13 @@
-import {StyledEngineProvider, ThemeProvider} from "@mui/material/styles";
 import {
     Container,
     Stack,
     TextField,
     Button
 } from "@mui/material";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 
-import "../../assets/style/form.scss"
 import MainTheme from "../../Themes/MainTheme";
+import "../../assets/style/form.scss"
 
 const ForgotPassword = () => {
     return (

@@ -1,5 +1,6 @@
 import { Alert, Collapse, ThemeProvider } from "@mui/material";
 import { useState, useEffect } from "react";
+
 import AlertTheme from "../../Themes/AlertTheme";
 import "../../assets/style/custom-alert.scss"
 
