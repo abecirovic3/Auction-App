@@ -14,12 +14,12 @@ import MainTheme from "../../Themes/MainTheme";
 import AuthService from "../../services/AuthService";
 import facebookIcon from "../../assets/img/facebook.svg";
 import googleIcon from "../../assets/img/google.svg";
-import Alert from "../Alert/Alert";
 
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRegistered } from '../../features/register/registerSlice';
+import CustomAlert from "../Alert/CustomAlert";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -68,7 +68,12 @@ const Login = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={MainTheme}>
-                {userRegistered && <Alert type="alert-success" displayText="Register was successful" />}
+                {userRegistered && <CustomAlert
+                                        color="success"
+                                        title="Registration successful!"
+                                        message="You may now login."
+                                    />
+                }
                 <div className="form-style">
                     <Container className="form-container" maxWidth="sm">
                         <h5>Login</h5>
