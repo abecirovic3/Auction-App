@@ -13,9 +13,6 @@ import { useDispatch } from 'react-redux';
 import { setRegistered } from '../../features/register/registerSlice';
 import AuthService from "../../services/AuthService";
 
-import facebookIcon from "../../assets/img/facebook.svg";
-import googleIcon from "../../assets/img/google.svg";
-
 import MainTheme from "../../Themes/MainTheme";
 import "../../assets/style/form.scss"
 
@@ -128,16 +125,9 @@ const Register = () => {
 
                             <Stack spacing={2}>
                                 <Button onClick={() => {handleSubmit()}} color={"primary"} variant="contained">Register</Button>
-
-                                <Stack className="social-media-stack" direction="row" spacing={2} >
-                                    <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Facebook" />}>
-                                        Signup With Facebook
-                                    </Button>
-                                    <Button variant="outlined" startIcon={<img src={googleIcon} alt="Google" />}>
-                                        Signup With Gmail
-                                    </Button>
-                                </Stack>
+                                {/*Social Media Register*/}
                             </Stack>
+
                             <FormControlLabel
                                 id="registerInfoLabel"
                                 control={

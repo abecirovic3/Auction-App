@@ -16,9 +16,6 @@ import AuthService from "../../services/AuthService";
 
 import CustomAlert from "../Alert/CustomAlert";
 
-import facebookIcon from "../../assets/img/facebook.svg";
-import googleIcon from "../../assets/img/google.svg";
-
 import MainTheme from "../../Themes/MainTheme";
 import "../../assets/style/form.scss"
 
@@ -122,24 +119,10 @@ const Login = () => {
 
                             <Stack spacing={2}>
                                 <Button onClick={() => {handleSubmit()}} color={"primary"} variant="contained">Login</Button>
-
-                                <Stack className="social-media-stack" direction="row" spacing={2}>
-                                    <Button variant="outlined" startIcon={<img src={facebookIcon} alt="Facebook" />}>
-                                        Login With Facebook
-                                    </Button>
-                                    <Button variant="outlined" startIcon={<img src={googleIcon} alt="Google" />}>
-                                        Login With Gmail
-                                    </Button>
-                                </Stack>
+                                {/*Social Media Login*/}
                             </Stack>
 
-                            <Button
-                                onClick={() => {navigate("/forgot-password")}}
-                                className="standardText"
-                                size="small"
-                            >
-                                Forgot password?
-                            </Button>
+                            {/*Forgot Password Btn*/}
                         </Stack>
                     </Container>
                 </div>
