@@ -32,18 +32,25 @@ const Register = () => {
         const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
         let err = {};
 
-        if (firstName === '')
+        if (!firstName) {
             err.firstName = 'Please enter your first name';
-        if (lastName === '')
+        }
+
+        if (!lastName) {
             err.lastName = 'Please enter your last name';
-        if (!email.match(emailRegex))
+        }
+
+        if (!email.match(emailRegex)) {
             err.email = 'Please enter a valid email';
-        if (password.length < 8)
+        }
+
+        if (password.length < 8) {
             err.password = 'Password must contain at least 8 characters';
+        }
 
         setErrors(err);
 
-        return Object.values(err).every(e => e === '');
+        return Object.values(err).every(e => e);
     }
 
     const handleSubmit = () => {
