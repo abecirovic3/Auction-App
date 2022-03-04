@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react';
 import AlertTheme from '../../Themes/AlertTheme';
 import '../../assets/style/custom-alert.scss'
 
-const CustomAlert = ({ color, title, message }) => {
+const CustomAlert = ({ color, title, message, showAlertDuration }) => {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
-        setTimeout(() => {setShowAlert(false)}, 5000);
-    }, []);
+        console.log(showAlertDuration);
+        setTimeout(() => {setShowAlert(false)}, showAlertDuration);
+    }, [showAlertDuration]);
 
     return (
         <ThemeProvider theme={AlertTheme} >
@@ -30,6 +31,7 @@ const CustomAlert = ({ color, title, message }) => {
 
 CustomAlert.defaultProps = {
     color: 'info',
+    showAlertDuration: 5000
 }
 
 export default CustomAlert;
