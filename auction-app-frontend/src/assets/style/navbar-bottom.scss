@@ -1,0 +1,30 @@
+.navbar-bottom-container {
+  width: 80%;
+  margin: auto;
+
+  .search-navigation-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+
+    .search-bar {
+      width: 70%;
+      border-radius: 0;
+      border-color: #E3E3E3;
+    }
+
+    a {
+      text-decoration: none;
+      color: #252525;
+      font-weight: 300;
+      font-size: 16px;
+    }
+
+    a:hover {
+      color: #8367D8;
+    }
+  }
+}
