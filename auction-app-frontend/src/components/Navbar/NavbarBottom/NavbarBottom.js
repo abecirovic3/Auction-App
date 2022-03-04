@@ -1,7 +1,7 @@
-import {Grid, IconButton, InputAdornment, OutlinedInput, Paper} from '@mui/material';
+import {Grid, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import appLogo from '../../../assets/img/appLogo.svg';
 import searchIcon from '../../../assets/img/search.svg';
@@ -11,6 +11,7 @@ import '../../../assets/style/navbar-bottom.scss';
 
 const NavbarBottom = () => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const activeLinkStyle = {
         color: '#8367D8',
@@ -38,7 +39,7 @@ const NavbarBottom = () => {
                             xs={2}
                             textAlign={showSearchAndNavigation() ? '' : 'center'}
                         >
-                            <img src={appLogo} alt='Logo' />
+                            <img src={appLogo} alt='Logo' onClick={() => {navigate('/')}} />
                         </Grid>
                         {showSearchAndNavigation() &&
                             <Grid item xs={10}>
