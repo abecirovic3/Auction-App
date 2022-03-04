@@ -31,36 +31,20 @@ const Login = () => {
     const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
 
-    const validate = () => {
-        const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-        let err = {};
-
-        if (!email.match(emailRegex))
-            err.email = 'Please enter a valid email';
-        if (password.length < 8)
-            err.password = 'Please enter a valid password';
-
-        setErrors(err);
-
-        return Object.values(err).every(e => e === '');
-    }
-
     const handleSubmit = () => {
-        if (validate()) {
-            AuthService.login(email, password, rememberMe)
-                .then(
-                    response => {
-                        dispatch(setRegistered(false));
-                        navigate('/');
-                    },
-                    err => {
-                        setErrors({
-                            email: 'Please check if you entered correct email',
-                            password: 'Please check if you entered correct password'
-                        });
-                    }
-                );
-        }
+        AuthService.login(email, password, rememberMe)
+            .then(
+                response => {
+                    dispatch(setRegistered(false));
+                    navigate('/');
+                },
+                err => {
+                    setErrors({
+                        email: 'Please check if you entered correct email',
+                        password: 'Please check if you entered correct password'
+                    });
+                }
+            );
     }
 
     return (
