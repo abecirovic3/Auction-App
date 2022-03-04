@@ -4,13 +4,12 @@ import Home from './components/Home/Home'
 import Register from './components/Register/Register'
 import Login from './components/Login/Login';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword';
+import Navbar from './components/Navbar/Navbar';
 
 function App() {
   return (
       <BrowserRouter>
-          <div>
-              <h1 style={{textAlign: 'center'}}>Header</h1>
-          </div>
+          <Navbar />
           <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/login' element={<Login />} />
