@@ -1,5 +1,5 @@
 import api from './Api';
-import TokenService from "./TokenService";
+import TokenService from './TokenService';
 
 const login = (email, password, rememberMe) => {
     return api
@@ -17,7 +17,7 @@ const logout = () => {
 };
 
 const register = (firstName, lastName, email, password) => {
-    return api.post("/auth/register", {
+    return api.post('/auth/register', {
         firstName,
         lastName,
         email,

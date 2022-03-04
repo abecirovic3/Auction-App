@@ -1,8 +1,8 @@
-import { Alert, Collapse, ThemeProvider } from "@mui/material";
-import { useState, useEffect } from "react";
+import { Alert, Collapse, ThemeProvider } from '@mui/material';
+import { useState, useEffect } from 'react';
 
-import AlertTheme from "../../Themes/AlertTheme";
-import "../../assets/style/custom-alert.scss"
+import AlertTheme from '../../Themes/AlertTheme';
+import '../../assets/style/custom-alert.scss'
 
 const CustomAlert = ({ color, title, message }) => {
     const [showAlert, setShowAlert] = useState(true);
@@ -13,13 +13,13 @@ const CustomAlert = ({ color, title, message }) => {
 
     return (
         <ThemeProvider theme={AlertTheme} >
-            <div className="custom-alert-container">
+            <div className='custom-alert-container'>
                 <Collapse in={showAlert}>
                     <Alert
                         icon={false}
                         color={color}
                     >
-                        <p className="strong">{title} &nbsp; </p>
+                        <p className='strong'>{title} &nbsp; </p>
                         <p>{message}</p>
                     </Alert>
                 </Collapse>
@@ -29,7 +29,7 @@ const CustomAlert = ({ color, title, message }) => {
 };
 
 CustomAlert.defaultProps = {
-    color: "info",
+    color: 'info',
 }
 
 export default CustomAlert;

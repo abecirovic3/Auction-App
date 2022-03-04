@@ -4,25 +4,25 @@ import {
     Button,
     Stack,
     Container
-} from "@mui/material";
-import { ThemeProvider, StyledEngineProvider  } from "@mui/material/styles";
-import { useState } from "react";
+} from '@mui/material';
+import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { setRegistered } from '../../features/register/registerSlice';
-import AuthService from "../../services/AuthService";
+import AuthService from '../../services/AuthService';
 
-import MainTheme from "../../Themes/MainTheme";
-import "../../assets/style/form.scss"
+import MainTheme from '../../Themes/MainTheme';
+import '../../assets/style/form.scss'
 
 const Register = () => {
     const navigate = useNavigate();
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const [errors, setErrors] = useState({});
 
@@ -32,18 +32,18 @@ const Register = () => {
         const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
         let err = {};
 
-        if (firstName === "")
-            err.firstName = "Please enter your first name";
-        if (lastName === "")
-            err.lastName = "Please enter your last name";
+        if (firstName === '')
+            err.firstName = 'Please enter your first name';
+        if (lastName === '')
+            err.lastName = 'Please enter your last name';
         if (!email.match(emailRegex))
-            err.email = "Please enter a valid email";
+            err.email = 'Please enter a valid email';
         if (password.length < 8)
-            err.password = "Password must contain at least 8 characters";
+            err.password = 'Password must contain at least 8 characters';
 
         setErrors(err);
 
-        return Object.values(err).every(e => e === "");
+        return Object.values(err).every(e => e === '');
     }
 
     const handleSubmit = () => {
@@ -51,10 +51,10 @@ const Register = () => {
             AuthService.register(firstName, lastName, email, password)
                 .then(response => {
                     dispatch(setRegistered(true));
-                    navigate("/login");
+                    navigate('/login');
 
                 }, err => {
-                    if (err.response.data.hasOwnProperty("message")) {
+                    if (err.response.data.hasOwnProperty('message')) {
                         setErrors({ email: err.response.data.message });
                     } else {
                         setErrors(err.response.data);
@@ -66,17 +66,17 @@ const Register = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={MainTheme}>
-                <div className="form-style">
-                    <Container className="form-container" maxWidth="sm">
+                <div className='form-style'>
+                    <Container className='form-container' maxWidth='sm'>
                         <h5>Register</h5>
 
-                        <Stack width="80%" margin="auto" spacing={5}>
+                        <Stack width='80%' margin='auto' spacing={5}>
                             <Stack spacing={4}>
                                 <Stack spacing={2}>
-                                    <label htmlFor="firstName">First Name</label>
+                                    <label htmlFor='firstName'>First Name</label>
                                     <TextField
-                                        id="firstName"
-                                        variant="outlined"
+                                        id='firstName'
+                                        variant='outlined'
                                         value={firstName}
                                         onChange={e => setFirstName(e.target.value)}
                                         error={!!errors.firstName}
@@ -85,10 +85,10 @@ const Register = () => {
                                 </Stack>
 
                                 <Stack spacing={2}>
-                                    <label htmlFor="lastName">Last Name</label>
+                                    <label htmlFor='lastName'>Last Name</label>
                                     <TextField
-                                        id="Last Name"
-                                        variant="outlined"
+                                        id='Last Name'
+                                        variant='outlined'
                                         value={lastName}
                                         onChange={e => setLastName(e.target.value)}
                                         error={!!errors.lastName}
@@ -97,11 +97,11 @@ const Register = () => {
                                 </Stack>
 
                                 <Stack spacing={2}>
-                                    <label htmlFor="email">Enter Email</label>
+                                    <label htmlFor='email'>Enter Email</label>
                                     <TextField
-                                        id="Last Name"
-                                        variant="outlined"
-                                        type="email"
+                                        id='Last Name'
+                                        variant='outlined'
+                                        type='email'
                                         value={email}
                                         onChange={e => setEmail(e.target.value)}
                                         error={!!errors.email}
@@ -110,11 +110,11 @@ const Register = () => {
                                 </Stack>
 
                                 <Stack spacing={2}>
-                                    <label htmlFor="password">Password</label>
+                                    <label htmlFor='password'>Password</label>
                                     <TextField
-                                        id="Last Name"
-                                        variant="outlined"
-                                        type="password"
+                                        id='Last Name'
+                                        variant='outlined'
+                                        type='password'
                                         value={password}
                                         onChange={e => setPassword(e.target.value)}
                                         error={!!errors.password}
@@ -124,22 +124,22 @@ const Register = () => {
                             </Stack>
 
                             <Stack spacing={2}>
-                                <Button onClick={() => {handleSubmit()}} color={"primary"} variant="contained">Register</Button>
+                                <Button onClick={() => {handleSubmit()}} color='primary' variant='contained'>Register</Button>
                                 {/*Social Media Register*/}
                             </Stack>
 
                             <FormControlLabel
-                                id="registerInfoLabel"
+                                id='registerInfoLabel'
                                 control={
                                     <Button
-                                        onClick={() => {navigate("/login")}}
-                                        className="standardText"
+                                        onClick={() => {navigate('/login')}}
+                                        className='standardText'
                                     >
                                         Login
                                     </Button>
                                 }
-                                label="Already have an account?"
-                                labelPlacement="start"
+                                label='Already have an account?'
+                                labelPlacement='start'
                             />
                         </Stack>
                     </Container>

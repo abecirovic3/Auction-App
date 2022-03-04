@@ -5,25 +5,25 @@ import {
     Button,
     Stack,
     Container
-} from "@mui/material";
-import { ThemeProvider, StyledEngineProvider  } from "@mui/material/styles";
-import { useState } from "react";
+} from '@mui/material';
+import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setRegistered } from '../../features/register/registerSlice';
-import AuthService from "../../services/AuthService";
+import AuthService from '../../services/AuthService';
 
-import CustomAlert from "../Alert/CustomAlert";
+import CustomAlert from '../Alert/CustomAlert';
 
-import MainTheme from "../../Themes/MainTheme";
-import "../../assets/style/form.scss"
+import MainTheme from '../../Themes/MainTheme';
+import '../../assets/style/form.scss'
 
 const Login = () => {
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
     const [errors, setErrors] = useState({});
@@ -36,13 +36,13 @@ const Login = () => {
         let err = {};
 
         if (!email.match(emailRegex))
-            err.email = "Please enter a valid email";
+            err.email = 'Please enter a valid email';
         if (password.length < 8)
-            err.password = "Please enter a valid password";
+            err.password = 'Please enter a valid password';
 
         setErrors(err);
 
-        return Object.values(err).every(e => e === "");
+        return Object.values(err).every(e => e === '');
     }
 
     const handleSubmit = () => {
@@ -51,12 +51,12 @@ const Login = () => {
                 .then(
                     response => {
                         dispatch(setRegistered(false));
-                        navigate("/");
+                        navigate('/');
                     },
                     err => {
                         setErrors({
-                            email: "Please check if you entered correct email",
-                            password: "Please check if you entered correct password"
+                            email: 'Please check if you entered correct email',
+                            password: 'Please check if you entered correct password'
                         });
                     }
                 );
@@ -67,24 +67,24 @@ const Login = () => {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={MainTheme}>
                 {userRegistered && <CustomAlert
-                                        color="success"
-                                        title="Registration successful!"
-                                        message="You may now login."
+                                        color='success'
+                                        title='Registration successful!'
+                                        message='You may now login.'
                                     />
                 }
-                <div className="form-style">
-                    <Container className="form-container" maxWidth="sm">
+                <div className='form-style'>
+                    <Container className='form-container' maxWidth='sm'>
                         <h5>Login</h5>
 
-                        <Stack width="80%" margin="auto" spacing={4}>
+                        <Stack width='80%' margin='auto' spacing={4}>
                             <Stack spacing={2}>
                                 <Stack spacing={4}>
                                     <Stack spacing={2}>
-                                        <label htmlFor="email">Email</label>
+                                        <label htmlFor='email'>Email</label>
                                         <TextField
-                                            id="email"
-                                            variant="outlined"
-                                            type="email"
+                                            id='email'
+                                            variant='outlined'
+                                            type='email'
                                             value={email}
                                             onChange={e => setEmail(e.target.value)}
                                             error={!!errors.email}
@@ -93,11 +93,11 @@ const Login = () => {
                                     </Stack>
 
                                     <Stack spacing={2}>
-                                        <label htmlFor="password">Password</label>
+                                        <label htmlFor='password'>Password</label>
                                         <TextField
-                                            id="password"
-                                            variant="outlined"
-                                            type="password"
+                                            id='password'
+                                            variant='outlined'
+                                            type='password'
                                             value={password}
                                             onChange={e => setPassword(e.target.value)}
                                             error={!!errors.password}
@@ -113,12 +113,12 @@ const Login = () => {
                                             onChange={e => setRememberMe(e.currentTarget.checked)}
                                         />
                                     }
-                                    label="Remember me"
+                                    label='Remember me'
                                 />
                             </Stack>
 
                             <Stack spacing={2}>
-                                <Button onClick={() => {handleSubmit()}} color={"primary"} variant="contained">Login</Button>
+                                <Button onClick={() => {handleSubmit()}} color='primary' variant='contained'>Login</Button>
                                 {/*Social Media Login*/}
                             </Stack>
 

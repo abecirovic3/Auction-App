@@ -12,9 +12,9 @@ const updateLocalAccessToken = (token) => {
     let {user, rememberUser} = getUser();
     user.access_token = token;
     if (rememberUser) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
     } else {
-        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(user));
     }
 };
 
@@ -22,17 +22,17 @@ const updateLocalRefreshToken = (token) => {
     let {user, rememberUser} = getUser();
     user.refresh_token = token;
     if (rememberUser) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
     } else {
-        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(user));
     }
 };
 
 const getUser = () => {
-    let user = JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(localStorage.getItem('user'));
     let rememberUser = true;
     if (!user) {
-        user = JSON.parse(sessionStorage.getItem("user"));
+        user = JSON.parse(sessionStorage.getItem('user'));
         rememberUser = false;
     }
     return {user, rememberUser};
@@ -40,14 +40,14 @@ const getUser = () => {
 
 const setUser = (user, rememberUser) => {
     if (rememberUser) {
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
     } else {
-        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(user));
     }
 };
 
 const removeUser = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem('user');
 };
 
 const TokenService = {

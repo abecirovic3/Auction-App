@@ -1,10 +1,10 @@
-import axios from "axios";
-import TokenService from "./TokenService";
+import axios from 'axios';
+import TokenService from './TokenService';
 
 const instance = axios.create({
-    baseURL: "http://localhost:8080/api/v1",
+    baseURL: 'http://localhost:8080/api/v1',
     headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
     },
 });
 
@@ -12,7 +12,7 @@ instance.interceptors.request.use(
     (config) => {
         const token = TokenService.getLocalAccessToken();
         if (token) {
-            config.headers["Authorization"] = 'Bearer ' + token;
+            config.headers['Authorization'] = 'Bearer ' + token;
         }
         return config;
     },
@@ -28,7 +28,7 @@ instance.interceptors.response.use(
     async (err) => {
         const originalConfig = err.config;
         // TODO implement some whitelist routes logic
-        if (!originalConfig.url.includes("/auth/login") && err.response) {
+        if (!originalConfig.url.includes('/auth/login') && err.response) {
             // Access Token was expired
             if (err.response.status === 403 && !originalConfig._retry) {
                 originalConfig._retry = true;
@@ -36,7 +36,7 @@ instance.interceptors.response.use(
                     const headers = {
                         'Authorization': `Bearer ${TokenService.getLocalRefreshToken()}`
                     }
-                    const rs = await instance.post("/auth/token/refresh", {}, {
+                    const rs = await instance.post('/auth/token/refresh', {}, {
                         headers: headers
                     });
                     const { access_token, refresh_token } = rs.data;
