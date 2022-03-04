@@ -28,7 +28,7 @@ const Register = () => {
 
     const dispatch = useDispatch();
 
-    const validate = () => {
+    function validate() {
         const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
         let err = {};
 

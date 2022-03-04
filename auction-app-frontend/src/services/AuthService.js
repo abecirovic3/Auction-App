@@ -1,7 +1,7 @@
 import api from './Api';
 import TokenService from './TokenService';
 
-const login = (email, password, rememberMe) => {
+function login(email, password, rememberMe) {
     return api
         .post(`/auth/login?email=${email}&password=${password}`, {})
         .then(response => {
@@ -12,18 +12,18 @@ const login = (email, password, rememberMe) => {
         });
 }
 
-const logout = () => {
+function logout() {
     TokenService.removeUser();
-};
+}
 
-const register = (firstName, lastName, email, password) => {
+function register(firstName, lastName, email, password) {
     return api.post('/auth/register', {
         firstName,
         lastName,
         email,
         password
     });
-};
+}
 
 const AuthService = {
     register,
