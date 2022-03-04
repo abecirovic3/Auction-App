@@ -28,6 +28,11 @@ function updateLocalRefreshToken(token) {
     }
 }
 
+function getUserCredentials() {
+    const { user } = getUser();
+    return user?.credentials;
+}
+
 function getUser() {
     let user = JSON.parse(localStorage.getItem('user'));
     let rememberUser = true;
@@ -55,6 +60,7 @@ const TokenService = {
     getLocalAccessToken,
     updateLocalAccessToken,
     updateLocalRefreshToken,
+    getUserCredentials,
     getUser,
     setUser,
     removeUser,
