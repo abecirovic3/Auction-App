@@ -136,7 +136,7 @@ const Register = () => {
                             </Stack>
 
                             <FormControlLabel
-                                id='registerInfoLabel'
+                                className='form-label-info'
                                 control={
                                     <Button
                                         onClick={() => {navigate('/login')}}

@@ -19,7 +19,7 @@ const ForgotPassword = () => {
 
                         <Stack width='80%' margin='auto' spacing={5} paddingBottom={5}>
                             <Stack spacing={2}>
-                                <p id='lostPasswordMsg'>
+                                <p className='form-label-info'>
                                     Lost your password? Please enter your username or email address.
                                     You will receive a link to create a new password via email.
                                 </p>
