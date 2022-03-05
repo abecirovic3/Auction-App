@@ -8,7 +8,6 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
-        console.log(showAlertDuration);
         setTimeout(() => {setShowAlert(false)}, showAlertDuration);
     }, [showAlertDuration]);
 
