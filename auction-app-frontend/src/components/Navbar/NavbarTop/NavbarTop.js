@@ -16,24 +16,26 @@ const NavbarTop = () => {
     return (
         <StyledEngineProvider injectFirst>
             <div className='navbar-top-container'>
-                <SocialMediaBtnContainer />
-                {userLoggedIn ?
-                    <div>
-                        <p className='white'>Hi, {userCredentials?.firstName} {userCredentials?.lastName}</p>
-                        <p className='gray'> | </p>
-                        <Link
-                            to='/'
-                            onClick={() => {
-                                TokenService.removeUser();
-                                dispatch(setLoggedIn(false));
-                            }}
-                        >
-                            Logout
-                        </Link>
-                    </div>
-                    :
-                    <p className='gray'> <Link to='/login'>Login</Link> or <Link to='/register'>Create an account</Link></p>
-                }
+                <div className='navbar-top-content-container'>
+                    <SocialMediaBtnContainer />
+                    {userLoggedIn ?
+                        <div>
+                            <p className='white'>Hi, {userCredentials?.firstName} {userCredentials?.lastName}</p>
+                            <p className='gray'> | </p>
+                            <Link
+                                to='/'
+                                onClick={() => {
+                                    TokenService.removeUser();
+                                    dispatch(setLoggedIn(false));
+                                }}
+                            >
+                                Logout
+                            </Link>
+                        </div>
+                        :
+                        <p className='gray'> <Link to='/login'>Login</Link> or <Link to='/register'>Create an account</Link></p>
+                    }
+                </div>
             </div>
         </StyledEngineProvider>
     );
