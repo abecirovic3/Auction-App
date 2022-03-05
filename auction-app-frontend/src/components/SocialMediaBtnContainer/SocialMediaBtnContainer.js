@@ -6,7 +6,7 @@ import twitterIcon from '../../assets/img/navbarTwitter.svg';
 const SocialMediaBtnContainer = () => {
     return (
         <div>
-            <IconButton onClick={() => {window.open('https://www.facebook.com/AtlantBH'); }}>
+            <IconButton sx={{paddingLeft: 0}} onClick={() => {window.open('https://www.facebook.com/AtlantBH'); }}>
                 <img src={facebookIcon} alt='Facebook' />
             </IconButton>
             <IconButton onClick={() => {window.open('https://www.instagram.com/atlantbh/?hl=en')}}>
