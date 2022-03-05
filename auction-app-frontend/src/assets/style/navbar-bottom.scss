@@ -1,5 +1,7 @@
+@use "base";
+
 .navbar-bottom-container {
-  width: 80%;
+  width: base.$main-width;
   margin: auto;
   img:hover {
     cursor: pointer;

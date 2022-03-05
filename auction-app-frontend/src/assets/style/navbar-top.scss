@@ -1,8 +1,10 @@
+@use "base";
+
 .navbar-top-container {
   background-color: #252525;
 
   .navbar-top-content-container {
-    width: 80%;
+    width: base.$main-width;
     margin-left: auto;
     margin-right: auto;
     display: flex;
