@@ -7,10 +7,16 @@
   background-color: #252525;
   padding: 5px 200px 5px 200px;
 
-  p {
+  p.gray {
     color: #9B9B9B;
   }
 
+  p.gray,
+  p.white {
+    display: inline;
+  }
+
+  p.white,
   a {
     text-decoration: none;
     font-weight: bold;

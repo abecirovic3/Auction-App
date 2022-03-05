@@ -12,10 +12,10 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setRegistered } from '../../features/register/registerSlice';
+import { setLoggedIn } from '../../features/login/loginSlice';
 import AuthService from '../../services/AuthService';
 
 import CustomAlert from '../Alert/CustomAlert';
-
 import MainTheme from '../../Themes/MainTheme';
 import '../../assets/style/form.scss'
 
@@ -36,6 +36,7 @@ const Login = () => {
             .then(
                 response => {
                     dispatch(setRegistered(false));
+                    dispatch(setLoggedIn(true));
                     navigate('/');
                 },
                 err => {
