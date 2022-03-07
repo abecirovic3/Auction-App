@@ -36,13 +36,13 @@ const NavbarBottom = () => {
                     >
                         <Grid
                             item
-                            xs={2}
+                            xs={2.5}
                             textAlign={showSearchAndNavigation() ? '' : 'center'}
                         >
                             <img src={appLogo} alt='Logo' onClick={() => {navigate('/')}} />
                         </Grid>
                         {showSearchAndNavigation() &&
-                            <Grid item xs={10}>
+                            <Grid item xs={9.5}>
                                 <div className='search-navigation-container'>
                                     <OutlinedInput
                                         placeholder='Try enter: Shoes'
