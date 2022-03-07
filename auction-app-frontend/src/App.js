@@ -9,6 +9,7 @@ import Footer from './components/Footer/Footer';
 import PrivacyAndPolicy from './components/PricacyAndPolicy/PrivacyAndPolicy';
 import TermsAndConditions from './components/TermsAndConditions/TermsAndConditions';
 import About from './components/About/About';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                       <Route path='/privacy' element={<PrivacyAndPolicy />} />
                       <Route path='/terms' element={<TermsAndConditions />} />
                       <Route path='/about' element={<About />} />
+                      <Route path='*' element={<NotFound />} />
                   </Routes>
               </div>
               <Footer />
