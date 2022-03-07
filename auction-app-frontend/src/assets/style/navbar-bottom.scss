@@ -22,15 +22,24 @@
       color: #9B9B9B;
     }
 
-    a {
-      text-decoration: none;
+    a.nav-link {
       color: #252525;
       font-weight: 300;
+    }
+
+    a.nav-link-active {
+      color: base.$primary-color;
+      font-weight: 500;
+    }
+
+    a.nav-link,
+    a.nav-link-active {
+      text-decoration: none;
       font-size: 16px;
     }
 
     a:hover {
-      color: #8367D8;
+      color: base.$primary-color;
     }
   }
 }

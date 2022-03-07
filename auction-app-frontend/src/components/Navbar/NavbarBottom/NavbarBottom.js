@@ -13,14 +13,16 @@ const NavbarBottom = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const activeLinkStyle = {
-        color: '#8367D8',
-        fontWeight: '500'
-    }
-
     function showSearchAndNavigation() {
         const path = location.pathname;
         return !path.includes('login') && !path.includes('register') && !path.includes('forgot-password');
+    }
+
+    function activeLink() {
+        const path = location.pathname;
+        if (path.startsWith('/shop')) return 'shop';
+        if (path.startsWith('/account')) return 'account';
+        return 'home';
     }
 
     return (
@@ -58,19 +60,19 @@ const NavbarBottom = () => {
                                     />
                                     <NavLink
                                         to='/'
-                                        style={({ isActive }) => { return isActive ? activeLinkStyle : {} }}
+                                        className={activeLink() === 'home' ? 'nav-link-active' : 'nav-link'}
                                     >
                                         HOME
                                     </NavLink>
                                     <NavLink
                                         to='/shop'
-                                        style={({ isActive }) => { return isActive ? activeLinkStyle : {} }}
+                                        className={activeLink() === 'shop' ? 'nav-link-active' : 'nav-link'}
                                     >
                                         SHOP
                                     </NavLink>
                                     <NavLink
                                         to='/account'
-                                        style={({ isActive }) => { return isActive ? activeLinkStyle : {} }}
+                                        className={activeLink() === 'account' ? 'nav-link-active' : 'nav-link'}
                                     >
                                         MY ACCOUNT
                                     </NavLink>
