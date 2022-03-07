@@ -1,6 +1,8 @@
 package com.atlantbh.auctionappbackend.filter;
 
+import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
+import com.atlantbh.auctionappbackend.service.UserService;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,11 +41,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final Algorithm signAlgorithm;
     private final JwtConfig jwtConfig;
+    private final UserService userService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, Algorithm signAlgorithm, JwtConfig jwtConfig) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, Algorithm signAlgorithm, JwtConfig jwtConfig, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.signAlgorithm = signAlgorithm;
         this.jwtConfig = jwtConfig;
+        this.userService = userService;
     }
 
     @Override
@@ -80,6 +84,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
+        User responseUser = userService.getUserByEmail(user.getUsername());
+
         String accessToken = JwtUtil.createToken(
                 signAlgorithm,
                 user.getUsername(),
@@ -99,7 +105,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(
                 response.getOutputStream(),
-                JwtUtil.getTokensResponseBody(accessToken, refreshToken)
+                JwtUtil.getLoginResponseBody(responseUser, accessToken, refreshToken)
         );
     }
 }

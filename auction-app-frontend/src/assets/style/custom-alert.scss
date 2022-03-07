@@ -1,0 +1,12 @@
+.custom-alert-container {
+  .MuiAlert-message {
+    padding-left: 200px;
+    display: flex;
+    flex-direction: row;
+    font-weight: 500;
+
+    .strong {
+      font-weight: 700;
+    }
+  }
+}

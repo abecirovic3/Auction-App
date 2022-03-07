@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.utils;
 
+import com.atlantbh.auctionappbackend.domain.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -69,5 +70,13 @@ public class JwtUtil {
         tokens.put(ACCESS_TOKEN, accessToken);
         tokens.put(REFRESH_TOKEN, refreshToken);
         return tokens;
+    }
+
+    public static Map<String, Object> getLoginResponseBody(User user, String accessToken, String refreshToken) {
+        Map<String, Object> response = new HashMap<>();
+        response.put(ACCESS_TOKEN, accessToken);
+        response.put(REFRESH_TOKEN, refreshToken);
+        response.put("credentials", user);
+        return response;
     }
 }
