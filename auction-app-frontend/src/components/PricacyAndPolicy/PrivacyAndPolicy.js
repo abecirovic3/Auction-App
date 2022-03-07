@@ -1,5 +1,4 @@
 import BreadCrumbsBar from '../BreadCrumbsBar/BreadCrumbsBar';
-
 import '../../assets/style/static-page.scss'
 
 const PrivacyAndPolicy = () => {

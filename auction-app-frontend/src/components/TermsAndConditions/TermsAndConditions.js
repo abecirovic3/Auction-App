@@ -1,18 +1,18 @@
-import '../../assets/style/static-page.scss'
 import BreadCrumbsBar from '../BreadCrumbsBar/BreadCrumbsBar';
+import '../../assets/style/static-page.scss'
 
 const TermsAndConditions = () => {
     return (
         <div>
             <BreadCrumbsBar title='Terms and Conditions'/>
             <div className='static-page-container'>
-                <div className="static-page-content-container">
+                <div className='static-page-content-container'>
                     <div className='text-container custom-width'>
                         <h1 className='heading-1'>Terms and Conditions for Auction Company</h1>
 
                         <h2 className='heading-2'>Introduction</h2>
                         <p className='text'>These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, Acution accessible at http:auctionapp.com.</p>
-                        <p className='text'>These Terms will be applied fully and affect to your use of this Website. By using this Website, you agreed to accept all terms and conditions written in here. You must not use this Website if you disagree with any of these Website Standard Terms and Conditions. These Terms and Conditions have been generated with the help of the <a href="https://www.termsandcondiitionssample.com">Terms And Conditiions Sample Generator</a>.</p>
+                        <p className='text'>These Terms will be applied fully and affect to your use of this Website. By using this Website, you agreed to accept all terms and conditions written in here. You must not use this Website if you disagree with any of these Website Standard Terms and Conditions. These Terms and Conditions have been generated with the help of the <a href='https://www.termsandcondiitionssample.com'>Terms And Conditiions Sample Generator</a>.</p>
                         <p className='text'>Minors or people below 18 years old are not allowed to use this Website.</p>
                         <h2 className='heading-2'>Intellectual Property Rights</h2>
                         <p className='text'>Other than the content you own, under these Terms, Auction Company and/or its licensors own all the intellectual property rights and materials contained in this Website.</p>

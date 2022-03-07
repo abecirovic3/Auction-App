@@ -31,7 +31,7 @@ const Login = () => {
     const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
 
-    const handleSubmit = () => {
+    function handleSubmit() {
         AuthService.login(email, password, rememberMe)
             .then(
                 response => {
