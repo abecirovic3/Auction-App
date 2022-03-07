@@ -25,10 +25,15 @@ function register(firstName, lastName, email, password) {
     });
 }
 
+function validateToken() {
+    return api.get('/auth/token/validate')
+}
+
 const AuthService = {
     register,
     login,
     logout,
+    validateToken,
 };
 
 export default AuthService;

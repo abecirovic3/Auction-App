@@ -66,6 +66,19 @@ public class AuthController {
         return errors;
     }
 
+    /**
+     * Route used for token validation.
+     * Authorization header will be checked by JwtAuthorizationFilter, because route is not whitelisted.
+     * If authorization succeeds 200 status code is returned, otherwise 403
+     */
+    @GetMapping(path = "/token/validate")
+    public ResponseEntity<String> validateToken() {
+        return new ResponseEntity<>(
+                "Token is valid",
+                HttpStatus.OK
+        );
+    }
+
     @GetMapping(path = "/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);

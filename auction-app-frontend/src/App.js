@@ -1,4 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { setLoggedIn } from './features/login/loginSlice';
+
+import AuthService from './services/AuthService';
+import TokenService from './services/TokenService';
 
 import Home from './components/Home/Home'
 import Register from './components/Register/Register'
@@ -12,6 +19,23 @@ import About from './components/About/About';
 import NotFound from './components/NotFound/NotFound';
 
 function App() {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!TokenService.getUserCredentials()) {
+            dispatch(setLoggedIn(false));
+        } else {
+            AuthService.validateToken()
+                .then(response => {
+                    dispatch(setLoggedIn(true));
+                })
+                .catch(err => {
+                    TokenService.removeUser();
+                    dispatch(setLoggedIn(false));
+                })
+        }
+    });
+
   return (
       <BrowserRouter>
           <Navbar />
