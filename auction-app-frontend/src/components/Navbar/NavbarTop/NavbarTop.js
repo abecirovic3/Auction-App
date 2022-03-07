@@ -1,17 +1,20 @@
 import { StyledEngineProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import TokenService from '../../../services/TokenService';
+import { setLoggedIn } from '../../../features/login/loginSlice';
 
 import SocialMediaBtnContainer from '../../SocialMediaBtnContainer/SocialMediaBtnContainer';
+
 import '../../../assets/style/navbar-top.scss'
-import {setLoggedIn} from '../../../features/login/loginSlice';
 
 const NavbarTop = () => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
     const dispatch = useDispatch();
     const userCredentials = TokenService.getUserCredentials();
+    const navigate = useNavigate();
 
     return (
         <StyledEngineProvider injectFirst>
@@ -27,6 +30,7 @@ const NavbarTop = () => {
                                 onClick={() => {
                                     TokenService.removeUser();
                                     dispatch(setLoggedIn(false));
+                                    navigate('/');
                                 }}
                             >
                                 Logout
