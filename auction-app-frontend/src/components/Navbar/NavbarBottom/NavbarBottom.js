@@ -1,4 +1,4 @@
-import {Grid, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
+import { Grid, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -29,11 +29,12 @@ const NavbarBottom = () => {
         return true;
     }
 
-    function activeLink() {
-        const path = location.pathname;
-        if (path.startsWith('/shop')) return 'shop';
-        if (path.startsWith('/account')) return 'account';
-        return 'home';
+    function isActive(path) {
+        const locationPath = location.pathname
+        if (path === '/') {
+            return !locationPath.startsWith('/shop') && !locationPath.startsWith('/account');
+        }
+        return locationPath.startsWith(path);
     }
 
     return (
@@ -62,7 +63,7 @@ const NavbarBottom = () => {
                                         className='search-bar'
                                         endAdornment={
                                             <InputAdornment position='end' >
-                                                <IconButton onClick={() => console.log('CLICK')}>
+                                                <IconButton>
                                                     <img src={searchIcon} alt='Search' />
                                                 </IconButton>
                                             </InputAdornment>
@@ -71,19 +72,19 @@ const NavbarBottom = () => {
                                     />
                                     <NavLink
                                         to='/'
-                                        className={activeLink() === 'home' ? 'nav-link-active' : 'nav-link'}
+                                        className={isActive('/') ? 'nav-link-active' : 'nav-link'}
                                     >
                                         HOME
                                     </NavLink>
                                     <NavLink
                                         to='/shop'
-                                        className={activeLink() === 'shop' ? 'nav-link-active' : 'nav-link'}
+                                        className={isActive('/shop') ? 'nav-link-active' : 'nav-link'}
                                     >
                                         SHOP
                                     </NavLink>
                                     <NavLink
                                         to='/account'
-                                        className={activeLink() === 'account' ? 'nav-link-active' : 'nav-link'}
+                                        className={isActive('/account') ? 'nav-link-active' : 'nav-link'}
                                     >
                                         MY ACCOUNT
                                     </NavLink>
