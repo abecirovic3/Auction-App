@@ -11,13 +11,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setRegistered } from '../../features/register/registerSlice';
-import { setLoggedIn } from '../../features/login/loginSlice';
-import AuthService from '../../services/AuthService';
+import { setRegistered } from 'features/register/registerSlice';
+import { setLoggedIn } from 'features/login/loginSlice';
+import AuthService from 'services/AuthService';
 
-import CustomAlert from '../Alert/CustomAlert';
-import MainTheme from '../../Themes/MainTheme';
-import '../../assets/style/form.scss'
+import CustomAlert from 'components/Alert/CustomAlert';
+
+import MainTheme from 'themes/MainTheme';
+import 'assets/style/form.scss'
 
 const Login = () => {
     const navigate = useNavigate();

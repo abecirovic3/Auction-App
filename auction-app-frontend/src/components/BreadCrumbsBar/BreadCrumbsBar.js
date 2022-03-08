@@ -1,8 +1,9 @@
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
-
-import '../../assets/style/bread-crumbs-bar.scss';
 import { NavLink } from 'react-router-dom';
-import { routes } from '../../configuration/RoutesConfig';
+
+import { routes } from 'configuration/RoutesConfig';
+
+import 'assets/style/bread-crumbs-bar.scss';
 
 const BreadCrumbsBar = ({ title }) => {
     const breadCrumbs = useBreadcrumbs(routes);

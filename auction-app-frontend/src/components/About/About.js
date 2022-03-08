@@ -1,11 +1,11 @@
 import { Grid } from '@mui/material';
 
-import about_1 from '../../assets/img/about1.png';
-import about_2 from '../../assets/img/about2.png';
-import about_3 from '../../assets/img/about3.png';
+import about_1 from 'assets/img/about1.png';
+import about_2 from 'assets/img/about2.png';
+import about_3 from 'assets/img/about3.png';
 
-import '../../assets/style/static-page.scss'
-import BreadCrumbsBar from '../BreadCrumbsBar/BreadCrumbsBar';
+import 'assets/style/static-page.scss'
+import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 
 const About = () => {
     return (

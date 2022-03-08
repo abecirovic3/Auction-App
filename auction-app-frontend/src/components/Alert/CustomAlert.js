@@ -1,8 +1,8 @@
 import { Alert, Collapse, ThemeProvider } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-import AlertTheme from '../../Themes/AlertTheme';
-import '../../assets/style/custom-alert.scss'
+import AlertTheme from 'themes/AlertTheme';
+import 'assets/style/custom-alert.scss'
 
 const CustomAlert = ({ color, title, message, showAlertDuration }) => {
     const [showAlert, setShowAlert] = useState(true);

@@ -3,11 +3,11 @@ import { NavLink } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import appLogo from '../../../assets/img/appLogo.svg';
-import searchIcon from '../../../assets/img/search.svg';
+import appLogo from 'assets/img/appLogo.svg';
+import searchIcon from 'assets/img/search.svg';
 
-import MainTheme from '../../../Themes/MainTheme';
-import '../../../assets/style/navbar-bottom.scss';
+import MainTheme from 'themes/MainTheme';
+import 'assets/style/navbar-bottom.scss';
 
 const NavbarBottom = () => {
     const location = useLocation();

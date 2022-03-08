@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 
-import '../../assets/style/footer.scss'
-import SocialMediaBtnContainer from '../SocialMediaBtnContainer/SocialMediaBtnContainer';
+import SocialMediaBtnContainer from 'components/SocialMediaBtnContainer/SocialMediaBtnContainer';
+
+import 'assets/style/footer.scss'
 
 const Footer = () => {
     return (

@@ -1,7 +1,7 @@
 import { IconButton } from '@mui/material';
-import facebookIcon from '../../assets/img/navbarFacebook.svg';
-import instagramIcon from '../../assets/img/navbarInstagram.svg';
-import twitterIcon from '../../assets/img/navbarTwitter.svg';
+import facebookIcon from 'assets/img/navbarFacebook.svg';
+import instagramIcon from 'assets/img/navbarInstagram.svg';
+import twitterIcon from 'assets/img/navbarTwitter.svg';
 
 const SocialMediaBtnContainer = () => {
     return (

@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import { AppBar } from '@mui/material';
-import NavbarTop from './NavbarTop/NavbarTop';
-import NavbarBottom from './NavbarBottom/NavbarBottom';
+
+import NavbarTop from 'components/Navbar/NavbarTop/NavbarTop';
+import NavbarBottom from 'components/Navbar/NavbarBottom/NavbarBottom';
 
 const Navbar = () => {
     const isSetNotFoundError = useSelector((state) => state.notFoundHandler.notFoundError);

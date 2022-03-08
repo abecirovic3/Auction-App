@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import TokenService from '../../../services/TokenService';
-import { setLoggedIn } from '../../../features/login/loginSlice';
+import TokenService from 'services/TokenService';
+import { setLoggedIn } from 'features/login/loginSlice';
 
-import SocialMediaBtnContainer from '../../SocialMediaBtnContainer/SocialMediaBtnContainer';
+import SocialMediaBtnContainer from 'components/SocialMediaBtnContainer/SocialMediaBtnContainer';
 
-import '../../../assets/style/navbar-top.scss'
+import 'assets/style/navbar-top.scss'
 
 const NavbarTop = () => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);

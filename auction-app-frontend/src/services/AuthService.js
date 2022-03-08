@@ -1,5 +1,5 @@
-import api from './Api';
-import TokenService from './TokenService';
+import api from 'services/Api';
+import TokenService from 'services/TokenService';
 
 function login(email, password, rememberMe) {
     return api

@@ -6,8 +6,8 @@ import {
 } from '@mui/material';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 
-import MainTheme from '../../Themes/MainTheme';
-import '../../assets/style/form.scss'
+import MainTheme from 'themes/MainTheme';
+import 'assets/style/form.scss'
 
 const ForgotPassword = () => {
     return (

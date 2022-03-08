@@ -10,11 +10,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { setRegistered } from '../../features/register/registerSlice';
-import AuthService from '../../services/AuthService';
+import { setRegistered } from 'features/register/registerSlice';
+import AuthService from 'services/AuthService';
 
-import MainTheme from '../../Themes/MainTheme';
-import '../../assets/style/form.scss'
+import MainTheme from 'themes/MainTheme';
+import 'assets/style/form.scss'
 
 const Register = () => {
     const navigate = useNavigate();

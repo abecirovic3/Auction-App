@@ -1,5 +1,6 @@
-import BreadCrumbsBar from '../BreadCrumbsBar/BreadCrumbsBar';
-import '../../assets/style/static-page.scss'
+import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
+
+import 'assets/style/static-page.scss'
 
 const TermsAndConditions = () => {
     return (
