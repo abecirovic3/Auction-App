@@ -13,9 +13,20 @@ const NavbarBottom = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    const hideSearchAndNavigationPaths = [
+        'login',
+        'register',
+        'forgot-password',
+    ];
+
     function showSearchAndNavigation() {
         const path = location.pathname;
-        return !path.includes('login') && !path.includes('register') && !path.includes('forgot-password');
+        for (const p of hideSearchAndNavigationPaths) {
+            if (path.includes(p)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function activeLink() {
