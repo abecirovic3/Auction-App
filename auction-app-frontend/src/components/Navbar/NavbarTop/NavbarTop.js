@@ -16,6 +16,12 @@ const NavbarTop = () => {
     const userCredentials = TokenService.getUserCredentials();
     const navigate = useNavigate();
 
+    function logout() {
+        TokenService.removeUser();
+        dispatch(setLoggedIn(false));
+        navigate('/');
+    }
+
     return (
         <StyledEngineProvider injectFirst>
             <div className='navbar-top-container'>
@@ -27,11 +33,7 @@ const NavbarTop = () => {
                             <p className='gray'> | </p>
                             <Link
                                 to='/'
-                                onClick={() => {
-                                    TokenService.removeUser();
-                                    dispatch(setLoggedIn(false));
-                                    navigate('/');
-                                }}
+                                onClick={() => {logout()}}
                             >
                                 Logout
                             </Link>
