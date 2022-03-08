@@ -1,0 +1,49 @@
+@use "base";
+
+.static-page-container {
+  width: base.$main-width;
+  margin-left: auto;
+  margin-right: auto;
+
+  .heading-1 {
+    font-weight: 400;
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+
+  .static-page-content-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 20px;
+  }
+
+  .text-container {
+    .heading-2 {
+      font-weight: 400;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .text {
+      font-size: 16px;
+      color: #9B9B9B;
+      margin-bottom: 20px;
+    }
+
+    .list {
+      margin-left: 30px;
+      margin-bottom: 20px;
+      color: #9B9B9B;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .custom-width {
+    flex-basis: 58%;
+  }
+}

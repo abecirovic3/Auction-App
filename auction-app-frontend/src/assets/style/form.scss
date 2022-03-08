@@ -1,0 +1,61 @@
+@use 'base';
+
+.form-style {
+
+    h5 {
+        font-weight: 700;
+        font-size: 24px;
+        margin-top: 0;
+        margin-bottom: 40px;
+        padding: 20px;
+        text-align: center;
+        background-color: base.$background-color;
+    }
+
+    .form-container {
+        padding: 0 0 20px;
+        border: 1px solid base.$border-color;
+    }
+
+    .MuiInputBase-root {
+        color: #9B9B9B;
+        background-color: base.$background-color;
+        border: base.$border-color;
+    }
+
+    .MuiButton-root,
+    .MuiInputBase-root {
+        border-radius: 0;
+        height: 3.5em;
+    }
+
+    .social-media-stack {
+        .MuiButton-root {
+            width: 50%;
+            border-color: base.$border-color;
+            text-transform: capitalize;
+            color: black;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+    }
+
+    .standardText {
+        text-transform: none;
+    }
+
+    .MuiCheckbox-root {
+        padding-left: 0;
+        color: base.$border-color;
+        &.Mui-checked {
+            color: base.$primary-color;
+        }
+    }
+
+    .form-label-info {
+        color: #9B9B9B;
+        justify-content: center;
+    }
+}

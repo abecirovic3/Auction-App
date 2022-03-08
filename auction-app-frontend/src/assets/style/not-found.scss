@@ -1,0 +1,33 @@
+@use "base";
+
+.not-found-container {
+  width: fit-content;
+  text-align: center;
+  margin: 0 auto 50px auto;
+
+  .status-code {
+    font-size: 192px;
+    font-weight: 400;
+    color: base.$primary-color;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .message {
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 30px;
+  }
+
+  .back-button {
+    border: 2px solid base.$primary-color;
+    border-radius: 0;
+    font-size: 18px;
+    color: black;
+  }
+
+  .back-button:hover {
+    border: 2px solid base.$primary-color;
+    background-color: #F5F5F5;
+  }
+}
