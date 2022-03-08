@@ -40,58 +40,63 @@ const NavbarBottom = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={MainTheme}>
-                <div className='navbar-bottom-container'>
-                    <Grid
-                        container
-                        columnSpacing={2}
-                        justifyContent='space-around'
-                        paddingTop={2}
-                        paddingBottom={2}
-                    >
+                <div
+                    className="navbar-bottom-container"
+                    style={!showSearchAndNavigation() ? {borderBottom: '1px solid #D8D8D8'} : {}}
+                >
+                    <div className='navbar-bottom-content-container'>
                         <Grid
-                            item
-                            xs={2.5}
-                            textAlign={showSearchAndNavigation() ? '' : 'center'}
+                            container
+                            columnSpacing={2}
+                            justifyContent='space-around'
+                            paddingTop={2}
+                            paddingBottom={2}
                         >
-                            <img src={appLogo} alt='Logo' onClick={() => {navigate('/')}} />
-                        </Grid>
-                        {showSearchAndNavigation() &&
-                            <Grid item xs={9.5}>
-                                <div className='search-navigation-container'>
-                                    <OutlinedInput
-                                        placeholder='Try enter: Shoes'
-                                        className='search-bar'
-                                        endAdornment={
-                                            <InputAdornment position='end' >
-                                                <IconButton>
-                                                    <img src={searchIcon} alt='Search' />
-                                                </IconButton>
-                                            </InputAdornment>
-
-                                        }
-                                    />
-                                    <NavLink
-                                        to='/'
-                                        className={isActive('/') ? 'nav-link-active' : 'nav-link'}
-                                    >
-                                        HOME
-                                    </NavLink>
-                                    <NavLink
-                                        to='/shop'
-                                        className={isActive('/shop') ? 'nav-link-active' : 'nav-link'}
-                                    >
-                                        SHOP
-                                    </NavLink>
-                                    <NavLink
-                                        to='/account'
-                                        className={isActive('/account') ? 'nav-link-active' : 'nav-link'}
-                                    >
-                                        MY ACCOUNT
-                                    </NavLink>
-                                </div>
+                            <Grid
+                                item
+                                xs={2.5}
+                                textAlign={showSearchAndNavigation() ? '' : 'center'}
+                            >
+                                <img src={appLogo} alt='Logo' onClick={() => {navigate('/')}} />
                             </Grid>
-                        }
-                    </Grid>
+                            {showSearchAndNavigation() &&
+                                <Grid item xs={9.5}>
+                                    <div className='search-navigation-container'>
+                                        <OutlinedInput
+                                            placeholder='Try enter: Shoes'
+                                            className='search-bar'
+                                            endAdornment={
+                                                <InputAdornment position='end' >
+                                                    <IconButton>
+                                                        <img src={searchIcon} alt='Search' />
+                                                    </IconButton>
+                                                </InputAdornment>
+
+                                            }
+                                        />
+                                        <NavLink
+                                            to='/'
+                                            className={isActive('/') ? 'nav-link-active' : 'nav-link'}
+                                        >
+                                            HOME
+                                        </NavLink>
+                                        <NavLink
+                                            to='/shop'
+                                            className={isActive('/shop') ? 'nav-link-active' : 'nav-link'}
+                                        >
+                                            SHOP
+                                        </NavLink>
+                                        <NavLink
+                                            to='/account'
+                                            className={isActive('/account') ? 'nav-link-active' : 'nav-link'}
+                                        >
+                                            MY ACCOUNT
+                                        </NavLink>
+                                    </div>
+                                </Grid>
+                            }
+                        </Grid>
+                    </div>
                 </div>
             </ThemeProvider>
         </StyledEngineProvider>
