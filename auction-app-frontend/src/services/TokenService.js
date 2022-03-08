@@ -53,6 +53,7 @@ function setUser(user, rememberUser) {
 
 function removeUser() {
     localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
 }
 
 const TokenService = {

@@ -11,13 +11,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setRegistered } from '../../features/register/registerSlice';
-import AuthService from '../../services/AuthService';
+import { setRegistered } from 'features/register/registerSlice';
+import { setLoggedIn } from 'features/login/loginSlice';
+import AuthService from 'services/AuthService';
 
-import CustomAlert from '../Alert/CustomAlert';
+import CustomAlert from 'components/Alert/CustomAlert';
 
-import MainTheme from '../../Themes/MainTheme';
-import '../../assets/style/form.scss'
+import MainTheme from 'themes/MainTheme';
+import 'assets/style/form.scss'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -31,11 +32,12 @@ const Login = () => {
     const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
 
-    const handleSubmit = () => {
+    function handleSubmit() {
         AuthService.login(email, password, rememberMe)
             .then(
                 response => {
                     dispatch(setRegistered(false));
+                    dispatch(setLoggedIn(true));
                     navigate('/');
                 },
                 err => {
