@@ -29,6 +29,13 @@
         <li><a href="#backend-prerequisites">Backend Prerequisites</a></li>
       </ul>
     </li>
+    <li>
+      <a href="#deployment">Deployment</a>
+      <ul>
+        <li><a href="#frontend-application">Frontend Application</a></li>
+        <li><a href="#backend-application">Backend Application</a></li>
+      </ul>
+    </li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -79,6 +86,17 @@ If everything went well the server should start and the connection to the databa
 
 To check available routes open [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
 
+## Deployment
+
+<a href="https://www.heroku.com/" target="_blank">Heroku</a> is used for application deployment.
+
+### Frontend Application
+
+Frontend ReactJS application is deployed at <a href="https://auction-app-1.herokuapp.com/" target="_blank">https://auction-app-1.herokuapp.com/</a>.
+
+### Backend Application
+
+Backend Spring Boot application is deployed at <a href="https://auction-api-1.herokuapp.com/" target="_blank">https://auction-api-1.herokuapp.com/</a>.
 
 ## Contact
 
