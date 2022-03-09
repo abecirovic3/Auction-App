@@ -7,7 +7,7 @@ import {
     Container
 } from '@mui/material';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -32,11 +32,16 @@ const Login = () => {
     const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        return () => {
+            dispatch(setRegistered(false));
+        }
+    })
+
     function handleSubmit() {
         AuthService.login(email, password, rememberMe)
             .then(
                 response => {
-                    dispatch(setRegistered(false));
                     dispatch(setLoggedIn(true));
                     navigate('/');
                 },
