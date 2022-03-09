@@ -2,10 +2,10 @@ import {
     TextField,
     Checkbox,
     FormControlLabel,
-    Button,
     Stack,
     Container
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,6 +28,7 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
 
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
@@ -39,13 +40,16 @@ const Login = () => {
     })
 
     function handleSubmit() {
+        setLoading(true);
         AuthService.login(email, password, rememberMe)
             .then(
                 response => {
+                    setLoading(false);
                     dispatch(setLoggedIn(true));
                     navigate('/');
                 },
                 err => {
+                    setLoading(false);
                     setErrors({
                         email: 'Please check if you entered correct email',
                         password: 'Please check if you entered correct password'
@@ -109,7 +113,16 @@ const Login = () => {
                             </Stack>
 
                             <Stack spacing={2}>
-                                <Button onClick={() => {handleSubmit()}} color='primary' variant='contained'>Login</Button>
+                                <LoadingButton
+                                    loading={loading}
+                                    loadingPosition='end'
+                                    endIcon={<div/>}
+                                    color='primary'
+                                    variant='contained'
+                                    onClick={() => {handleSubmit()}}
+                                >
+                                    Login
+                                </LoadingButton>
                                 {/*Social Media Login*/}
                             </Stack>
 

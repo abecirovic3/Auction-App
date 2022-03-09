@@ -29,6 +29,11 @@
         height: 3.5em;
     }
 
+    .MuiLoadingButton-loading {
+        background-color: base.$primary-color;
+        color: white;
+    }
+
     .social-media-stack {
         .MuiButton-root {
             width: 50%;

@@ -5,6 +5,7 @@ import {
     Stack,
     Container
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +26,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
 
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -53,14 +55,17 @@ const Register = () => {
         return Object.keys(err).length === 0;
     }
 
-    const handleSubmit = () => {
+    function handleSubmit() {
         if (validate()) {
+            setLoading(true);
             AuthService.register(firstName, lastName, email, password)
                 .then(response => {
+                    setLoading(false);
                     dispatch(setRegistered(true));
                     navigate('/login');
 
                 }, err => {
+                    setLoading(false);
                     if (err.response.data.hasOwnProperty('message')) {
                         setErrors({ email: err.response.data.message });
                     } else {
@@ -131,7 +136,16 @@ const Register = () => {
                             </Stack>
 
                             <Stack spacing={2}>
-                                <Button onClick={() => {handleSubmit()}} color='primary' variant='contained'>Register</Button>
+                                <LoadingButton
+                                    loading={loading}
+                                    loadingPosition='end'
+                                    endIcon={<div/>}
+                                    color='primary'
+                                    variant='contained'
+                                    onClick={() => {handleSubmit()}}
+                                >
+                                    Register
+                                </LoadingButton>
                                 {/*Social Media Register*/}
                             </Stack>
 
