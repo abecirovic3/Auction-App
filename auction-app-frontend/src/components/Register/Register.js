@@ -50,7 +50,7 @@ const Register = () => {
 
         setErrors(err);
 
-        return Object.values(err).every(e => e);
+        return Object.keys(err).length === 0;
     }
 
     const handleSubmit = () => {
