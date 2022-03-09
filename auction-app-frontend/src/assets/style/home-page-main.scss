@@ -1,0 +1,10 @@
+@use "base";
+
+.home-page-main-container {
+  color: base.$background-color;
+
+  .home-page-main-content-container {
+    width: base.$main-width;
+    margin: auto;
+  }
+}

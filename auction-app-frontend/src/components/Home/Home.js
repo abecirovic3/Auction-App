@@ -1,8 +1,9 @@
+import HomeMain from 'components/Home/HomeMain/HomeMain';
+
 const Home = () => {
     return (
-        <div style={{textAlign: 'center'}}>
-            <h1>Auction App</h1>
-            <p>Under construction :)</p>
+        <div>
+            <HomeMain />
         </div>
     );
 };
