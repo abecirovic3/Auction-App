@@ -49,6 +49,7 @@ const HomeMain = () => {
                                     <h3 className='product-start-price'>Start From $59.00</h3>
                                     <p className='product-description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit odio a erat lobortis auctor. Curabitur sodales pharetra placerat. Aenean auctor luctus tempus. Cras laoreet et magna in dignissim. Nam et tincidunt augue. Vivamus quis malesuada velit. In hac habitasse platea dictumst. </p>
                                     <Button
+                                        disabled={true}
                                         variant='outlined'
                                         className='bid-now-btn'
                                         endIcon={<img src={bidNowIcon} alt='Bid Now' />}
