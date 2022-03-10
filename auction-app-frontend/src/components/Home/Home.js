@@ -1,5 +1,5 @@
 import HomeMain from 'components/Home/HomeMain/HomeMain';
-import HomeProductsTabContainer from 'components/Home/HomeItemsTabContainer/HomeProductsTabContainer';
+import HomeProductsTabContainer from 'components/Home/HomeProductsTabContainer/HomeProductsTabContainer';
 
 import 'assets/style/home-page.scss';
 
