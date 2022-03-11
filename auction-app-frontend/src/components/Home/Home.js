@@ -1,8 +1,13 @@
+import HomeMain from 'components/Home/HomeMain/HomeMain';
+import HomeProductsTabContainer from 'components/Home/HomeProductsTabContainer/HomeProductsTabContainer';
+
+import 'assets/style/home-page.scss';
+
 const Home = () => {
     return (
-        <div style={{textAlign: 'center'}}>
-            <h1>Auction App</h1>
-            <p>Under construction :)</p>
+        <div className='home-page-container'>
+            <HomeMain />
+            <HomeProductsTabContainer />
         </div>
     );
 };
