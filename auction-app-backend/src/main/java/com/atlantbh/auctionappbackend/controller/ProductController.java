@@ -26,18 +26,30 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping(path = "/all-products/last-added")
+    @GetMapping(path = "/all-products/last-added", params = {"page", "size"})
     public ResponseEntity<Map<String, Object>> getAllNewestProductsPaginated(
             @RequestParam("page") int page,
             @RequestParam("size") int size
     ) {
         Page<Product> productsPage = productService.getNewestProducts(page, size);
-        Map<String, Object> response = new HashMap<>();
-        response.put("products", productsPage.getContent());
-        response.put("isLastPage", productsPage.isLast());
+        return getPaginatedProductsResponse(productsPage);
+    }
 
+    @GetMapping(path = "/all-products/first-done", params = {"page", "size"})
+    public ResponseEntity<Map<String, Object>> getAllFirstToEndProductsPaginated(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
+    ) {
+        Page<Product> productsPage = productService.getFirstToEndProducts(page, size);
+        return getPaginatedProductsResponse(productsPage);
+    }
+
+    private ResponseEntity<Map<String, Object>> getPaginatedProductsResponse(Page<Product> productsPage) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("products", productsPage.getContent());
+        responseBody.put("isLastPage", productsPage.isLast());
         return new ResponseEntity<>(
-                response,
+                responseBody,
                 HttpStatus.OK
         );
     }

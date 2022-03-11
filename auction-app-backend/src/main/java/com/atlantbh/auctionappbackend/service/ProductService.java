@@ -20,4 +20,8 @@ public class ProductService {
     public Page<Product> getNewestProducts(int page, int size) {
         return productRepository.findAll(PageRequest.of(page, size, Sort.by("startDate").descending()));
     }
+
+    public Page<Product> getFirstToEndProducts(int page, int size) {
+        return productRepository.findAll(PageRequest.of(page, size, Sort.by("endDate")));
+    }
 }
