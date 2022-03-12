@@ -14,7 +14,7 @@ const Product = ({ name, startPrice, img, imgAlt }) => {
 };
 
 Product.defaultProps = {
-    imgAlt: 'Product',
+    imgAlt: 'Image',
 }
 
 export default Product;
