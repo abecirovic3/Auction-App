@@ -92,6 +92,12 @@ const HomeProductsTabContainer = () => {
         }
     }
 
+    function handleProductsScroll() {
+        if (loadedInitialProducts === true) {
+            setPage(page + 1);
+        }
+    }
+
     return (
         <div className="home-product-tabs-container">
             <div className="home-product-tabs-content-container">
@@ -115,7 +121,7 @@ const HomeProductsTabContainer = () => {
                     :
                     <InfiniteScroll
                         className='infinite-scroll-grid'
-                        next={() => {if (loadedInitialProducts === true) setPage(page + 1)}}
+                        next={handleProductsScroll}
                         hasMore={!isLastPage}
                         loader={<p className='loading-label'>Loading...</p>}
                         dataLength={products.length}
