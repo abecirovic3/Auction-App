@@ -65,27 +65,25 @@ const HomeProductsTabContainer = () => {
     }
 
     function fetchProductsForTab(tab, page, size, tabChanged) {
-        setTimeout(() => {
-            if (isLastPage) return;
+        if (isLastPage) return;
 
-            let getProducts = ProductService.getNewArrivalsProducts;
-            if (tab.lastChance) {
-                getProducts = ProductService.getLastChanceProducts;
-            }
+        let getProducts = ProductService.getNewArrivalsProducts;
+        if (tab.lastChance) {
+            getProducts = ProductService.getLastChanceProducts;
+        }
 
-            getProducts(page, size)
-                .then(response => {
-                    setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
-                    if (tabChanged) {
-                        setProducts(response.data.products);
-                    } else {
-                        setProducts([...products, ...response.data.products]);
-                    }
-                })
-                .catch(err => {
-                    setBackendError(err.response.data);
-                });
-        }, 1500);
+        getProducts(page, size)
+            .then(response => {
+                setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
+                if (tabChanged) {
+                    setProducts(response.data.products);
+                } else {
+                    setProducts([...products, ...response.data.products]);
+                }
+            })
+            .catch(err => {
+                setBackendError(err.response.data);
+            });
     }
 
     function handleTabChange(tab) {
