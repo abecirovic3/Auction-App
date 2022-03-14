@@ -1,0 +1,22 @@
+.product-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .name {
+    font-size: 24px;
+    color: #252525;
+    margin-bottom: 5px;
+  }
+
+  .start-price-label {
+    color: #9B9B9B;
+    display: inline;
+  }
+
+  .price-tag {
+    color: #8367D8;
+    font-size: 18px;
+    display: inline;
+  }
+}
