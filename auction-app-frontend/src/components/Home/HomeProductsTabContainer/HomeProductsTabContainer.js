@@ -139,7 +139,7 @@ const HomeProductsTabContainer = () => {
                         {
                             products.map(product => (
                                 <div key={product.id} className='grid-item'>
-                                    <Product img={productImage} name={product.name} startPrice={product.startPrice} />
+                                    <Product img={product.imageUrl || productImage} name={product.name} startPrice={product.startPrice} />
                                 </div>
                             ))
                         }
