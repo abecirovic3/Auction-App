@@ -26,12 +26,12 @@ public class ProductController {
     public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
-            @RequestParam(defaultValue = "startDate,desc") String[] sort
+            @RequestParam(defaultValue = "startDate") String sortKey,
+            @RequestParam(defaultValue = "desc") String sortDirection
     ) {
-        PaginatedResponse<Product> response = productService.getAllProductsPaginated(page, size, sort);
         return new ResponseEntity<>(
-                response,
-                response == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK
+                productService.getAllProductsPaginated(page, size, sortKey, sortDirection),
+                HttpStatus.OK
         );
     }
 }

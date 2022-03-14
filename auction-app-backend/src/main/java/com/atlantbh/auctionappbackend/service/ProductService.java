@@ -9,7 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,29 +25,34 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public PaginatedResponse<Product> getAllProductsPaginated(int page, int size, String[] sort) {
-        try {
-            List<Order> orders = new ArrayList<>();
-            if (sort[0].contains(",")) {
-                // sort by more than one column
-                for (String sortOrder : sort) {
-                    String[] _sort = sortOrder.split(",");
-                    orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
-                }
-            } else {
-                orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+    public PaginatedResponse<Product> getAllProductsPaginated(int page, int size, String sortKey, String sortDirection) {
+        List<Order> orders = new ArrayList<>();
+
+        if (sortKey.contains(",")) {
+            String[] _sortKeys = sortKey.split(",");
+            String[] _sortDirections = sortDirection.split(",");
+
+            if (_sortKeys.length != _sortDirections.length) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "The number of sortKeys must match the number of sortDirections"
+                );
             }
 
-            Page<Product> pageProducts = productRepository.findAll(PageRequest.of(page, size, Sort.by(orders)));
-            return new PaginatedResponse<>(
-                    pageProducts.getContent(),
-                    pageProducts.getNumber(),
-                    pageProducts.getTotalElements(),
-                    pageProducts.getTotalPages()
-            );
-        } catch (Exception e) {
-            return null;
+            for (int i = 0; i < _sortKeys.length; i++) {
+                orders.add(new Order(getSortDirection(_sortDirections[i]), _sortKeys[i]));
+            }
+        } else {
+            orders.add(new Order(getSortDirection(sortDirection), sortKey));
         }
+
+        Page<Product> pageProducts = productRepository.findAll(PageRequest.of(page, size, Sort.by(orders)));
+        return new PaginatedResponse<>(
+                pageProducts.getContent(),
+                pageProducts.getNumber(),
+                pageProducts.getTotalElements(),
+                pageProducts.getTotalPages()
+        );
     }
 
     private Direction getSortDirection(String direction) {

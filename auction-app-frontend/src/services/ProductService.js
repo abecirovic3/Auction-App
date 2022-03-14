@@ -1,11 +1,11 @@
 import api from 'services/Api';
 
 function getNewArrivalsProducts(page, size) {
-    return api.get(`/products?page=${page}&size=${size}&sort=startDate,desc`);
+    return api.get(`/products?page=${page}&size=${size}&sortKey=startDate&sortDirection=desc`);
 }
 
 function getLastChanceProducts(page, size) {
-    return api.get(`/products?page=${page}&size=${size}&sort=endDate,asc`);
+    return api.get(`/products?page=${page}&size=${size}&sortKey=endDate&sortDirection=asc`);
 }
 
 const ProductService = {
