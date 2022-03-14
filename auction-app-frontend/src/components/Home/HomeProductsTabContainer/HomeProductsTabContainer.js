@@ -54,7 +54,10 @@ const HomeProductsTabContainer = () => {
     }, [activeTab]);
 
     function setTabToActive(tab) {
-        const tabSelector = {newArrivals: false, lastChance: false};
+        const tabSelector = {
+            newArrivals: false,
+            lastChance: false
+        };
         tabSelector[tab] = true;
         setActiveTab(tabSelector);
     }
@@ -70,7 +73,7 @@ const HomeProductsTabContainer = () => {
 
             getProducts(page, size)
                 .then(response => {
-                    setIsLastPage(response.data.isLastPage);
+                    setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
                     if (tabChanged) {
                         setProducts(response.data.products);
                     } else {
