@@ -34,6 +34,7 @@ public class Product {
     @Column(nullable = false)
     private LocalDate endDate;
 
+    private String imageUrl;
     private Integer size;
     private String color;
 
@@ -66,7 +67,8 @@ public class Product {
                     LocalDate startDate,
                     LocalDate endDate,
                     Integer size,
-                    String color
+                    String color,
+                    String imageUrl
     ) {
         this.id = id;
         this.name = name;
@@ -76,6 +78,7 @@ public class Product {
         this.endDate = endDate;
         this.size = size;
         this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -140,5 +143,13 @@ public class Product {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
