@@ -2,11 +2,17 @@ package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
+import com.atlantbh.auctionappbackend.response.ProductPaginated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -17,11 +23,32 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<Product> getNewestProducts(int page, int size) {
-        return productRepository.findAll(PageRequest.of(page, size, Sort.by("startDate").descending()));
+    public ProductPaginated getAllProductsPaginated(int page, int size, String[] sort) {
+        try {
+            List<Order> orders = new ArrayList<>();
+            if (sort[0].contains(",")) {
+                // sort by more than one column
+                for (String sortOrder : sort) {
+                    String[] _sort = sortOrder.split(",");
+                    orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+                }
+            } else {
+                orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+            }
+
+            Page<Product> pageProducts = productRepository.findAll(PageRequest.of(page, size, Sort.by(orders)));
+            return new ProductPaginated(
+                    pageProducts.getContent(),
+                    pageProducts.getNumber(),
+                    pageProducts.getTotalElements(),
+                    pageProducts.getTotalPages()
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public Page<Product> getFirstToEndProducts(int page, int size) {
-        return productRepository.findAll(PageRequest.of(page, size, Sort.by("endDate")));
+    private Direction getSortDirection(String direction) {
+        return direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
     }
 }
