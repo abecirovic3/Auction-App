@@ -1,27 +1,25 @@
 package com.atlantbh.auctionappbackend.response;
 
-import com.atlantbh.auctionappbackend.domain.Product;
-
 import java.util.List;
 
-public class ProductPaginated {
-    private List<Product> products;
+public class PaginatedResponse<T> {
+    private List<T> products;
     private int currentPage;
     private long totalElements;
     private int totalPages;
 
-    public ProductPaginated(List<Product> products, int currentPage, long totalElements, int totalPages) {
+    public PaginatedResponse(List<T> products, int currentPage, long totalElements, int totalPages) {
         this.products = products;
         this.currentPage = currentPage;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
     }
 
-    public List<Product> getProducts() {
+    public List<T> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<T> products) {
         this.products = products;
     }
 
@@ -37,7 +35,7 @@ public class ProductPaginated {
         return totalElements;
     }
 
-    public void setTotalElements(int totalElements) {
+    public void setTotalElements(long totalElements) {
         this.totalElements = totalElements;
     }
 

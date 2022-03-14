@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.controller;
 
-import com.atlantbh.auctionappbackend.response.ProductPaginated;
+import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductPaginated> getAllProductsPage(
+    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
             @RequestParam(defaultValue = "startDate,desc") String[] sort
     ) {
-        ProductPaginated response = productService.getAllProductsPaginated(page, size, sort);
+        PaginatedResponse<Product> response = productService.getAllProductsPaginated(page, size, sort);
         return new ResponseEntity<>(
                 response,
                 response == null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK

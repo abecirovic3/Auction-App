@@ -2,7 +2,7 @@ package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
-import com.atlantbh.auctionappbackend.response.ProductPaginated;
+import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +23,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductPaginated getAllProductsPaginated(int page, int size, String[] sort) {
+    public PaginatedResponse<Product> getAllProductsPaginated(int page, int size, String[] sort) {
         try {
             List<Order> orders = new ArrayList<>();
             if (sort[0].contains(",")) {
@@ -37,7 +37,7 @@ public class ProductService {
             }
 
             Page<Product> pageProducts = productRepository.findAll(PageRequest.of(page, size, Sort.by(orders)));
-            return new ProductPaginated(
+            return new PaginatedResponse<>(
                     pageProducts.getContent(),
                     pageProducts.getNumber(),
                     pageProducts.getTotalElements(),
