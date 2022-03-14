@@ -9,6 +9,7 @@ import Product from 'components/Product/Product';
 import productImage from 'assets/img/products/productHome1.png';
 
 import 'assets/style/home-page-product-tabs.scss'
+import CustomAlert from 'components/Alert/CustomAlert';
 
 const HomeProductsTabContainer = () => {
     const pageSize = 4;
@@ -20,6 +21,7 @@ const HomeProductsTabContainer = () => {
     const [isLastPage, setIsLastPage] = useState(false);
     const [activeTab, setActiveTab] = useState({ newArrivals: true, lastChance: false });
     const [tabLoading, setTabLoading] = useState(false);
+    const [backendError, setBackendError] = useState(null);
 
     useEffect(() => {
         setTabLoading(false);
@@ -81,7 +83,7 @@ const HomeProductsTabContainer = () => {
                     }
                 })
                 .catch(err => {
-                    console.log(err);
+                    setBackendError(err.response.data);
                 });
         }, 1500);
     }
@@ -115,6 +117,16 @@ const HomeProductsTabContainer = () => {
                         Last Chance
                     </Button>
                 </div>
+
+                {
+                    backendError &&
+                    <CustomAlert
+                        color='error'
+                        title={backendError.error}
+                        message={backendError.message}
+                        showAlertDuration={60000}
+                    />
+                }
 
                 {tabLoading ?
                     <p className='loading-label'>Loading...</p>
