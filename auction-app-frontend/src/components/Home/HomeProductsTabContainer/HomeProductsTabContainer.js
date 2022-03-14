@@ -44,10 +44,24 @@ const HomeProductsTabContainer = () => {
     const [products, setProducts] = useState(newArrivalsProducts);
     const [activeTab, setActiveTab] = useState({ newArrivals: true, lastChance: false });
 
-    function setActive(tab) {
-        const tabSelector = {newArrivals: false, lastChance: false};
+    function setTabToActive(tab) {
+        const tabSelector = {
+            newArrivals: false,
+            lastChance: false
+        };
         tabSelector[tab] = true;
         setActiveTab(tabSelector);
+    }
+
+    function handleTabChange(tab) {
+        if (!activeTab[tab]) {
+            setTabToActive(tab);
+            if (tab === 'newArrivals') {
+                setProducts(newArrivalsProducts);
+            } else {
+                setProducts(lastChanceProducts);
+            }
+        }
     }
 
     return (
@@ -55,13 +69,13 @@ const HomeProductsTabContainer = () => {
             <div className="home-product-tabs-content-container">
                 <div className="tab-selector">
                     <Button
-                        onClick={() => {setActive('newArrivals'); setProducts(newArrivalsProducts)}}
+                        onClick={() => {handleTabChange('newArrivals')}}
                         className={activeTab.newArrivals ? 'tab-selector-btn-active' : 'tab-selector-btn'}
                     >
                         New Arrivals
                     </Button>
                     <Button
-                        onClick={() => {setActive('lastChance'); setProducts(lastChanceProducts)}}
+                        onClick={() => {handleTabChange('lastChance')}}
                         className={activeTab.lastChance ? 'tab-selector-btn-active' : 'tab-selector-btn'}
                     >
                         Last Chance
@@ -70,7 +84,7 @@ const HomeProductsTabContainer = () => {
                 <Grid container spacing={3}>
                     {
                         products.map(product => (
-                            <Grid item xs={3}>
+                            <Grid key={product.id} item xs={3}>
                                 <Product img={product.img} name={product.name} startPrice={product.startPrice} />
                             </Grid>
                         ))
