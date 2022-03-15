@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.atlantbh.auctionappbackend.security.ApplicationUserRole.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -118,8 +121,8 @@ public class NoMockingAuthControllerTest {
                 String.class
         );
 
-        int startIndex = resp.indexOf("\"refresh_token\"");
-        String refresh_token = resp.substring(startIndex + "\"refresh_token\":\"".length(), resp.length() - 2);
+        Map<String, String> decodedJson = decodeJson(resp);
+        String refresh_token = decodedJson.get("refresh_token");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(refresh_token);
@@ -136,6 +139,24 @@ public class NoMockingAuthControllerTest {
         assertThat(finalResponse.getBody().contains("\"access_token\"")).isTrue();
         assertThat(finalResponse.getBody().contains("\"refresh_token\"")).isTrue();
 
+    }
+
+    /**
+     * This is a simple helper method, which is used to decode non-object value, key-value Json strings
+     * Pairs where the value is of type Object won't be parsed correctly
+     * @param json
+     * @return Map<String, String> representing the decoded Json
+     */
+    private Map<String, String> decodeJson(String json) {
+        Map<String, String> decodedJson = new HashMap<>();
+        String[] keyValues = json.split(",");
+        for (String keyValue : keyValues) {
+            String[] kv = keyValue.split(":");
+            kv[0] = kv[0].replace("\"", "").replace("{", "").replace("}", "");
+            kv[1] = kv[1].replace("\"", "").replace("{", "").replace("}", "");
+            decodedJson.put(kv[0], kv[1]);
+        }
+        return decodedJson;
     }
 
 }
