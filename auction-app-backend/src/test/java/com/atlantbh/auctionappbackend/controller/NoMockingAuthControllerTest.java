@@ -5,6 +5,7 @@ import com.atlantbh.auctionappbackend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,9 @@ public class NoMockingAuthControllerTest {
     @LocalServerPort
     private int port;
 
+    @Value("${application.api.prefix}")
+    private String apiPrefix;
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -56,7 +60,7 @@ public class NoMockingAuthControllerTest {
     @Test
     public void testRegisterUserSuccess() {
         String response = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/register",
+                "http://localhost:" + port + apiPrefix + "/auth/register",
                 testUser,
                 String.class
         );
@@ -70,7 +74,7 @@ public class NoMockingAuthControllerTest {
     public void testRegisterUserInvalidRequest() {
         testUser.setFirstName("");
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/register",
+                "http://localhost:" + port + apiPrefix + "/auth/register",
                 testUser,
                 String.class
         );
@@ -81,13 +85,13 @@ public class NoMockingAuthControllerTest {
     @Test
     public void testLoginUserSuccess() {
         this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/register",
+                "http://localhost:" + port + apiPrefix + "/auth/register",
                 testUser,
                 String.class
         );
 
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/login?email=" + testUser.getEmail() + "&password=" + testUser.getPassword(),
+                "http://localhost:" + port + apiPrefix + "/auth/login?email=" + testUser.getEmail() + "&password=" + testUser.getPassword(),
                 null,
                 String.class
         );
@@ -99,7 +103,7 @@ public class NoMockingAuthControllerTest {
     @Test
     public void testLoginUserFail() {
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/login?email=" + testUser.getEmail() + "&password=wrong",
+                "http://localhost:" + port + apiPrefix + "/auth/login?email=" + testUser.getEmail() + "&password=wrong",
                 null,
                 String.class
         );
@@ -110,13 +114,13 @@ public class NoMockingAuthControllerTest {
     @Test
     public void testRefreshTokenSuccess() {
         this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/register",
+                "http://localhost:" + port + apiPrefix + "/auth/register",
                 testUser,
                 String.class
         );
 
         String resp = this.restTemplate.postForObject(
-                "http://localhost:" + port + "/api/v1/auth/login?email=" + testUser.getEmail() + "&password=" + testUser.getPassword(),
+                "http://localhost:" + port + apiPrefix + "/auth/login?email=" + testUser.getEmail() + "&password=" + testUser.getPassword(),
                 null,
                 String.class
         );
