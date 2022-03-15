@@ -1,7 +1,10 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity(name = "Product")
 @Table(name = "product")
@@ -34,29 +37,15 @@ public class Product {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    private String imageUrl;
+    @OneToMany(mappedBy = "product")
+    @JsonManagedReference
+    private List<ProductImage> images;
+
     private Integer size;
     private String color;
 
     public Product() {
         // No args constructor needed by **framework**
-    }
-
-    public Product(String name, String description, Double startPrice, LocalDate startDate, LocalDate endDate) {
-        this.name = name;
-        this.description = description;
-        this.startPrice = startPrice;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    public Product(Long id, String name, String description, Double startPrice, LocalDate startDate, LocalDate endDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.startPrice = startPrice;
-        this.startDate = startDate;
-        this.endDate = endDate;
     }
 
     public Product(
@@ -66,9 +55,9 @@ public class Product {
                     Double startPrice,
                     LocalDate startDate,
                     LocalDate endDate,
+                    List<ProductImage> images,
                     Integer size,
-                    String color,
-                    String imageUrl
+                    String color
     ) {
         this.id = id;
         this.name = name;
@@ -76,9 +65,37 @@ public class Product {
         this.startPrice = startPrice;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.images = images;
         this.size = size;
         this.color = color;
-        this.imageUrl = imageUrl;
+    }
+
+    public Product(
+            String name,
+            String description,
+            Double startPrice,
+            LocalDate startDate,
+            LocalDate endDate,
+            List<ProductImage> images,
+            Integer size,
+            String color
+    ) {
+        this.name = name;
+        this.description = description;
+        this.startPrice = startPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.images = images;
+        this.size = size;
+        this.color = color;
+    }
+
+    public Product(String name, String description, Double startPrice, LocalDate startDate, LocalDate endDate) {
+        this.name = name;
+        this.description = description;
+        this.startPrice = startPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getId() {
@@ -129,6 +146,14 @@ public class Product {
         this.endDate = endDate;
     }
 
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
+    }
+
     public Integer getSize() {
         return size;
     }
@@ -143,13 +168,5 @@ public class Product {
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 }
