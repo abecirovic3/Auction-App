@@ -19,7 +19,7 @@ const HomeProductsTabContainer = () => {
     const [isLastPage, setIsLastPage] = useState(false);
     const [activeTab, setActiveTab] = useState({ newArrivals: true, lastChance: false });
     const [tabLoading, setTabLoading] = useState(false);
-    const [backendError, setBackendError] = useState(null);
+    const [alert, setAlert] = useState(null);
 
     useEffect(() => {
         setTabLoading(false);
@@ -78,7 +78,7 @@ const HomeProductsTabContainer = () => {
                 }
             })
             .catch(err => {
-                setBackendError(err.response.data);
+                setAlert(err.response.data);
             });
     }
 
@@ -113,11 +113,11 @@ const HomeProductsTabContainer = () => {
                 </div>
 
                 {
-                    backendError &&
+                    alert &&
                     <CustomAlert
                         color='error'
-                        title={backendError.error}
-                        message={backendError.message}
+                        title={alert.error}
+                        message={alert.message}
                         showAlertDuration={60000}
                     />
                 }
