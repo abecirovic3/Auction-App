@@ -6,8 +6,6 @@ import ProductService from 'services/ProductService';
 
 import Product from 'components/Product/Product';
 
-import imagePlaceholder from 'assets/img/imagePlaceholder.png';
-
 import 'assets/style/home-page-product-tabs.scss'
 import CustomAlert from 'components/Alert/CustomAlert';
 
@@ -137,7 +135,7 @@ const HomeProductsTabContainer = () => {
                         {
                             products.map(product => (
                                 <div key={product.id} className='grid-item'>
-                                    <Product img={product.images[0]?.imageUrl || imagePlaceholder} name={product.name} startPrice={product.startPrice} />
+                                    <Product product={product} />
                                 </div>
                             ))
                         }
