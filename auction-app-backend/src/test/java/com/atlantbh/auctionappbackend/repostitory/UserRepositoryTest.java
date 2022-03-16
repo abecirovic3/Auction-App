@@ -20,7 +20,7 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final User testUser = new User("John", "Doe", "john@doe.com", "passwod", "ROLE_USER");
+    private final User testUser = new User("John", "Doe", "john@doe.com", "password", "ROLE_USER");
 
     @BeforeEach
     void initUseCase() {
@@ -41,7 +41,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testFinAllUsers() {
+    public void testFindAllUsers() {
         List<User> users = userRepository.findAll();
         assertThat(users.size()).isGreaterThanOrEqualTo(1);
     }

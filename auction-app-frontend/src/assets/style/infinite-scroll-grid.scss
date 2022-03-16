@@ -1,0 +1,17 @@
+.infinite-scroll-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2%;
+
+  .grid-item {
+    flex-basis: 23.5%;
+    margin-bottom: 2%;
+  }
+
+  .loading-label {
+    color: #9B9B9B;
+    text-align: center;
+  }
+}
