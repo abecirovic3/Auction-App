@@ -62,7 +62,7 @@ const Register = () => {
                 .then(response => {
                     setLoading(false);
                     dispatch(setRegistered(true));
-                    navigate('/login');
+                    navigate('/login', { state: {loginAfterRegister: true} });
 
                 }, err => {
                     setLoading(false);

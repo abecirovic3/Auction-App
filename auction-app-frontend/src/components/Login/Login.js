@@ -8,7 +8,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setRegistered } from 'features/register/registerSlice';
@@ -22,6 +22,7 @@ import 'assets/style/form.scss'
 
 const Login = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -46,7 +47,11 @@ const Login = () => {
                 response => {
                     setLoading(false);
                     dispatch(setLoggedIn(true));
-                    navigate('/');
+                    if (state?.loginAfterRegister) {
+                        navigate('/');
+                    } else {
+                        navigate(-1);
+                    }
                 },
                 err => {
                     setLoading(false);
