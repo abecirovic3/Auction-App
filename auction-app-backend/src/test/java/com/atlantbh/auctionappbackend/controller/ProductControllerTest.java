@@ -4,6 +4,7 @@ import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
+import com.atlantbh.auctionappbackend.security.SecurityConfig;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import com.atlantbh.auctionappbackend.service.UserService;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -44,18 +45,10 @@ public class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
-    @MockBean
-    private UserService userService;
-    @MockBean
-    private Algorithm signAlgorithm;
-    @MockBean
-    private JwtConfig jwtConfig;
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-    @MockBean
-    private ApiConfig apiConfig;
     @MockBean(name = "springSecurityFilterChain")
     private Filter springSecurityFilterChain;
+    @MockBean
+    private SecurityConfig securityConfig;
 
     @Test
     public void testGetAllProductsPage() throws Exception {
@@ -92,7 +85,7 @@ public class ProductControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("\"products\"")))
+                .andExpect(content().string(containsString("\"data\"")))
                 .andExpect(content().string(containsString("\"currentPage\"")))
                 .andExpect(content().string(containsString("\"totalElements\"")))
                 .andExpect(content().string(containsString("\"totalPages\"")));
