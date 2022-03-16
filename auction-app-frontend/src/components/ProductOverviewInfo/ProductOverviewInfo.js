@@ -1,10 +1,11 @@
+import { useSelector } from 'react-redux';
 import { Button, Stack, TextField } from '@mui/material';
 
 import bidNowIcon from 'assets/img/bid-now.svg';
-
 import 'assets/style/product-overview-info.scss';
 
 const ProductOverviewInfo = ({ product }) => {
+    const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
 
     return (
         <div className="product-overview-info-container">
@@ -33,11 +34,13 @@ const ProductOverviewInfo = ({ product }) => {
 
                 <div className='bid-placement-container'>
                     <TextField
+                        disabled={!userLoggedIn}
                         className='bid-input-field'
                         variant='outlined'
                         placeholder='Smt higher from highest bid'
                     />
                     <Button
+                        disabled={!userLoggedIn}
                         className='place-bid-btn'
                         variant='outlined'
                         endIcon={<img src={bidNowIcon} alt='Bid Now' />}
