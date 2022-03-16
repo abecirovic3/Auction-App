@@ -1,0 +1,101 @@
+@use "base";
+
+.product-overview-info-container {
+  .product-name {
+    font-size: 32px;
+    font-weight: 400;
+  }
+
+  .label,
+  .value {
+    font-size: 16px;
+    display: inline;
+  }
+
+  .label {
+    color: #252525;
+    font-weight: 300;
+  }
+
+  .label:after {
+    content: " ";
+  }
+
+  .price-label {
+    color: base.$primary-color;
+  }
+
+  .value {
+    color: base.$primary-color;
+    font-weight: 700;
+  }
+
+  .product-bid-info {
+    border: 1px solid base.$border-color;
+    width: fit-content;
+    padding: 25px;
+  }
+
+  .bid-placement-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .MuiInputBase-root,
+    .MuiButton-root {
+      border-radius: 0;
+      height: 3em;
+    }
+
+    .MuiInputBase-root {
+      box-sizing: content-box;
+      padding: 3.5px;
+    }
+
+    .bid-input-field {
+      width: 60%;
+    }
+
+    .place-bid-btn {
+      gap: 30px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #252525;
+      border: 3px solid base.$primary-color;
+      width: 35%;
+    }
+  }
+
+  .product-details-container {
+    .tab-selector {
+      border-bottom: 1px solid base.$border-color;
+      margin-bottom: 25px;
+
+      .tab-selector-btn,
+      .tab-selector-btn-active {
+        text-transform: none;
+        font-size: 16px;
+        padding: 5px 35px 5px 25px;
+      }
+
+      .tab-selector-btn {
+        font-weight: 300;
+        color: black;
+      }
+
+      .tab-selector-btn-active {
+        font-weight: 700;
+        color: base.$primary-color;
+        border-radius: 0;
+        border-bottom: 1px solid base.$primary-color;
+      }
+    }
+
+    p {
+      color: #9B9B9B;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+}
