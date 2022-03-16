@@ -4,36 +4,46 @@ import bidNowIcon from 'assets/img/bid-now.svg';
 
 import 'assets/style/product-overview-info.scss';
 
-const ProductOverviewInfo = () => {
+const ProductOverviewInfo = ({ product }) => {
 
     return (
         <div className="product-overview-info-container">
             <Stack gap={4} >
                 <Stack gap={2} >
-                    <h3 className='product-name'>Name</h3>
+                    <h3 className='product-name'>{product.name}</h3>
                     <div>
                         <p className='label price-label'>Start from</p>
-                        <p className='value'>$50</p>
+                        <p className='value'>${product.startPrice}</p>
                     </div>
                     <Stack className='product-bid-info' gap={1}>
                         <div>
                             <p className='label'>Highest bid:</p>
-                            <p className="value">$55</p>
+                            <p className="value">$X</p>
                         </div>
                         <div>
                             <p className='label'>Number of bids:</p>
-                            <p className="value">1</p>
+                            <p className="value">Y</p>
                         </div>
                         <div>
                             <p className='label'>Time left:</p>
-                            <p className="value">10 Weeks 6 days</p>
+                            <p className="value">Z</p>
                         </div>
                     </Stack>
                 </Stack>
 
                 <div className='bid-placement-container'>
-                    <TextField className='bid-input-field' variant='outlined' placeholder='Smt higher from highest bid' />
-                    <Button className='place-bid-btn' variant='outlined' endIcon={<img src={bidNowIcon} alt='Bid Now' />}>Place Bid</Button>
+                    <TextField
+                        className='bid-input-field'
+                        variant='outlined'
+                        placeholder='Smt higher from highest bid'
+                    />
+                    <Button
+                        className='place-bid-btn'
+                        variant='outlined'
+                        endIcon={<img src={bidNowIcon} alt='Bid Now' />}
+                    >
+                        Place Bid
+                    </Button>
                 </div>
 
                 <div className='product-details-container'>
@@ -57,7 +67,7 @@ const ProductOverviewInfo = () => {
                             Customer reviews
                         </Button>
                     </div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores esse obcaecati optio rem reprehenderit sunt vel! Alias cum earum fugiat molestias, non qui soluta temporibus. Expedita optio pariatur sint vel!</p>
+                    <p>{product.description}</p>
                 </div>
             </Stack>
         </div>
