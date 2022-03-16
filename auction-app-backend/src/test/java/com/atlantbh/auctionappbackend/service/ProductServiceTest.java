@@ -67,7 +67,7 @@ public class ProductServiceTest {
         PaginatedResponse<Product> paginatedResponse = productService.getAllProductsPaginated(0, 1, "startDate", "desc");
 
         assertThat(paginatedResponse.getCurrentPage()).isEqualTo(0);
-        assertThat(paginatedResponse.getProducts().size()).isEqualTo(2);
+        assertThat(paginatedResponse.getData().size()).isEqualTo(2);
         assertThat(paginatedResponse.getTotalPages()).isEqualTo(2);
     }
 

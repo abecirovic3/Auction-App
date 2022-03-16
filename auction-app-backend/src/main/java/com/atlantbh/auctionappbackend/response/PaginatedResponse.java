@@ -3,24 +3,24 @@ package com.atlantbh.auctionappbackend.response;
 import java.util.List;
 
 public class PaginatedResponse<T> {
-    private List<T> products;
+    private List<T> data;
     private int currentPage;
     private long totalElements;
     private int totalPages;
 
-    public PaginatedResponse(List<T> products, int currentPage, long totalElements, int totalPages) {
-        this.products = products;
+    public PaginatedResponse(List<T> data, int currentPage, long totalElements, int totalPages) {
+        this.data = data;
         this.currentPage = currentPage;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
     }
 
-    public List<T> getProducts() {
-        return products;
+    public List<T> getData() {
+        return data;
     }
 
-    public void setProducts(List<T> products) {
-        this.products = products;
+    public void setData(List<T> data) {
+        this.data = data;
     }
 
     public int getCurrentPage() {

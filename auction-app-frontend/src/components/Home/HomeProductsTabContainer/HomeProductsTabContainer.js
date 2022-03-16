@@ -76,9 +76,9 @@ const HomeProductsTabContainer = () => {
             .then(response => {
                 setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
                 if (tabChanged) {
-                    setProducts(response.data.products);
+                    setProducts(response.data.data);
                 } else {
-                    setProducts([...products, ...response.data.products]);
+                    setProducts([...products, ...response.data.data]);
                 }
             })
             .catch(err => {
