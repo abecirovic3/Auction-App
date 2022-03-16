@@ -5,9 +5,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import ProductService from 'services/ProductService';
 
 import Product from 'components/Product/Product';
-
-import 'assets/style/home-page-product-tabs.scss'
 import CustomAlert from 'components/Alert/CustomAlert';
+
+import 'assets/style/home-page-product-tabs.scss';
+import 'assets/style/infinite-scroll-grid.scss';
 
 const HomeProductsTabContainer = () => {
     const pageSize = 4;
