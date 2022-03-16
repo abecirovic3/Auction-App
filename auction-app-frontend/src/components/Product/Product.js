@@ -2,10 +2,10 @@ import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 
 import 'assets/style/product.scss';
 
-const Product = ({ product, imgAlt }) => {
+const Product = ({ product }) => {
     return (
         <div className='product-container'>
-            <img className='cover-img' src={product.images[0]?.imageUrl || imagePlaceholder} alt={imgAlt}/>
+            <img className='cover-img' src={product.images[0]?.imageUrl || imagePlaceholder} alt={'Product'}/>
             <div className='product-details'>
                 <h3 className='name'>{product.name}</h3>
                 <p className='start-price-label'>Start from</p>
@@ -14,9 +14,5 @@ const Product = ({ product, imgAlt }) => {
         </div>
     );
 };
-
-Product.defaultProps = {
-    imgAlt: 'Image',
-}
 
 export default Product;
