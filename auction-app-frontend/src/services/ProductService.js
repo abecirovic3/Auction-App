@@ -1,16 +1,11 @@
 import api from 'services/Api';
 
-function getNewArrivalsProducts(page, size) {
-    return api.get(`/products?page=${page}&size=${size}&sortKey=startDate&sortDirection=desc`);
-}
-
-function getLastChanceProducts(page, size) {
-    return api.get(`/products?page=${page}&size=${size}&sortKey=endDate&sortDirection=asc`);
+function getProducts(page, size, sortKey, sortDirection) {
+    return api.get(`/products?page=${page}&size=${size}&sortKey=${sortKey}&sortDirection=${sortDirection}`);
 }
 
 const ProductService = {
-    getNewArrivalsProducts,
-    getLastChanceProducts
+    getProducts,
 };
 
 export default ProductService;

@@ -67,12 +67,10 @@ const HomeProductsTabContainer = () => {
     function fetchProductsForTab(tab, page, size, tabChanged) {
         if (isLastPage) return;
 
-        let getProducts = ProductService.getNewArrivalsProducts;
-        if (tab.lastChance) {
-            getProducts = ProductService.getLastChanceProducts;
-        }
+        let sortKey = tab.newArrivals ? 'startDate' : 'endDate';
+        let sortDirection = tab.newArrivals ? 'desc' : 'asc';
 
-        getProducts(page, size)
+        ProductService.getProducts(page, size, sortKey, sortDirection)
             .then(response => {
                 setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
                 if (tabChanged) {
