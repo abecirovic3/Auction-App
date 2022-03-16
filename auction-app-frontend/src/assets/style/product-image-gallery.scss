@@ -1,0 +1,23 @@
+.product-image-gallery-container {
+  .main-image {
+    width: 90%;
+  }
+
+  .image-selector-container {
+    margin-top: 10px;
+    width: 90%;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 2%;
+  }
+
+  .image-to-select {
+    width: 18.4%;
+    flex-shrink: 0;
+  }
+
+  .image-to-select:hover {
+    cursor: pointer;
+  }
+}
