@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
+import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +28,14 @@ public class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private ProductUserBidRepository productUserBidRepository;
+
     private ProductService productService;
 
     @BeforeEach
     void initUseCase() {
-        productService = new ProductService(productRepository);
+        productService = new ProductService(productRepository, productUserBidRepository);
     }
 
     @Test
