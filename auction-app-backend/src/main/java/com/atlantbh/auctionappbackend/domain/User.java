@@ -1,20 +1,16 @@
 package com.atlantbh.auctionappbackend.domain;
 
 import com.atlantbh.auctionappbackend.constraint.EmailPreference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity(name = "User")
 @Table(
@@ -68,6 +64,10 @@ public class User {
 
     private String photoUrl;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<ProductUserBid> userBids;
+
     public User() {
         // No args constructor needed by **framework**
     }
@@ -87,6 +87,52 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public User(
+                Long id,
+                String firstName,
+                String lastName,
+                String email,
+                String password,
+                String role,
+                LocalDate dateOfBirth,
+                String phoneNumber,
+                String photoUrl,
+                List<ProductUserBid> userBids
+    ) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.dateOfBirth = dateOfBirth;
+        this.phoneNumber = phoneNumber;
+        this.photoUrl = photoUrl;
+        this.userBids = userBids;
+    }
+
+    public User(
+            String firstName,
+            String lastName,
+            String email,
+            String password,
+            String role,
+            LocalDate dateOfBirth,
+            String phoneNumber,
+            String photoUrl,
+            List<ProductUserBid> userBids
+    ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.dateOfBirth = dateOfBirth;
+        this.phoneNumber = phoneNumber;
+        this.photoUrl = photoUrl;
+        this.userBids = userBids;
     }
 
     public Long getId() {
@@ -159,5 +205,13 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public List<ProductUserBid> getUserBids() {
+        return userBids;
+    }
+
+    public void setUserBids(List<ProductUserBid> userBids) {
+        this.userBids = userBids;
     }
 }

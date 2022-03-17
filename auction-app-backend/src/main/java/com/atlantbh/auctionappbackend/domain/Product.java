@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -25,7 +26,7 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition="TEXT")
     private String description;
 
     @Column(nullable = false)
@@ -40,6 +41,10 @@ public class Product {
     @OneToMany(mappedBy = "product")
     @JsonManagedReference
     private List<ProductImage> images;
+    
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<ProductUserBid> productBids;
 
     private Integer size;
     private String color;
@@ -66,6 +71,30 @@ public class Product {
         this.startDate = startDate;
         this.endDate = endDate;
         this.images = images;
+        this.size = size;
+        this.color = color;
+    }
+
+    public Product(
+                    Long id,
+                    String name,
+                    String description,
+                    Double startPrice,
+                    LocalDate startDate,
+                    LocalDate endDate,
+                    List<ProductImage> images,
+                    List<ProductUserBid> productBids,
+                    Integer size,
+                    String color
+    ) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startPrice = startPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.images = images;
+        this.productBids = productBids;
         this.size = size;
         this.color = color;
     }
@@ -168,5 +197,13 @@ public class Product {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public List<ProductUserBid> getProductBids() {
+        return productBids;
+    }
+
+    public void setProductBids(List<ProductUserBid> productBids) {
+        this.productBids = productBids;
     }
 }
