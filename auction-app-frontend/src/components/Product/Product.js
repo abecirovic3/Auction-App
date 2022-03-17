@@ -7,7 +7,7 @@ const Product = ({ product }) => {
     const navigate = useNavigate();
 
     function previewProduct() {
-        navigate('/shop/product-overview', { state: {product} });
+        navigate(`/shop/product-overview/${product.id}`);
     }
 
     return (

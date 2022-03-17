@@ -1,4 +1,7 @@
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import ProductService from 'services/ProductService';
 
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 
@@ -8,19 +11,36 @@ import ProductOverviewInfo from 'components/ProductOverviewInfo/ProductOverviewI
 import 'assets/style/product-overview.scss';
 
 const ProductOverview = () => {
-    const { state } = useLocation();
+    const params = useParams();
+    const [productData, setProductData] =useState(null);
+
+    useEffect(() => {
+        console.log(params.id);
+        ProductService.getProductById(params.id)
+            .then(response => {
+                console.log(response);
+                setProductData(response.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [params.id]);
 
     return (
         <div className='product-overview-container'>
-            <BreadCrumbsBar title='Product Name'/>
-            <div className='product-overview-content-container'>
-                <div className='product-image-gallery'>
-                    <ProductImageGallery images={state.product.images} />
-                </div>
-                <div className='product-info'>
-                    <ProductOverviewInfo product={state.product} />
-                </div>
-            </div>
+            {productData &&
+                <>
+                    <BreadCrumbsBar title={productData.product.name} />
+                    <div className='product-overview-content-container'>
+                        <div className='product-image-gallery'>
+                            <ProductImageGallery images={productData.product.images} />
+                        </div>
+                        <div className='product-info'>
+                            <ProductOverviewInfo productData={productData} />
+                        </div>
+                    </div>
+                </>
+            }
         </div>
     );
 };

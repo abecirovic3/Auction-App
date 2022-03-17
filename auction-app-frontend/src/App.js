@@ -50,7 +50,7 @@ function App() {
                         <Route path='/privacy' element={<PrivacyAndPolicy/>}/>
                         <Route path='/terms' element={<TermsAndConditions/>}/>
                         <Route path='/about' element={<About/>}/>
-                        <Route path='/shop/product-overview' element={<ProductOverview />}/>
+                        <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
                         <Route path='*' element={<NotFound/>}/>
                     </Routes>
                 </div>
