@@ -76,7 +76,8 @@ public class ProductService {
             );
         } else {
             Product product = optionalProduct.get();
-            List<ProductUserBid> productBids = productUserBidRepository.findByProduct(product, Sort.by("amount").descending());
+            List<ProductUserBid> productBids =
+                    productUserBidRepository.findByProduct(product, Sort.by("amount").descending());
             return new ProductOverviewResponse(
                     optionalProduct.get(),
                     productBids.size() > 0 ? productBids.get(0).getAmount() : null,

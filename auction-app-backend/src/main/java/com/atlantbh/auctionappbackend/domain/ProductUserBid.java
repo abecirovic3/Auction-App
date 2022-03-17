@@ -1,6 +1,5 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
