@@ -79,7 +79,10 @@ const HomeProductsTabContainer = () => {
                 }
             })
             .catch(err => {
-                setAlert(err.response.data);
+                setAlert(
+                    err.response?.data ||
+                    { error: 'Connection Error', message: 'Could not establish connection to server' }
+                );
             });
     }
 
@@ -96,9 +99,9 @@ const HomeProductsTabContainer = () => {
     }
 
     return (
-        <div className="home-product-tabs-container">
-            <div className="home-product-tabs-content-container">
-                <div className="tab-selector">
+        <div className='home-product-tabs-container'>
+            <div className='home-product-tabs-content-container'>
+                <div className='tab-selector'>
                     <Button
                         onClick={() => {handleTabChange('newArrivals')}}
                         className={activeTab.newArrivals ? 'tab-selector-btn-active' : 'tab-selector-btn'}

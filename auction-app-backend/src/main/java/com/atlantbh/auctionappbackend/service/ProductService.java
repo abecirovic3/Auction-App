@@ -71,7 +71,7 @@ public class ProductService {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.NOT_FOUND,
                     "Product with id " + id + " doesn't exist"
             );
         } else {

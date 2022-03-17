@@ -11,7 +11,7 @@ const ProductOverviewInfo = ({ productData }) => {
 
     return (
         <ThemeProvider theme={MainTheme}>
-            <div className="product-overview-info-container">
+            <div className='product-overview-info-container'>
                 <Stack gap={4} >
                     <Stack gap={2} >
                         <h3 className='product-name'>{productData.product.name}</h3>
@@ -22,15 +22,15 @@ const ProductOverviewInfo = ({ productData }) => {
                         <Stack className='product-bid-info' gap={1}>
                             <div>
                                 <p className='label'>Highest bid:</p>
-                                <p className="value">{productData.highestBid ? `${productData.highestBid}` : '/'}</p>
+                                <p className='value'>{productData.highestBid ? `${productData.highestBid}` : '/'}</p>
                             </div>
                             <div>
                                 <p className='label'>Number of bids:</p>
-                                <p className="value">{productData.numberOfBids}</p>
+                                <p className='value'>{productData.numberOfBids}</p>
                             </div>
                             <div>
                                 <p className='label'>Time left:</p>
-                                <p className="value">{productData.timeLeft}</p>
+                                <p className='value'>{productData.timeLeft}</p>
                             </div>
                         </Stack>
                     </Stack>
@@ -53,7 +53,7 @@ const ProductOverviewInfo = ({ productData }) => {
                     </div>
 
                     <div className='product-details-container'>
-                        <div className="tab-selector">
+                        <div className='tab-selector'>
                             <Button
                                 disabled={true}
                                 className='tab-selector-btn-active'
