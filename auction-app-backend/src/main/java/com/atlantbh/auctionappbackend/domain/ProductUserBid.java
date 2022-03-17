@@ -1,7 +1,5 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity(name = "ProductUserBid")
 @Table(name = "product_user_bid")
@@ -49,14 +47,14 @@ public class ProductUserBid {
     @Column(nullable = false)
     private Double amount;
 
-    @CreatedDate
-    private Date date;
+    @Column(nullable = false)
+    private LocalDate date;
 
     public ProductUserBid() {
         // No args constructor needed by **framework**
     }
 
-    public ProductUserBid(Long id, Product product, User user, Double amount, Date date) {
+    public ProductUserBid(Long id, Product product, User user, Double amount, LocalDate date) {
         this.id = id;
         this.product = product;
         this.user = user;
@@ -64,7 +62,7 @@ public class ProductUserBid {
         this.date = date;
     }
 
-    public ProductUserBid(Product product, User user, Double amount, Date date) {
+    public ProductUserBid(Product product, User user, Double amount, LocalDate date) {
         this.product = product;
         this.user = user;
         this.amount = amount;
@@ -109,11 +107,11 @@ public class ProductUserBid {
         this.amount = amount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }
