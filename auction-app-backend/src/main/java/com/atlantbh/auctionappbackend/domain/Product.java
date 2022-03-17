@@ -46,6 +46,14 @@ public class Product {
     @JsonIgnore
     private List<ProductUserBid> productBids;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "seller_id",
+            foreignKey = @ForeignKey(name = "seller_id"),
+            nullable = false
+    )
+    private User seller;
+
     private Integer size;
     private String color;
 
@@ -205,5 +213,13 @@ public class Product {
 
     public void setProductBids(List<ProductUserBid> productBids) {
         this.productBids = productBids;
+    }
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
     }
 }

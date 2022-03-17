@@ -1,6 +1,8 @@
 import { useSelector } from 'react-redux';
 import { Button, Stack, TextField, ThemeProvider } from '@mui/material';
 
+import TokenService from 'services/TokenService';
+
 import bidNowIcon from 'assets/img/bid-now.svg';
 
 import MainTheme from 'themes/MainTheme';
@@ -35,22 +37,24 @@ const ProductOverviewInfo = ({ productData }) => {
                         </Stack>
                     </Stack>
 
-                    <div className='bid-placement-container'>
-                        <TextField
-                            disabled={!userLoggedIn}
-                            className='bid-input-field'
-                            variant='outlined'
-                            placeholder={`Enter $${productData.highestBid ? Math.round(productData.highestBid + 1) : productData.product.startPrice} or higher`}
-                        />
-                        <Button
-                            disabled={!userLoggedIn}
-                            className='place-bid-btn'
-                            variant='outlined'
-                            endIcon={<img src={bidNowIcon} alt='Bid Now' />}
-                        >
-                            Place Bid
-                        </Button>
-                    </div>
+                    {TokenService.getUserCredentials()?.id !== productData.product.seller.id &&
+                        <div className='bid-placement-container'>
+                            <TextField
+                                disabled={!userLoggedIn}
+                                className='bid-input-field'
+                                variant='outlined'
+                                placeholder={`Enter $${productData.highestBid ? Math.round(productData.highestBid + 1) : productData.product.startPrice} or higher`}
+                            />
+                            <Button
+                                disabled={!userLoggedIn}
+                                className='place-bid-btn'
+                                variant='outlined'
+                                endIcon={<img src={bidNowIcon} alt='Bid Now' />}
+                            >
+                                Place Bid
+                            </Button>
+                        </div>
+                    }
 
                     <div className='product-details-container'>
                         <div className='tab-selector'>

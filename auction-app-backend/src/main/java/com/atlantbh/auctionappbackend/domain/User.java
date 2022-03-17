@@ -75,6 +75,10 @@ public class User {
     @JsonIgnore
     private List<ProductUserBid> userBids;
 
+    @OneToMany(mappedBy = "seller")
+    @JsonIgnore
+    private List<Product> products;
+
     public User() {
         // No args constructor needed by **framework**
     }
