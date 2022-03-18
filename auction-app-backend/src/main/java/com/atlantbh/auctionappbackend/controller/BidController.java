@@ -1,7 +1,6 @@
 package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
-import com.atlantbh.auctionappbackend.request.BidRequest;
 import com.atlantbh.auctionappbackend.response.BidInfoResponse;
 import com.atlantbh.auctionappbackend.service.BiddingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class BidController {
     }
 
     @PostMapping(path = "/register-bid")
-    public ResponseEntity<BidInfoResponse> processBidRegister(@RequestBody BidRequest bid) {
+    public ResponseEntity<BidInfoResponse> processBidRegister(@RequestBody ProductUserBid bid) {
         return new ResponseEntity<>(
                 biddingService.processBid(bid),
                 HttpStatus.OK
