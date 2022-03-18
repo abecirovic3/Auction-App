@@ -36,7 +36,7 @@ instance.interceptors.response.use(
                     const headers = {
                         'Authorization': `Bearer ${TokenService.getLocalRefreshToken()}`
                     }
-                    const rs = await instance.post('/auth/token/refresh', {}, {
+                    const rs = await instance.get('/auth/token/refresh', {
                         headers: headers
                     });
                     const { access_token, refresh_token } = rs.data;
