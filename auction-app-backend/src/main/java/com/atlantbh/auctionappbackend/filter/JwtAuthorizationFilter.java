@@ -58,6 +58,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     DecodedJWT decodedJWT = JwtUtil.verifyToken(signAlgorithm, token);
                     String email = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                    if (roles == null) {
+                        throw new JWTVerificationException("Refresh token can't be used for auth");
+                    }
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     email,
@@ -72,7 +75,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     response.setContentType(APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(
                             response.getOutputStream(),
-                            JwtUtil.getErrorResponseBody("Token Verification Failed")
+                            JwtUtil.getErrorResponseBody("Authentication failed")
                     );
                 }
 
