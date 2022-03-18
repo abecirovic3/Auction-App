@@ -1,8 +1,11 @@
 package com.atlantbh.auctionappbackend.repostitory;
 
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.ProductImageRepository;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
+import com.atlantbh.auctionappbackend.repository.UserRepository;
+import com.atlantbh.auctionappbackend.security.ApplicationUserRole;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ public class ProductRepositoryTest {
     ProductRepository productRepository;
 
     @Autowired
-    ProductImageRepository productImageRepository;
+    UserRepository userRepository;
 
     @AfterEach
     public void destroyAll(){
@@ -30,13 +33,19 @@ public class ProductRepositoryTest {
 
     @Test
     public void testCreateProduct() {
+        User seller = new User("First Name", "Last Name", "email@email.com", "password", ApplicationUserRole.USER.getRole());
+        User savedUser = userRepository.save(seller);
+
         Product product = new Product(
                 "Product Name",
                 "Product Description",
                 99.99,
                 LocalDate.of(2022, 3, 10),
                 LocalDate.of(2022, 4, 10)
+
         );
+
+        product.setSeller(savedUser);
 
         Product savedProduct = productRepository.save(product);
         assertThat(product.getName()).isEqualTo(savedProduct.getName());
