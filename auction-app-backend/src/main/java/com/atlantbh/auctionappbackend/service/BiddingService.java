@@ -44,11 +44,11 @@ public class BiddingService {
         }
 
         Optional<ProductUserBid> higherBidOptional =
-                productUserBidRepository.findByProductAndAmountGreaterThanEqual(product, bid.getAmount());
+                productUserBidRepository.findFirstByProductAndAmountGreaterThanEqual(product, bid.getAmount());
         if (higherBidOptional.isPresent()) {
-            return new BidInfoResponse("fail", "There are higher bids than yours. You could give a second try!");
+            return new BidInfoResponse("warning", "There are higher bids than yours. You could give a second try!");
         } else if (bid.getAmount() <= product.getStartPrice()) {
-            return new BidInfoResponse("fail", "Bid must be higher than start price. You could give a second try!");
+            return new BidInfoResponse("warning", "Bid must be higher than start price. You could give a second try!");
         }
 
         bid.setDate(LocalDate.now());

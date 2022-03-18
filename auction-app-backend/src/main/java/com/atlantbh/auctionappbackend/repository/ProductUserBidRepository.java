@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface ProductUserBidRepository extends JpaRepository<ProductUserBid, Long> {
     List<ProductUserBid> findByProduct(Product product, Sort sort);
-    Optional<ProductUserBid> findByProductAndAmountGreaterThanEqual(Product product, Double amount);
+    Optional<ProductUserBid> findFirstByProductAndAmountGreaterThanEqual(Product product, Double amount);
 }
