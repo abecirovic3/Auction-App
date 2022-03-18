@@ -8,9 +8,12 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
-        const hideAlertTimeout = setTimeout(() => {setShowAlert(false)}, showAlertDuration);
-        return () => {
-            clearTimeout(hideAlertTimeout);
+        if (showAlertDuration > 0) {
+            console.log("Usao u postavke alerta");
+            const hideAlertTimeout = setTimeout(() => {setShowAlert(false)}, showAlertDuration);
+            return () => {
+                clearTimeout(hideAlertTimeout);
+            }
         }
     }, [showAlertDuration]);
 
