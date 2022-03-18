@@ -1,15 +1,44 @@
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import TokenService from 'services/TokenService';
+import BiddingService from 'services/BiddingService';
 
 import bidNowIcon from 'assets/img/bid-now.svg';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
 
-const ProductOverviewInfo = ({ productData }) => {
+const ProductOverviewInfo = ({ productData, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
+    const [bidAmount, setBidAmount] = useState('');
+    const [bidValueError, setBidValueError] = useState(false);
+    // const [bidAlert, setBidAlert] = useState(null);
+
+    function validateBid() {
+        if (isNaN(parseFloat(bidAmount))) {
+            setBidValueError(true);
+            return false;
+        } else {
+            setBidValueError(false);
+            return true;
+        }
+    }
+
+    function handlePlaceBid() {
+        if (validateBid()) {
+            setBidAmount(parseFloat(bidAmount).toString());
+            placeBid(productData.product.id, parseFloat(bidAmount));
+            // BiddingService.placeBid(productData.product.id, parseFloat(bidAmount))
+            //     .then(response => {
+            //         console.log(response);
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
+        }
+    }
 
     return (
         <ThemeProvider theme={MainTheme}>
@@ -43,6 +72,10 @@ const ProductOverviewInfo = ({ productData }) => {
                                 disabled={!userLoggedIn}
                                 className='bid-input-field'
                                 variant='outlined'
+                                value={bidAmount}
+                                onChange={e => setBidAmount(e.target.value)}
+                                error={bidValueError}
+                                helperText={bidValueError ? 'Please enter a valid numeric value' : ''}
                                 placeholder={`Enter $${productData.highestBid ? Math.round(productData.highestBid + 1) : productData.product.startPrice} or higher`}
                             />
                             <Button
@@ -50,6 +83,7 @@ const ProductOverviewInfo = ({ productData }) => {
                                 className='place-bid-btn'
                                 variant='outlined'
                                 endIcon={<img src={bidNowIcon} alt='Bid Now' />}
+                                onClick={() => {handlePlaceBid()}}
                             >
                                 Place Bid
                             </Button>
