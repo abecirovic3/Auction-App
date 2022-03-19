@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import ProductService from 'services/ProductService';
 import BiddingService from 'services/BiddingService';
+import useLoginService from 'hooks/useLoginService';
 
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 import CustomAlert from 'components/Alert/CustomAlert';
@@ -16,7 +17,7 @@ const ProductOverview = () => {
     const [productData, setProductData] =useState(null);
     const [errorAlert, setErrorAlert] = useState(null);
     const [bidInfoAlerts, setBidInfoAlerts] = useState([]);
-
+    const LoginService = useLoginService();
 
     useEffect(() => {
         ProductService.getProductById(params.id)
@@ -28,7 +29,7 @@ const ProductOverview = () => {
                     err.response?.data ||
                     { error: 'Connection Error', message: 'Could not establish connection to server' }
                 );
-            })
+            });
     }, [params.id, bidInfoAlerts]);
 
     function processBid(productId, bidAmount) {
@@ -37,7 +38,14 @@ const ProductOverview = () => {
                 setBidInfoAlerts([...bidInfoAlerts, response.data]);
             })
             .catch(err => {
-                console.log(err);
+                if (err.response.status === 403) {
+                    LoginService.reinitiateLogin();
+                } else {
+                    setErrorAlert(
+                        err.response?.data ||
+                        { error: 'Connection Error', message: 'Could not establish connection to server' }
+                    );
+                }
             });
     }
 
