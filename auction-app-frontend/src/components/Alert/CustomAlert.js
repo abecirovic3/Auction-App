@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import AlertTheme from 'themes/AlertTheme';
 import 'assets/style/custom-alert.scss'
 
-const CustomAlert = ({ color, title, message, showAlertDuration }) => {
+const CustomAlert = ({ color, title, message, showAlertDuration, marginBottom }) => {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
 
     return (
         <ThemeProvider theme={AlertTheme} >
-            <div className='custom-alert-container'>
+            <div className='custom-alert-container' style={{marginBottom: marginBottom}}>
                 <Collapse in={showAlert}>
                     <Alert
                         icon={false}
@@ -35,7 +35,8 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
 
 CustomAlert.defaultProps = {
     color: 'info',
-    showAlertDuration: 5000
+    showAlertDuration: 5000,
+    marginBottom: '20px'
 }
 
 export default CustomAlert;

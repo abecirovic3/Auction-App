@@ -7,16 +7,15 @@ import BiddingService from 'services/BiddingService';
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 import CustomAlert from 'components/Alert/CustomAlert';
 import ProductImageGallery from 'components/ProductImageGallery/ProductImageGallery';
-
 import ProductOverviewInfo from 'components/ProductOverviewInfo/ProductOverviewInfo';
+
 import 'assets/style/product-overview.scss';
-import { Collapse } from '@mui/material';
 
 const ProductOverview = () => {
     const params = useParams();
     const [productData, setProductData] =useState(null);
     const [errorAlert, setErrorAlert] = useState(null);
-    const [bidInfoAlert, setBidInfoAlert] = useState(null);
+    const [bidInfoAlerts, setBidInfoAlerts] = useState([]);
 
 
     useEffect(() => {
@@ -35,8 +34,7 @@ const ProductOverview = () => {
     function processBid(productId, bidAmount) {
         BiddingService.placeBid(productId, bidAmount)
             .then(response => {
-                setBidInfoAlert(response.data);
-                setTimeout(() => {setBidInfoAlert(null)}, 10000);
+                setBidInfoAlerts([...bidInfoAlerts, response.data]);
             })
             .catch(err => {
                 console.log(err);
@@ -51,9 +49,15 @@ const ProductOverview = () => {
                 <>
                     <BreadCrumbsBar title={productData.product.name} />
 
-                    <Collapse in={bidInfoAlert != null} >
-                        <CustomAlert color={bidInfoAlert?.status} message={bidInfoAlert?.message} showAlertDuration={-1} />
-                    </Collapse>
+                    {bidInfoAlerts.map((infoAlert, i) => (
+                        <CustomAlert
+                            key={i}
+                            color={infoAlert.status}
+                            message={infoAlert.message}
+                            showAlertDuration={10000}
+                            marginBottom={0}
+                        />
+                    ))}
 
                     <div className='product-overview-content-container'>
                         <div className='product-image-gallery'>
