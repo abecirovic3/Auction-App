@@ -29,7 +29,7 @@ const ProductOverview = () => {
                     { error: 'Connection Error', message: 'Could not establish connection to server' }
                 );
             })
-    }, [params.id]);
+    }, [params.id, bidInfoAlerts]);
 
     function processBid(productId, bidAmount) {
         BiddingService.placeBid(productId, bidAmount)

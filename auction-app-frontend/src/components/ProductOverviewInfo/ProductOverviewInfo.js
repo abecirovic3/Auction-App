@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { Button, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import TokenService from 'services/TokenService';
-import BiddingService from 'services/BiddingService';
 
 import bidNowIcon from 'assets/img/bid-now.svg';
 
@@ -14,7 +13,6 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
     const [bidAmount, setBidAmount] = useState('');
     const [bidValueError, setBidValueError] = useState(false);
-    // const [bidAlert, setBidAlert] = useState(null);
 
     function validateBid() {
         if (isNaN(parseFloat(bidAmount))) {
@@ -30,13 +28,6 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
         if (validateBid()) {
             setBidAmount(parseFloat(bidAmount).toString());
             placeBid(productData.product.id, parseFloat(bidAmount));
-            // BiddingService.placeBid(productData.product.id, parseFloat(bidAmount))
-            //     .then(response => {
-            //         console.log(response);
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         }
     }
 
