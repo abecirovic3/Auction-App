@@ -9,7 +9,6 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
 
     useEffect(() => {
         if (showAlertDuration > 0) {
-            console.log("Usao u postavke alerta");
             const hideAlertTimeout = setTimeout(() => {setShowAlert(false)}, showAlertDuration);
             return () => {
                 clearTimeout(hideAlertTimeout);
@@ -25,7 +24,7 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
                         icon={false}
                         color={color}
                     >
-                        <p className='strong'>{title} &nbsp; </p>
+                        <p className='strong'>{title}</p>
                         <p>{message}</p>
                     </Alert>
                 </Collapse>
