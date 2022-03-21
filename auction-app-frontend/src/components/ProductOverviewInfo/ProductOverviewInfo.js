@@ -31,6 +31,10 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
         }
     }
 
+    function showPlaceBidForm() {
+        return TokenService.getUserCredentials()?.id !== productData.product.seller.id && productData.timeLeft != null;
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='product-overview-info-container'>
@@ -52,12 +56,12 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
                             </div>
                             <div>
                                 <p className='label'>Time left:</p>
-                                <p className='value'>{productData.timeLeft}</p>
+                                <p className='value'>{productData.timeLeft ? productData.timeLeft : 'Auction ended'}</p>
                             </div>
                         </Stack>
                     </Stack>
 
-                    {TokenService.getUserCredentials()?.id !== productData.product.seller.id &&
+                    {showPlaceBidForm() &&
                         <div className='bid-placement-container'>
                             <TextField
                                 disabled={!userLoggedIn}

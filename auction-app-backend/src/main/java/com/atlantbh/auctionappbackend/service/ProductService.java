@@ -88,6 +88,9 @@ public class ProductService {
 
     private String getAuctionTimeLeftMessage(LocalDate endDate) {
         LocalDate today = LocalDate.now();
+        if (today.isAfter(endDate)) {
+            return null;
+        }
         long daysBetween = ChronoUnit.DAYS.between(today, endDate);
         long weeks = daysBetween / 7;
         int days = (int) daysBetween % 7;
