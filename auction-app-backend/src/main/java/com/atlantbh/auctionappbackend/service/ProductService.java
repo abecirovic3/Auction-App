@@ -87,16 +87,32 @@ public class ProductService {
     }
 
     private String getAuctionTimeLeftMessage(LocalDateTime endDate) {
-        LocalDateTime today = LocalDateTime.now();
-        if (today.isAfter(endDate)) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        if (currentDateTime.isAfter(endDate)) {
             return null;
         }
-        long daysBetween = ChronoUnit.DAYS.between(today, endDate);
+        long daysBetween = ChronoUnit.DAYS.between(currentDateTime, endDate);
         long weeks = daysBetween / 7;
-        int days = (int) daysBetween % 7;
+        long days = daysBetween % 7;
 
         if (weeks == 0 && days == 0) {
-            return "Until Today";
+            long minutesBetween = ChronoUnit.MINUTES.between(currentDateTime, endDate);
+            long hours = minutesBetween / 60;
+            long minutes = minutesBetween % 60;
+
+            if (hours == 0 && minutes == 0) {
+                return "Less than a minute";
+            }
+
+            if (hours == 0) {
+                return minutes + " Minutes";
+            }
+
+            if (minutes == 0) {
+                return hours + " Hours";
+            }
+
+            return hours + " Hours " + minutes + " Minutes";
         }
 
         if (weeks == 0) {
