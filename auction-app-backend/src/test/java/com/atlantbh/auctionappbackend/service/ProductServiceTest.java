@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +47,8 @@ public class ProductServiceTest {
                 "First Product",
                 "Description of first product",
                 10.10,
-                LocalDate.of(2022, 3, 10),
-                LocalDate.of(2022, 4, 10),
+                LocalDateTime.of(2022, 3, 10, 10, 15),
+                LocalDateTime.of(2022, 4, 10, 10, 15),
                 null,
                 null,
                 null
@@ -57,8 +58,8 @@ public class ProductServiceTest {
                 "Second Product",
                 "Description of second product",
                 20.20,
-                LocalDate.of(2022, 3, 10),
-                LocalDate.of(2022, 4, 10),
+                LocalDateTime.of(2022, 3, 10, 10, 15),
+                LocalDateTime.of(2022, 4, 10, 10, 15),
                 null,
                 null,
                 null

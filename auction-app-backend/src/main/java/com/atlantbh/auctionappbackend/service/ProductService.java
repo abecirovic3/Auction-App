@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +86,8 @@ public class ProductService {
         }
     }
 
-    private String getAuctionTimeLeftMessage(LocalDate endDate) {
-        LocalDate today = LocalDate.now();
+    private String getAuctionTimeLeftMessage(LocalDateTime endDate) {
+        LocalDateTime today = LocalDateTime.now();
         if (today.isAfter(endDate)) {
             return null;
         }

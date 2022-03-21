@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -51,7 +51,7 @@ public class BiddingService {
             return new BidInfoResponse("warning", "Bid must be higher than start price. You could give a second try!");
         }
 
-        bid.setDate(LocalDate.now());
+        bid.setDate(LocalDateTime.now());
         productUserBidRepository.save(bid);
 
         return new BidInfoResponse("success", "Congrats! You are the highest bidder!");

@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "ProductUserBid")
 @Table(name = "product_user_bid")
@@ -48,13 +48,13 @@ public class ProductUserBid {
     private Double amount;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     public ProductUserBid() {
         // No args constructor needed by **framework**
     }
 
-    public ProductUserBid(Long id, Product product, User user, Double amount, LocalDate date) {
+    public ProductUserBid(Long id, Product product, User user, Double amount, LocalDateTime date) {
         this.id = id;
         this.product = product;
         this.user = user;
@@ -62,7 +62,7 @@ public class ProductUserBid {
         this.date = date;
     }
 
-    public ProductUserBid(Product product, User user, Double amount, LocalDate date) {
+    public ProductUserBid(Product product, User user, Double amount, LocalDateTime date) {
         this.product = product;
         this.user = user;
         this.amount = amount;
@@ -107,11 +107,11 @@ public class ProductUserBid {
         this.amount = amount;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

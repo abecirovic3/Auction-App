@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,8 +41,8 @@ public class ProductRepositoryTest {
                 "Product Name",
                 "Product Description",
                 99.99,
-                LocalDate.of(2022, 3, 10),
-                LocalDate.of(2022, 4, 10)
+                LocalDateTime.of(2022, 3, 10, 10, 15),
+                LocalDateTime.of(2022, 4, 10, 10, 15)
 
         );
 

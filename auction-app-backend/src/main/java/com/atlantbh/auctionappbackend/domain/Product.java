@@ -3,8 +3,18 @@ package com.atlantbh.auctionappbackend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity(name = "Product")
@@ -33,10 +43,10 @@ public class Product {
     private Double startPrice;
 
     @Column(nullable = false)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Column(nullable = false)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "product")
     @JsonManagedReference
@@ -62,15 +72,15 @@ public class Product {
     }
 
     public Product(
-                    Long id,
-                    String name,
-                    String description,
-                    Double startPrice,
-                    LocalDate startDate,
-                    LocalDate endDate,
-                    List<ProductImage> images,
-                    Integer size,
-                    String color
+            Long id,
+            String name,
+            String description,
+            Double startPrice,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            List<ProductImage> images,
+            Integer size,
+            String color
     ) {
         this.id = id;
         this.name = name;
@@ -84,16 +94,16 @@ public class Product {
     }
 
     public Product(
-                    Long id,
-                    String name,
-                    String description,
-                    Double startPrice,
-                    LocalDate startDate,
-                    LocalDate endDate,
-                    List<ProductImage> images,
-                    List<ProductUserBid> productBids,
-                    Integer size,
-                    String color
+            Long id,
+            String name,
+            String description,
+            Double startPrice,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            List<ProductImage> images,
+            List<ProductUserBid> productBids,
+            Integer size,
+            String color
     ) {
         this.id = id;
         this.name = name;
@@ -111,8 +121,8 @@ public class Product {
             String name,
             String description,
             Double startPrice,
-            LocalDate startDate,
-            LocalDate endDate,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
             List<ProductImage> images,
             Integer size,
             String color
@@ -127,7 +137,7 @@ public class Product {
         this.color = color;
     }
 
-    public Product(String name, String description, Double startPrice, LocalDate startDate, LocalDate endDate) {
+    public Product(String name, String description, Double startPrice, LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
         this.description = description;
         this.startPrice = startPrice;
@@ -167,19 +177,19 @@ public class Product {
         this.startPrice = startPrice;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
