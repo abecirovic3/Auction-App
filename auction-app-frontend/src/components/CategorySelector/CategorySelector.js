@@ -83,7 +83,7 @@ const CategorySelector = () => {
     ];
     return (
         <div className='category-selector-container'>
-            <h3 className='product-categories-title'>PRODUCT CATEGORIES</h3>
+            <h3 className='filter-title'>PRODUCT CATEGORIES</h3>
             <Stack spacing={2}>
                 {
                     categories.map(category => (
