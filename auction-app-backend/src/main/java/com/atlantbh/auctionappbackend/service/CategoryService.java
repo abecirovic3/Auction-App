@@ -16,11 +16,17 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> getAllSuperCategories() {
-        return categoryRepository.findAllBySuperCategoryIsNull();
-    }
-
-    public List<Object[]> getSubCategoriesForCategory(Long superCategoryId) {
-        return categoryRepository.countProductsByCategories(superCategoryId);
+    /**
+     * Method to fetch all categories with respected number of products in each
+     * First, all top level categories are fetched
+     * SubCategories are set for each top level category by executing custom query defined in Categeory class
+     * @return List of top level categories with their respected sub categories
+     */
+    public List<Category> getAllCategories() {
+        List<Category> categories = categoryRepository.findAllBySuperCategoryIsNull();
+        for (Category c : categories) {
+            c.setSubCategories(categoryRepository.countProductsByCategory(c.getId()));
+        }
+        return categories;
     }
 }

@@ -1,14 +1,45 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 @Entity(name = "Category")
 @Table(name = "category")
+@SqlResultSetMapping(
+        name = "categoryProductCountMapping",
+        classes = @ConstructorResult(
+                targetClass = Category.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "name", type = String.class),
+                        @ColumnResult(name = "count", type = Long.class)
+                }
+        )
+)
+@NamedNativeQuery(
+        name = "Category.countProductsByCategory",
+        resultClass = Category.class,
+        resultSetMapping = "categoryProductCountMapping",
+        query = "SELECT c.id, c.name, COUNT(c.id) FROM category c, product p WHERE c.id = p.category_id and c.super_category_id = ?1 group by c.id, c.name"
+)
 public class Category {
     @Id
     @SequenceGenerator(
@@ -32,7 +63,7 @@ public class Category {
     private Category superCategory;
 
     @OneToMany(mappedBy = "superCategory")
-    @JsonIgnore
+    @JsonManagedReference
     private List<Category> subCategories;
 
     @Column(nullable = false)
@@ -42,8 +73,20 @@ public class Category {
     @JsonIgnore
     private List<Product> products;
 
+    @Transient
+    private Long numberOfProducts;
+
     public Category() {
         // No args constructor needed by **framework**
+    }
+
+    // Constructor needed for Result Set Mapping
+    public Category(Long id, String name, Long count) {
+        this.id = id;
+        this.name = name;
+        this.numberOfProducts = count;
+        // Set subCategories to null so Hibernate doesn't try to fetch them for the response
+        this.subCategories = null;
     }
 
     public Category(Long id, Category superCategory, List<Category> subCategories, String name, List<Product> products) {
@@ -99,5 +142,13 @@ public class Category {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public Long getNumberOfProducts() {
+        return numberOfProducts;
+    }
+
+    public void setNumberOfProducts(Long numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
     }
 }
