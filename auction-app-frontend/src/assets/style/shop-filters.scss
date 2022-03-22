@@ -1,0 +1,15 @@
+@use "base";
+
+.shop-filters-container {
+  .category-selector-container {
+    border: 1px solid base.$border-color;
+    padding: 20px;
+
+    .product-categories-title {
+      margin-bottom: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      color: base.$primary-color;
+    }
+  }
+}

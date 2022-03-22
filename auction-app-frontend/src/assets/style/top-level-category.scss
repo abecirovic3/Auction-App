@@ -1,0 +1,36 @@
+@use "base";
+
+.top-level-category-container {
+  .selector,
+  .sub-category-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .selector {
+    justify-content: space-between;
+  }
+
+  .sub-categories-container {
+    padding: 10px 0 10px 0;
+  }
+
+  .MuiCheckbox-root {
+    color: base.$primary-color;
+  }
+
+  .top-level-category-name,
+  .sub-category-name {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .top-level-category-name {
+    color: #252525;
+  }
+
+  .sub-category-name {
+    color: #9B9B9B;
+  }
+}
