@@ -28,6 +28,8 @@ public class AuthWhitelistConfig {
                 apiConfig.getPrefix() + "/auth/token/refresh/**",
                 apiConfig.getPrefix() + "/products",
                 apiConfig.getPrefix() + "/products/*",
+                apiConfig.getPrefix() + "/category",
+                apiConfig.getPrefix() + "/category/**",
                 apiConfig.getPrefix() + "/health"
         };
     }
