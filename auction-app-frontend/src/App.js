@@ -18,6 +18,7 @@ import TermsAndConditions from 'components/TermsAndConditions/TermsAndConditions
 import About from 'components/About/About';
 import NotFound from 'components/NotFound/NotFound';
 import ProductOverview from 'components/ProductOverview/ProductOverview';
+import Shop from 'components/Shop/Shop';
 
 function App() {
     const dispatch = useDispatch();
@@ -50,6 +51,7 @@ function App() {
                         <Route path='/privacy' element={<PrivacyAndPolicy/>}/>
                         <Route path='/terms' element={<TermsAndConditions/>}/>
                         <Route path='/about' element={<About/>}/>
+                        <Route path='/shop' element={<Shop />} />
                         <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
                         <Route path='*' element={<NotFound/>}/>
                     </Routes>
