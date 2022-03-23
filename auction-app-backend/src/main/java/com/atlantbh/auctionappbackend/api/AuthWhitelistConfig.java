@@ -26,8 +26,8 @@ public class AuthWhitelistConfig {
                 apiConfig.getPrefix() + "/auth/register/**",
                 apiConfig.getPrefix() + "/auth/token/refresh",
                 apiConfig.getPrefix() + "/auth/token/refresh/**",
-                apiConfig.getPrefix() + "/products",
-                apiConfig.getPrefix() + "/products/*",
+                apiConfig.getPrefix() + "/product",
+                apiConfig.getPrefix() + "/product/**",
                 apiConfig.getPrefix() + "/category",
                 apiConfig.getPrefix() + "/category/**",
                 apiConfig.getPrefix() + "/health"

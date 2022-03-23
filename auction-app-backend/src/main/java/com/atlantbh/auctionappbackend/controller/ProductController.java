@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(path = "${application.api.prefix}/products")
+@RequestMapping(path = "${application.api.prefix}/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -24,7 +26,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
@@ -37,10 +39,24 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-one/{id}")
     public ResponseEntity<ProductOverviewResponse> getProductOverview(@PathVariable Long id) {
         return new ResponseEntity<>(
                 productService.getProductOverview(id),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/get-all-filtered")
+    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPageFiltered(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestParam List<Long> categories,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice
+    ) {
+        return new ResponseEntity<>(
+                productService.getAllProductsPaginatedAndFiltered(page, size, categories, minPrice, maxPrice),
                 HttpStatus.OK
         );
     }

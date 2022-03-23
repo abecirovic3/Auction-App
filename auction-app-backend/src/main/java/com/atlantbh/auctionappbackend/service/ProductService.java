@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.service;
 
+import com.atlantbh.auctionappbackend.domain.Category;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
@@ -9,6 +10,7 @@ import com.atlantbh.auctionappbackend.response.ProductOverviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.domain.Sort.Direction;
@@ -124,5 +126,21 @@ public class ProductService {
         }
 
         return weeks + " Weeks " + days + " Days";
+    }
+
+    public PaginatedResponse<Product> getAllProductsPaginatedAndFiltered(int page, int size, List<Long> categoryIds, Double minPrice, Double maxPrice) {
+        List<Category> categories = new ArrayList<>();
+        for (Long id : categoryIds) {
+            Category c = new Category();
+            c.setId(id);
+            categories.add(c);
+        }
+        Page<Product> pageProducts = productRepository.findAllWithFiltersAndSort(categories, minPrice, maxPrice, PageRequest.of(page, size));
+        return new PaginatedResponse<>(
+                pageProducts.getContent(),
+                pageProducts.getNumber(),
+                pageProducts.getTotalElements(),
+                pageProducts.getTotalPages()
+        );
     }
 }
