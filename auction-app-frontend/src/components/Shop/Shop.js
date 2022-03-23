@@ -1,7 +1,9 @@
 import { Grid } from '@mui/material';
 
-import 'assets/style/shop-page.scss';
 import ShopFilters from 'components/Shop/ShopFilters/ShopFilters';
+import ShopProductsGrid from 'components/Shop/ShopProductsGrid/ShopProductsGrid';
+
+import 'assets/style/shop-page.scss';
 
 const Shop = () => {
     return (
@@ -16,7 +18,7 @@ const Shop = () => {
                         <ShopFilters />
                     </Grid>
                     <Grid item xs={9.5}>
-                        <h1>Products</h1>
+                        <ShopProductsGrid />
                     </Grid>
                 </Grid>
             </div>
