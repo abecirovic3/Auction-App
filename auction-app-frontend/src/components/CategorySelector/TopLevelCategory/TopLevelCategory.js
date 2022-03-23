@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Checkbox, Collapse, IconButton } from '@mui/material';
 
 import plusIcon from 'assets/img/plus.png';
@@ -6,8 +6,15 @@ import minusIcon from 'assets/img/minus.png';
 
 import 'assets/style/top-level-category.scss';
 
-const TopLevelCategory = ({ category }) => {
+const TopLevelCategory = ({ category, isExpanded }) => {
     const [expand, setExpand] = useState(false);
+
+    useEffect(() => {
+        if (isExpanded) {
+            setExpand(true);
+        }
+    }, [isExpanded]);
+
     return (
         <div className='top-level-category-container'>
             <div className="selector">

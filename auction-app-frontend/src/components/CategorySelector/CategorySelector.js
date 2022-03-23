@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Stack } from '@mui/material';
 
 import CategoryService from 'services/CategoryService';
@@ -6,7 +7,8 @@ import CategoryService from 'services/CategoryService';
 import TopLevelCategory from 'components/CategorySelector/TopLevelCategory/TopLevelCategory';
 
 const CategorySelector = () => {
-    const [categories, setCategories] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const { state } = useLocation();
 
     useEffect(() => {
         CategoryService.getAllCategories()
@@ -17,18 +19,21 @@ const CategorySelector = () => {
                 console.log(err);
             });
     }, []);
+
     return (
         <div className='category-selector-container'>
             <h3 className='filter-title'>PRODUCT CATEGORIES</h3>
-            {categories &&
-                <Stack spacing={2}>
-                    {
-                        categories.map(category => (
-                            <TopLevelCategory key={category.id} category={category}/>
-                        ))
-                    }
-                </Stack>
-            }
+            <Stack spacing={2}>
+                {
+                    categories.map(category => (
+                        <TopLevelCategory
+                            key={category.id}
+                            category={category}
+                            isExpanded={state?.openCategoryId === category.id}
+                        />
+                    ))
+                }
+            </Stack>
         </div>
     );
 };
