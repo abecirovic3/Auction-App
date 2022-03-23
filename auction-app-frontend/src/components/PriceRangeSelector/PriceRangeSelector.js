@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Slider } from '@mui/material';
 
 const PriceRangeSelector = () => {
-    const [price, setPrice] = useState([0, 50]);
+    const [price, setPrice] = useState([30, 50]);
 
     const handleChange = (event, newValue) => {
         setPrice(newValue);

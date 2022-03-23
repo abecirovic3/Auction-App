@@ -19,7 +19,7 @@ const TopLevelCategory = ({ category }) => {
             <Collapse in={expand}>
                 <div className='sub-categories-container'>
                     {category.subCategories.map(subCategory => (
-                        <div className='sub-category-selector'>
+                        <div key={subCategory.id} className='sub-category-selector'>
                             <Checkbox color='primary' />
                             <h3 className='sub-category-name'>{subCategory.name}{` (${subCategory.numberOfProducts})`}</h3>
                         </div>
