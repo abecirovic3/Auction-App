@@ -6,14 +6,14 @@ import minusIcon from 'assets/img/minus.png';
 
 import 'assets/style/top-level-category.scss';
 
-const TopLevelCategory = ({ category, isExpanded }) => {
+const TopLevelCategory = ({ category, initialExpand }) => {
     const [expand, setExpand] = useState(false);
 
     useEffect(() => {
-        if (isExpanded) {
+        if (initialExpand) {
             setExpand(true);
         }
-    }, [isExpanded]);
+    }, [initialExpand]);
 
     return (
         <div className='top-level-category-container'>
@@ -27,7 +27,10 @@ const TopLevelCategory = ({ category, isExpanded }) => {
                 <div className='sub-categories-container'>
                     {category.subCategories.map(subCategory => (
                         <div key={subCategory.id} className='sub-category-selector'>
-                            <Checkbox color='primary' />
+                            <Checkbox
+                                color='primary'
+                                checked={initialExpand}
+                            />
                             <h3 className='sub-category-name'>{subCategory.name}{` (${subCategory.numberOfProducts})`}</h3>
                         </div>
                     ))}

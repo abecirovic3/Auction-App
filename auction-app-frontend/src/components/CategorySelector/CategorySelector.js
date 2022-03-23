@@ -29,7 +29,7 @@ const CategorySelector = () => {
                         <TopLevelCategory
                             key={category.id}
                             category={category}
-                            isExpanded={state?.openCategoryId === category.id}
+                            initialExpand={state?.openCategoryId === category.id}
                         />
                     ))
                 }

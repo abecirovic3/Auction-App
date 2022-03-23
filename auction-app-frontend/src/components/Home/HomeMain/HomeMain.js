@@ -11,7 +11,7 @@ import bidNowIcon from 'assets/img/bid-now.svg';
 import 'assets/style/home-page-main.scss';
 
 const HomeMain = () => {
-    const [categories, setCategories] = useState(null);
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,22 +41,28 @@ const HomeMain = () => {
                         <Grid item xs={2.5} >
                             <div className='category-selector'>
                                 <h3>CATEGORIES</h3>
-                                {categories &&
-                                    <Stack spacing={1}>
-                                        {
-                                            categories.map(category => (
-                                                <Paper
-                                                    id={category.id}
-                                                    key={category.id}
-                                                    className='category'
-                                                    onClick={e => {handleSelectCategory(e.target.id)}}
-                                                >
-                                                    {category.name}
-                                                </Paper>
-                                            ))
-                                        }
-                                    </Stack>
-                                }
+                                <Stack spacing={1}>
+                                    {
+                                        categories.map(category => (
+                                            <Paper
+                                                id={category.id}
+                                                key={category.id}
+                                                className='category'
+                                                onClick={e => {handleSelectCategory(e.target.id)}}
+                                            >
+                                                {category.name}
+                                            </Paper>
+                                        ))
+                                    }
+                                    {categories.length > 0 &&
+                                        <Paper
+                                            className='category'
+                                            onClick={() => {navigate('/shop')}}
+                                        >
+                                            All Categories
+                                        </Paper>
+                                    }
+                                </Stack>
                             </div>
                         </Grid>
                         <Grid item xs={9.5}>
