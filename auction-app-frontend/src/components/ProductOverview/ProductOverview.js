@@ -14,7 +14,7 @@ import 'assets/style/product-overview.scss';
 
 const ProductOverview = () => {
     const params = useParams();
-    const [productData, setProductData] =useState(null);
+    const [product, setProduct] =useState(null);
     const [errorAlert, setErrorAlert] = useState(null);
     const [bidInfoAlerts, setBidInfoAlerts] = useState([]);
     const LoginService = useLoginService();
@@ -22,7 +22,7 @@ const ProductOverview = () => {
     useEffect(() => {
         ProductService.getProductById(params.id)
             .then(response => {
-                setProductData(response.data);
+                setProduct(response.data);
             })
             .catch(err => {
                 setErrorAlert(
@@ -53,9 +53,9 @@ const ProductOverview = () => {
         <div className='product-overview-container'>
             {errorAlert && <CustomAlert color='error' title={errorAlert.error} message={errorAlert.message} showAlertDuration={60000}  />}
 
-            {productData &&
+            {product &&
                 <>
-                    <BreadCrumbsBar title={productData.product.name} />
+                    <BreadCrumbsBar title={product.name} />
 
                     {bidInfoAlerts.map((infoAlert, i) => (
                         <CustomAlert
@@ -69,10 +69,10 @@ const ProductOverview = () => {
 
                     <div className='product-overview-content-container'>
                         <div className='product-image-gallery'>
-                            <ProductImageGallery images={productData.product.images} />
+                            <ProductImageGallery images={product.images} />
                         </div>
                         <div className='product-info'>
-                            <ProductOverviewInfo productData={productData} placeBid={processBid} />
+                            <ProductOverviewInfo product={product} placeBid={processBid} />
                         </div>
                     </div>
                 </>

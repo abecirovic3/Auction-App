@@ -3,17 +3,7 @@ package com.atlantbh.auctionappbackend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -66,6 +56,12 @@ public class Product {
 
     private Integer size;
     private String color;
+
+    @Transient
+    private Double highestBid;
+
+    @Transient
+    private Integer numberOfBids;
 
     public Product() {
         // No args constructor needed by **framework**
@@ -231,5 +227,21 @@ public class Product {
 
     public void setSeller(User seller) {
         this.seller = seller;
+    }
+
+    public Double getHighestBid() {
+        return highestBid;
+    }
+
+    public void setHighestBid(Double highestBid) {
+        this.highestBid = highestBid;
+    }
+
+    public Integer getNumberOfBids() {
+        return numberOfBids;
+    }
+
+    public void setNumberOfBids(Integer numberOfBids) {
+        this.numberOfBids = numberOfBids;
     }
 }

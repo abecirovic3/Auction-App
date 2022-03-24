@@ -2,7 +2,6 @@ package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
-import com.atlantbh.auctionappbackend.response.ProductOverviewResponse;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductOverviewResponse> getProductOverview(@PathVariable Long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         return new ResponseEntity<>(
                 productService.getProductOverview(id),
                 HttpStatus.OK
