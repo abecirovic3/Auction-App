@@ -4,7 +4,6 @@ import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
-import com.atlantbh.auctionappbackend.response.BidInfoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class BiddingService {
         this.productRepository = productRepository;
     }
 
-    public BidInfoResponse processBid(ProductUserBid bid) {
+    public ProductUserBid processBid(ProductUserBid bid) {
         Optional<Product> productOptional = productRepository.findById(bid.getProduct().getId());
 
         if (productOptional.isEmpty()) {
@@ -46,14 +45,19 @@ public class BiddingService {
         Optional<ProductUserBid> higherBidOptional =
                 productUserBidRepository.findFirstByProductAndAmountGreaterThanEqual(product, bid.getAmount());
         if (higherBidOptional.isPresent()) {
-            return new BidInfoResponse("warning", "There are higher bids than yours. You could give a second try!");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "There are higher bids than yours. You could give a second try!"
+            );
         } else if (bid.getAmount() <= product.getStartPrice()) {
-            return new BidInfoResponse("warning", "Bid must be higher than start price. You could give a second try!");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Bid must be higher than start price. You could give a second try!"
+            );
         }
 
         bid.setDate(LocalDateTime.now());
-        productUserBidRepository.save(bid);
 
-        return new BidInfoResponse("success", "Congrats! You are the highest bidder!");
+        return productUserBidRepository.save(bid);
     }
 }

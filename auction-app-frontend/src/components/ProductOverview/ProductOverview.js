@@ -35,10 +35,13 @@ const ProductOverview = () => {
     function processBid(productId, bidAmount) {
         BiddingService.placeBid(productId, bidAmount)
             .then(response => {
-                setBidInfoAlerts([...bidInfoAlerts, response.data]);
+                setBidInfoAlerts([...bidInfoAlerts, { color: 'success', message: 'Congrats! You are the highest bidder!' }]);
             })
             .catch(err => {
-                if (err.response.status === 403) {
+                if (err.response.status === 400) {
+                    setBidInfoAlerts([...bidInfoAlerts, { color: 'warning', message: err.response.data.message }]);
+                }
+                else if (err.response.status === 403) {
                     LoginService.reinitiateLogin();
                 } else {
                     setErrorAlert(
@@ -60,7 +63,7 @@ const ProductOverview = () => {
                     {bidInfoAlerts.map((infoAlert, i) => (
                         <CustomAlert
                             key={i}
-                            color={infoAlert.status}
+                            color={infoAlert.color}
                             message={infoAlert.message}
                             showAlertDuration={10000}
                             marginBottom={0}
