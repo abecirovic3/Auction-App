@@ -21,8 +21,8 @@ public class BidController {
         this.biddingService = biddingService;
     }
 
-    @PostMapping(path = "/register-bid")
-    public ResponseEntity<BidInfoResponse> processBidRegister(@RequestBody ProductUserBid bid) {
+    @PostMapping
+    public ResponseEntity<BidInfoResponse> bid(@RequestBody ProductUserBid bid) {
         return new ResponseEntity<>(
                 biddingService.processBid(bid),
                 HttpStatus.OK
