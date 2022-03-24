@@ -11,6 +11,7 @@ import ProductImageGallery from 'components/ProductImageGallery/ProductImageGall
 import ProductOverviewInfo from 'components/ProductOverviewInfo/ProductOverviewInfo';
 
 import 'assets/style/product-overview.scss';
+import TokenService from 'services/TokenService';
 
 const ProductOverview = () => {
     const params = useParams();
@@ -33,7 +34,11 @@ const ProductOverview = () => {
     }, [params.id, bidInfoAlerts]);
 
     function processBid(productId, bidAmount) {
-        BiddingService.placeBid(productId, bidAmount)
+        BiddingService.placeBid({
+            product: { id: productId },
+            user: { id: TokenService.getUserCredentials().id },
+            amount: bidAmount
+        })
             .then(response => {
                 setBidInfoAlerts([...bidInfoAlerts, { color: 'success', message: 'Congrats! You are the highest bidder!' }]);
             })
