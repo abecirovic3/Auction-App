@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ProductService from 'services/ProductService';
 import BiddingService from 'services/BiddingService';
 import useLoginService from 'hooks/useLoginService';
+import TokenService from 'services/TokenService';
 
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 import CustomAlert from 'components/Alert/CustomAlert';
@@ -33,7 +34,11 @@ const ProductOverview = () => {
     }, [params.id, bidInfoAlerts]);
 
     function processBid(productId, bidAmount) {
-        BiddingService.placeBid(productId, bidAmount)
+        BiddingService.placeBid({
+            product: { id: productId },
+            user: { id: TokenService.getUserCredentials().id },
+            amount: bidAmount
+        })
             .then(response => {
                 setBidInfoAlerts([...bidInfoAlerts, { color: 'success', message: 'Congrats! You are the highest bidder!' }]);
             })

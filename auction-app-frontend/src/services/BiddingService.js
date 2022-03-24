@@ -1,13 +1,7 @@
 import api from 'services/Api';
-import TokenService from 'services/TokenService';
 
-function placeBid(productId, amount) {
-    return api.post('/bid',
-        {
-            product: { id: productId },
-            user: { id: TokenService.getUserCredentials().id },
-            amount: amount
-        });
+function placeBid(bid) {
+    return api.post('/bid', bid);
 }
 
 const BiddingService = {
