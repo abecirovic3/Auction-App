@@ -2,7 +2,6 @@ package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
-import com.atlantbh.auctionappbackend.response.ProductOverviewResponse;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "${application.api.prefix}/product")
+@RequestMapping(path = "${application.api.prefix}/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -26,29 +25,16 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @GetMapping("/get-all")
-//    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "4") int size,
-//            @RequestParam(defaultValue = "startDate") String sortKey,
-//            @RequestParam(defaultValue = "desc") String sortDirection
-//    ) {
-//        return new ResponseEntity<>(
-//                productService.getAllProductsPaginated(page, size, sortKey, sortDirection),
-//                HttpStatus.OK
-//        );
-//    }
-
-    @GetMapping("/get-one/{id}")
-    public ResponseEntity<ProductOverviewResponse> getProductOverview(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         return new ResponseEntity<>(
                 productService.getProductOverview(id),
                 HttpStatus.OK
         );
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPageFiltered(
+    @GetMapping
+    public ResponseEntity<PaginatedResponse<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
             @RequestParam(required = false) List<Long> categories,

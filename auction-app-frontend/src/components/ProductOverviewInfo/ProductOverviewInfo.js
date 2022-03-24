@@ -3,13 +3,14 @@ import { useSelector } from 'react-redux';
 import { Button, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import TokenService from 'services/TokenService';
+import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 
 import bidNowIcon from 'assets/img/bid-now.svg';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
 
-const ProductOverviewInfo = ({ productData, placeBid }) => {
+const ProductOverviewInfo = ({ product, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
     const [bidAmount, setBidAmount] = useState('');
     const [bidValueError, setBidValueError] = useState(false);
@@ -27,12 +28,12 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
     function handlePlaceBid() {
         if (validateBid()) {
             setBidAmount(parseFloat(bidAmount).toString());
-            placeBid(productData.product.id, parseFloat(bidAmount));
+            placeBid(product.id, parseFloat(bidAmount));
         }
     }
 
     function showPlaceBidForm() {
-        return TokenService.getUserCredentials()?.id !== productData.product.seller.id && productData.timeLeft != null;
+        return TokenService.getUserCredentials()?.id !== product.seller.id && !AuctionTimeUtil.auctionEnded(product.endDate);
     }
 
     return (
@@ -40,23 +41,23 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
             <div className='product-overview-info-container'>
                 <Stack gap={4} >
                     <Stack gap={2} >
-                        <h3 className='product-name'>{productData.product.name}</h3>
+                        <h3 className='product-name'>{product.name}</h3>
                         <div>
                             <p className='label price-label'>Start from</p>
-                            <p className='value'>${productData.product.startPrice}</p>
+                            <p className='value'>${product.startPrice}</p>
                         </div>
                         <Stack className='product-bid-info' gap={1}>
                             <div>
                                 <p className='label'>Highest bid:</p>
-                                <p className='value'>{productData.highestBid ? `${productData.highestBid}` : '/'}</p>
+                                <p className='value'>{product.highestBid ? `${product.highestBid}` : '/'}</p>
                             </div>
                             <div>
                                 <p className='label'>Number of bids:</p>
-                                <p className='value'>{productData.numberOfBids}</p>
+                                <p className='value'>{product.numberOfBids}</p>
                             </div>
                             <div>
                                 <p className='label'>Time left:</p>
-                                <p className='value'>{productData.timeLeft ? productData.timeLeft : 'Auction ended'}</p>
+                                <p className='value'>{AuctionTimeUtil.getAuctionTimeLeftMessage(product.endDate)}</p>
                             </div>
                         </Stack>
                     </Stack>
@@ -71,7 +72,7 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
                                 onChange={e => setBidAmount(e.target.value)}
                                 error={bidValueError}
                                 helperText={bidValueError ? 'Please enter a valid numeric value' : ''}
-                                placeholder={`Enter $${productData.highestBid ? Math.round(productData.highestBid + 1) : productData.product.startPrice} or higher`}
+                                placeholder={`Enter $${product.highestBid ? Math.round(product.highestBid + 1) : product.startPrice} or higher`}
                             />
                             <Button
                                 disabled={!userLoggedIn}
@@ -106,7 +107,7 @@ const ProductOverviewInfo = ({ productData, placeBid }) => {
                                 Customer reviews
                             </Button>
                         </div>
-                        <p>{productData.product.description}</p>
+                        <p>{product.description}</p>
                     </div>
                 </Stack>
             </div>
