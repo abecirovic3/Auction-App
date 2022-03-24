@@ -26,10 +26,10 @@ public class AuthWhitelistConfig {
                 apiConfig.getPrefix() + "/auth/register/**",
                 apiConfig.getPrefix() + "/auth/token/refresh",
                 apiConfig.getPrefix() + "/auth/token/refresh/**",
-                apiConfig.getPrefix() + "/product",
-                apiConfig.getPrefix() + "/product/**",
-                apiConfig.getPrefix() + "/category",
-                apiConfig.getPrefix() + "/category/**",
+                apiConfig.getPrefix() + "/products",
+                apiConfig.getPrefix() + "/products/**",
+                apiConfig.getPrefix() + "/categories",
+                apiConfig.getPrefix() + "/categories/**",
                 apiConfig.getPrefix() + "/health"
         };
     }

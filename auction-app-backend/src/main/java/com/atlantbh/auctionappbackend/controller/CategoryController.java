@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "${application.api.prefix}/category")
+@RequestMapping(path = "${application.api.prefix}/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -21,7 +21,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping(path = "/get-all")
+    @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         return new ResponseEntity<>(
                 categoryService.getAllCategories(),

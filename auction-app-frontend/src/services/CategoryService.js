@@ -1,7 +1,7 @@
 import api from 'services/Api';
 
 function getAllCategories() {
-    return api.get('/category/get-all');
+    return api.get('/categories');
 }
 
 const CategoryService = {
