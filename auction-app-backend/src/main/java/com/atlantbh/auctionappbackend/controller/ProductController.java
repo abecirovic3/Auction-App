@@ -26,18 +26,18 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size,
-            @RequestParam(defaultValue = "startDate") String sortKey,
-            @RequestParam(defaultValue = "desc") String sortDirection
-    ) {
-        return new ResponseEntity<>(
-                productService.getAllProductsPaginated(page, size, sortKey, sortDirection),
-                HttpStatus.OK
-        );
-    }
+//    @GetMapping("/get-all")
+//    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "4") int size,
+//            @RequestParam(defaultValue = "startDate") String sortKey,
+//            @RequestParam(defaultValue = "desc") String sortDirection
+//    ) {
+//        return new ResponseEntity<>(
+//                productService.getAllProductsPaginated(page, size, sortKey, sortDirection),
+//                HttpStatus.OK
+//        );
+//    }
 
     @GetMapping("/get-one/{id}")
     public ResponseEntity<ProductOverviewResponse> getProductOverview(@PathVariable Long id) {
@@ -47,16 +47,20 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/get-all-filtered")
+    @GetMapping("/get-all")
     public ResponseEntity<PaginatedResponse<Product>> getAllProductsPageFiltered(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
-            @RequestParam List<Long> categories,
+            @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "name") String sortKey,
+            @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         return new ResponseEntity<>(
-                productService.getAllProductsPaginatedAndFiltered(page, size, categories, minPrice, maxPrice),
+                productService.getAllProductsFilteredSortedAndPaginated(
+                        page, size, categories, minPrice, maxPrice, sortKey, sortDirection
+                ),
                 HttpStatus.OK
         );
     }

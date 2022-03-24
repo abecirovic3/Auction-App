@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +66,18 @@ public class ProductServiceTest {
 
         Page<Product> page = new PageImpl<>(products, PageRequest.of(0,1), 2);
 
-        when(productRepository.findAll(any(Pageable.class))).thenReturn(page);
+        when(productRepository.findAllWithFiltersAndSortPaginated(any(), any(), any(), any(Pageable.class))).thenReturn(page);
 
-        PaginatedResponse<Product> paginatedResponse = productService.getAllProductsPaginated(0, 1, "startDate", "desc");
+        PaginatedResponse<Product> paginatedResponse
+                = productService.getAllProductsFilteredSortedAndPaginated(
+                        0,
+                        4,
+                        null,
+                        null,
+                        null,
+                        "startDate",
+                        "desc"
+        );
 
         assertThat(paginatedResponse.getCurrentPage()).isEqualTo(0);
         assertThat(paginatedResponse.getData().size()).isEqualTo(2);

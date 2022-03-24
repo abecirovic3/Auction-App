@@ -1,6 +1,5 @@
 package com.atlantbh.auctionappbackend.service;
 
-import com.atlantbh.auctionappbackend.domain.Category;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
@@ -10,7 +9,6 @@ import com.atlantbh.auctionappbackend.response.ProductOverviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.domain.Sort.Direction;
@@ -33,40 +31,6 @@ public class ProductService {
     public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
-    }
-
-    public PaginatedResponse<Product> getAllProductsPaginated(int page, int size, String sortKey, String sortDirection) {
-        List<Order> orders = new ArrayList<>();
-
-        if (sortKey.contains(",")) {
-            String[] _sortKeys = sortKey.split(",");
-            String[] _sortDirections = sortDirection.split(",");
-
-            if (_sortKeys.length != _sortDirections.length) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "The number of sortKeys must match the number of sortDirections"
-                );
-            }
-
-            for (int i = 0; i < _sortKeys.length; i++) {
-                orders.add(new Order(getSortDirection(_sortDirections[i]), _sortKeys[i]));
-            }
-        } else {
-            orders.add(new Order(getSortDirection(sortDirection), sortKey));
-        }
-
-        Page<Product> pageProducts = productRepository.findAll(PageRequest.of(page, size, Sort.by(orders)));
-        return new PaginatedResponse<>(
-                pageProducts.getContent(),
-                pageProducts.getNumber(),
-                pageProducts.getTotalElements(),
-                pageProducts.getTotalPages()
-        );
-    }
-
-    private Direction getSortDirection(String direction) {
-        return direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
     }
 
     public ProductOverviewResponse getProductOverview(Long id) {
@@ -128,19 +92,52 @@ public class ProductService {
         return weeks + " Weeks " + days + " Days";
     }
 
-    public PaginatedResponse<Product> getAllProductsPaginatedAndFiltered(int page, int size, List<Long> categoryIds, Double minPrice, Double maxPrice) {
-        List<Category> categories = new ArrayList<>();
-        for (Long id : categoryIds) {
-            Category c = new Category();
-            c.setId(id);
-            categories.add(c);
-        }
-        Page<Product> pageProducts = productRepository.findAllWithFiltersAndSort(categories, minPrice, maxPrice, PageRequest.of(page, size));
+    public PaginatedResponse<Product> getAllProductsFilteredSortedAndPaginated(
+                                                                            int page,
+                                                                            int size,
+                                                                            List<Long> categoryIds,
+                                                                            Double minPrice,
+                                                                            Double maxPrice,
+                                                                            String sortKey,
+                                                                            String sortDirection
+    ) {
+        List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
+        Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
+                categoryIds, minPrice, maxPrice, PageRequest.of(page, size, Sort.by(sortOrders))
+        );
         return new PaginatedResponse<>(
                 pageProducts.getContent(),
                 pageProducts.getNumber(),
                 pageProducts.getTotalElements(),
                 pageProducts.getTotalPages()
         );
+    }
+
+    private List<Order> getSortOrders(String sortKey, String sortDirection) {
+        List<Order> orders = new ArrayList<>();
+
+        if (sortKey.contains(",")) {
+            String[] _sortKeys = sortKey.split(",");
+            String[] _sortDirections = sortDirection.split(",");
+
+            if (_sortKeys.length != _sortDirections.length) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "The number of sortKeys must match the number of sortDirections"
+                );
+            }
+
+            for (int i = 0; i < _sortKeys.length; i++) {
+                orders.add(new Order(getSortDirection(_sortDirections[i]), _sortKeys[i]));
+            }
+        } else {
+            orders.add(new Order(getSortDirection(sortDirection), sortKey));
+        }
+
+        return orders;
+    }
+
+    private Direction getSortDirection(String direction) {
+        return direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
     }
 }
