@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Paper, Stack } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
 
 import CategoryService from 'services/CategoryService';
+
+import { setFilters } from 'features/productFilters/productFiltersSlice';
 
 import highlightedProduct from 'assets/img/home-main-product.png';
 import bidNowIcon from 'assets/img/bid-now.svg';
@@ -13,6 +16,7 @@ import 'assets/style/home-page-main.scss';
 const HomeMain = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         CategoryService.getAllCategories()
@@ -25,7 +29,26 @@ const HomeMain = () => {
     }, []);
 
     function handleSelectCategory(categoryId) {
-        navigate('/shop', {state: {openCategoryId: parseInt(categoryId)}});
+        let category = null;
+        categoryId = parseInt(categoryId);
+
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].id === categoryId) {
+                category = categories[i];
+                break;
+            }
+        }
+
+        const categoryIds = category?.subCategories.map(category => category.id);
+
+        dispatch(setFilters({
+            minPrice: null,
+            maxPrice: null,
+            categories: categoryIds,
+            search: null
+        }));
+
+        navigate('/shop', {state: {openCategoryId: categoryId}});
     }
 
     return (
