@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,7 +67,7 @@ public class ProductServiceTest {
 
         Page<Product> page = new PageImpl<>(products, PageRequest.of(0,1), 2);
 
-        when(productRepository.findAllWithFiltersAndSortPaginated(any(), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(productRepository.findAllWithFiltersAndSortPaginated(any(), anyBoolean(), any(), any(), any(Pageable.class))).thenReturn(page);
 
         PaginatedResponse<Product> paginatedResponse
                 = productService.getAllProductsFilteredSortedAndPaginated(

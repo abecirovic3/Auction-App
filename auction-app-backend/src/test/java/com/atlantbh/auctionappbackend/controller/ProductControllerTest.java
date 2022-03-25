@@ -75,7 +75,7 @@ public class ProductControllerTest {
         when(productService.getAllProductsFilteredSortedAndPaginated(anyInt(), anyInt(), any(), any(), any(), any(), any())).thenReturn(paginatedResponse);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get(apiPrefix + "/product/get-all")
+                MockMvcRequestBuilders.get(apiPrefix + "/products")
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
