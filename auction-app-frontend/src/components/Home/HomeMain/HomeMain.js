@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Paper, Stack } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CategoryService from 'services/CategoryService';
 
-import { setFilters } from 'features/productFilters/productFiltersSlice';
+import { setTopLevelCategories, setSubCategories } from 'features/productFilters/productFiltersSlice';
 
 import highlightedProduct from 'assets/img/home-main-product.png';
 import bidNowIcon from 'assets/img/bid-now.svg';
@@ -17,41 +17,46 @@ const HomeMain = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const filters = useSelector((state) => state.productFilters.filters);
 
     useEffect(() => {
         CategoryService.getAllCategories()
             .then(response => {
                 setCategories(response.data);
+
+                // TODO need to refactor this to load on app load
+                const tlc = {};
+                const sc = {};
+                for (let category of response.data) {
+                    tlc[category.id.toString()] = false;
+                    for (let subCategory of category.subCategories) {
+                        sc[subCategory.id.toString()] = false;
+                    }
+                }
+                dispatch(setTopLevelCategories(tlc));
+                dispatch(setSubCategories(sc));
             })
             .catch(err => {
                 console.log(err);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function handleSelectCategory(categoryId) {
-        let category = null;
-
-        if (categoryId != null) {
-            categoryId = parseInt(categoryId);
-
-            for (let i = 0; i < categories.length; i++) {
-                if (categories[i].id === categoryId) {
-                    category = categories[i];
-                    break;
+        if (categoryId !== null) {
+            dispatch(setTopLevelCategories({...filters.topLevelCategories, [categoryId]: true}));
+            const sc = {};
+            for (let category of categories) {
+                if (category.id === parseInt(categoryId)) {
+                    for (let subCategory of category.subCategories) {
+                        sc[subCategory.id.toString()] = true;
+                    }
                 }
             }
+            dispatch(setSubCategories({...filters.subCategories, ...sc}))
         }
 
-        const categoryIds = category?.subCategories.map(category => category.id) || null;
-
-        dispatch(setFilters({
-            minPrice: null,
-            maxPrice: null,
-            categories: categoryIds,
-            search: null
-        }));
-
-        navigate('/shop', {state: {openCategoryId: categoryId}});
+        navigate('/shop');
     }
 
     return (

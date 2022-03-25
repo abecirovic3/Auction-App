@@ -6,7 +6,8 @@ export const productFiltersSlice = createSlice({
         filters: {
             minPrice: null,
             maxPrice: null,
-            categories: null,
+            topLevelCategories: {},
+            subCategories: {},
             search: null
         },
         disableFilters: false
@@ -15,12 +16,22 @@ export const productFiltersSlice = createSlice({
         setFilters: (state, action) => {
             state.filters = action.payload
         },
+        setTopLevelCategories: (state, action) => {
+            state.filters.topLevelCategories = action.payload
+        },
+        setSubCategories: (state, action) => {
+            state.filters.subCategories = action.payload
+        },
         setDisableFilters: (state, action) => {
             state.disableFilters = action.payload
         }
     },
 });
 
-export const { setFilters, setDisableFilters } = productFiltersSlice.actions;
+export const {
+    setFilters,
+    setTopLevelCategories,
+    setSubCategories,
+    setDisableFilters } = productFiltersSlice.actions;
 
 export default productFiltersSlice.reducer;

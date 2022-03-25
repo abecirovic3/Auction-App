@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Stack } from '@mui/material';
 
 import CategoryService from 'services/CategoryService';
@@ -8,7 +7,6 @@ import TopLevelCategory from 'components/CategorySelector/TopLevelCategory/TopLe
 
 const CategorySelector = () => {
     const [categories, setCategories] = useState([]);
-    const { state } = useLocation();
 
     useEffect(() => {
         CategoryService.getAllCategories()
@@ -29,7 +27,6 @@ const CategorySelector = () => {
                         <TopLevelCategory
                             key={category.id}
                             category={category}
-                            initialExpand={state?.openCategoryId === category.id}
                         />
                     ))
                 }
