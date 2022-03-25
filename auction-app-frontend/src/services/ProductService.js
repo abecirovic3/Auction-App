@@ -1,7 +1,27 @@
 import api from 'services/Api';
 
-function getProducts(page, size, sortKey, sortDirection) {
-    return api.get(`/products?page=${page}&size=${size}&sortKey=${sortKey}&sortDirection=${sortDirection}`);
+function getProducts(page, size, filters, sortKey, sortDirection) {
+    let queryArray = [];
+    if (page || page === 0) {
+        queryArray.push(`page=${page}`);
+    }
+    if (size) {
+        queryArray.push(`size=${size}`);
+    }
+    if (filters) {
+        for (const filterKey in filters) {
+            if (filters[filterKey]) {
+                queryArray.push(`${filterKey}=${filters[filterKey]}`);
+            }
+        }
+    }
+    if (sortKey) {
+        queryArray.push(`sortKey=${sortKey}`);
+    }
+    if (sortDirection) {
+        queryArray.push(`sortDirection=${sortDirection}`);
+    }
+    return api.get('/products' + (queryArray.length > 0 ? `?${queryArray.join('&')}` : ''));
 }
 
 function getProductById(id) {
