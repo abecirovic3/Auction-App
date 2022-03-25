@@ -56,9 +56,10 @@ public class ProductService {
                                                                             String sortKey,
                                                                             String sortDirection
     ) {
+        boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
         Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
-                categoryIds, minPrice, maxPrice, PageRequest.of(page, size, Sort.by(sortOrders))
+                categoryIds, categoriesAvailable, minPrice, maxPrice, PageRequest.of(page, size, Sort.by(sortOrders))
         );
         return new PaginatedResponse<>(
                 pageProducts.getContent(),
