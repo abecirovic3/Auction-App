@@ -16,20 +16,29 @@ import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
 
 const ShopProductsGrid = () => {
+    const pageSize = 3;
     const [itemWidth, setItemWidth] = useState(4);
     const [products, setProducts] = useState([]);
+    const [page, setPage] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(false);
     const filters = useSelector(state => state.productFilters.filters);
 
     useEffect(() => {
-        ProductService.getProducts(0, 9, filters, null, null)
+        fetchProducts(page, pageSize, filters, null, null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters, page]);
+
+    function fetchProducts(page, size, filters, sortKey, sortDirection) {
+        ProductService.getProducts(page, size, filters, null, null)
             .then(response => {
-                console.log(response);
-                setProducts(response.data.data);
+                console.log(response.data);
+                setProducts([...products, ...response.data.data]);
+                setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
             })
             .catch(err => {
                 console.log(err);
             });
-    }, [filters]);
+    }
 
     return (
         <ThemeProvider theme={MainTheme}>
@@ -69,6 +78,9 @@ const ShopProductsGrid = () => {
                         </Grid>
                     ))}
                 </Grid>
+                {!isLastPage &&
+                    <Button onClick={() => {setPage(page + 1)}} variant='contained'>Load more</Button>
+                }
             </div>
         </ThemeProvider>
     );

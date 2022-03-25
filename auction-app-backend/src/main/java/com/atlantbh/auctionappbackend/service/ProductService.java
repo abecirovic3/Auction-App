@@ -90,6 +90,11 @@ public class ProductService {
             orders.add(new Order(getSortDirection(sortDirection), sortKey));
         }
 
+        // Add order by id because of pagination problems when 2 or more products are ordered at same position
+        // For instance if we order products by name ascending, 2 products with the same name can cause
+        // problems when their ordered position is at the end of page
+        orders.add(new Order(Direction.ASC, "id"));
+
         return orders;
     }
 

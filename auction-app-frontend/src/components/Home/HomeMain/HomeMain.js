@@ -30,16 +30,19 @@ const HomeMain = () => {
 
     function handleSelectCategory(categoryId) {
         let category = null;
-        categoryId = parseInt(categoryId);
 
-        for (let i = 0; i < categories.length; i++) {
-            if (categories[i].id === categoryId) {
-                category = categories[i];
-                break;
+        if (categoryId != null) {
+            categoryId = parseInt(categoryId);
+
+            for (let i = 0; i < categories.length; i++) {
+                if (categories[i].id === categoryId) {
+                    category = categories[i];
+                    break;
+                }
             }
         }
 
-        const categoryIds = category?.subCategories.map(category => category.id);
+        const categoryIds = category?.subCategories.map(category => category.id) || null;
 
         dispatch(setFilters({
             minPrice: null,
@@ -80,7 +83,7 @@ const HomeMain = () => {
                                     {categories.length > 0 &&
                                         <Paper
                                             className='category'
-                                            onClick={() => {navigate('/shop')}}
+                                            onClick={() => {handleSelectCategory(null)}}
                                         >
                                             All Categories
                                         </Paper>
