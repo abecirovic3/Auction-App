@@ -1,6 +1,10 @@
 @use "base";
 
 .product-container {
+  a {
+    text-decoration: none;
+  }
+
   .vertical-container,
   .horizontal-container {
     display: flex;
@@ -69,6 +73,11 @@
     margin-bottom: 5px;
   }
 
+  .name:hover,
+  .cover-img:hover {
+    cursor: pointer;
+  }
+
   .MuiButton-root {
     border-radius: 0;
     border-color: base.$border-color;
@@ -79,8 +88,4 @@
     padding-bottom: 8px;
     margin-right: 20px;
   }
-}
-
-.product-container:hover {
-  cursor: pointer;
 }

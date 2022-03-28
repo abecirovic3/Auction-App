@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 import wishlistIcon from 'assets/img/wishlist.png';
@@ -9,18 +9,18 @@ import 'assets/style/product.scss';
 
 const Product = ({ product, layoutStyle }) => {
     const navigate = useNavigate();
-
-    function previewProduct() {
-        navigate(`/shop/product-overview/${product.id}`);
-    }
-
+    
     return (
-        <div onClick={() => {previewProduct()}} className='product-container'>
+        <div className='product-container'>
             <div className={layoutStyle}>
-                <img className='cover-img' src={product.images[0]?.imageUrl || imagePlaceholder} alt={'Product'}/>
+                <Link to={`/shop/product-overview/${product.id}`}>
+                    <img className='cover-img' src={product.images[0]?.imageUrl || imagePlaceholder} alt={'Product'}/>
+                </Link>
                 <div className='product-details'>
                     <div>
-                        <h3 className='name'>{product.name}</h3>
+                        <Link to={`/shop/product-overview/${product.id}`}>
+                            <h3 className='name'>{product.name}</h3>
+                        </Link>
                         {layoutStyle === 'horizontal-container' &&
                             <p className='description'>{product.description}</p>
                         }
@@ -31,8 +31,20 @@ const Product = ({ product, layoutStyle }) => {
                     </div>
                     {layoutStyle === 'horizontal-container' &&
                         <div>
-                            <Button variant='outlined' endIcon={<img src={wishlistIcon} alt='wishlist'/>}>Wishlist</Button>
-                            <Button variant='outlined' endIcon={<img src={bidIcon} alt='bid'/>}>Bid</Button>
+                            <Button
+                                disabled={true}
+                                variant='outlined'
+                                endIcon={<img src={wishlistIcon} alt='wishlist'/>}
+                            >
+                                Wishlist
+                            </Button>
+                            <Button
+                                variant='outlined'
+                                endIcon={<img src={bidIcon} alt='bid'/>}
+                                onClick={() => {navigate(`/shop/product-overview/${product.id}`)}}
+                            >
+                                Bid
+                            </Button>
                         </div>
                     }
                 </div>
