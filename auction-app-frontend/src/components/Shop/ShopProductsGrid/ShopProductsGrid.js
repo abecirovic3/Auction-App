@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setDisableFilters } from 'features/productFilters/productFiltersSlice';
+import { setProducts, setPage, setIsLastPage } from 'features/shop/shopSlice';
 
 import ProductService from 'services/ProductService';
 
@@ -22,13 +23,15 @@ const ShopProductsGrid = () => {
     const isInitialMount = useRef(true);
     const dispatch = useDispatch();
     const [itemWidth, setItemWidth] = useState(4);
-    const [products, setProducts] = useState([]);
-    const [page, setPage] = useState(0);
-    const [isLastPage, setIsLastPage] = useState(false);
+    const products = useSelector(state => state.shop.products);
+    const page = useSelector(state => state.shop.page);
+    const isLastPage = useSelector(state => state.shop.isLastPage);
     const filters = useSelector(state => state.productFilters.filters);
 
     useEffect(() => {
-        fetchProducts(page, pageSize, filters, null, null, page === 0);
+        if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
+            fetchProducts(page, pageSize, filters, null, null, page === 0);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
@@ -39,22 +42,22 @@ const ShopProductsGrid = () => {
             if (page === 0) {
                 fetchProducts(page, pageSize, filters, null, null, true);
             } else {
-                setPage(0);
+                dispatch(setPage(0));
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters]);
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, initFetch) {
-        ProductService.getProducts(page, size, filters, null, null)
+        ProductService.getProducts(page, size, filters, sortKey, sortDirection)
             .then(response => {
                 console.log(response.data);
                 if (initFetch) {
-                    setProducts(response.data.data);
+                    dispatch(setProducts(response.data.data));
                 } else {
-                    setProducts([...products, ...response.data.data]);
+                    dispatch(setProducts([...products, ...response.data.data]));
                 }
-                setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
+                dispatch(setIsLastPage(response.data.currentPage + 1 === response.data.totalPages));
                 dispatch(setDisableFilters(false));
             })
             .catch(err => {
@@ -101,7 +104,7 @@ const ShopProductsGrid = () => {
                     ))}
                 </Grid>
                 {!isLastPage &&
-                    <Button onClick={() => {setPage(page + 1)}} variant='contained'>Load more</Button>
+                    <Button onClick={() => {dispatch(setPage(page + 1))}} variant='contained'>Load more</Button>
                 }
             </div>
         </ThemeProvider>
