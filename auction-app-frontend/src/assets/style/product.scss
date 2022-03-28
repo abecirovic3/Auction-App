@@ -26,6 +26,11 @@
     .price-tag {
       font-size: 18px;
     }
+
+    .cover-img {
+      height: 350px;
+      max-width: 100%;
+    }
   }
 
   .horizontal-container {
@@ -45,6 +50,11 @@
     .price-tag {
       font-size: 32px;
     }
+
+    .cover-img {
+      width: 350px;
+      height: 350px;
+    }
   }
 
   .description {
@@ -61,17 +71,13 @@
 
   .MuiButton-root {
     border-radius: 0;
+    border-color: base.$border-color;
     text-transform: capitalize;
     color: #252525;
     font-size: 16px;
     padding-top: 8px;
     padding-bottom: 8px;
     margin-right: 20px;
-  }
-
-  .cover-img {
-    height: 350px;
-    max-width: 100%;
   }
 }
 

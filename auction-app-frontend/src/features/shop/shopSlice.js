@@ -5,7 +5,8 @@ export const shopSlice = createSlice({
     initialState: {
         products: [],
         page: 0,
-        isLastPage: false
+        isLastPage: false,
+        gridItemWidth: 4
     },
     reducers: {
         setProducts: (state, action) => {
@@ -16,6 +17,9 @@ export const shopSlice = createSlice({
         },
         setIsLastPage: (state, action) => {
             state.isLastPage = action.payload
+        },
+        setGridItemWidth: (state, action) => {
+            state.gridItemWidth = action.payload
         }
     },
 });
@@ -23,7 +27,8 @@ export const shopSlice = createSlice({
 export const {
     setProducts,
     setPage,
-    setIsLastPage
+    setIsLastPage,
+    setGridItemWidth
 } = shopSlice.actions;
 
 export default shopSlice.reducer;

@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setDisableFilters } from 'features/productFilters/productFiltersSlice';
-import { setProducts, setPage, setIsLastPage } from 'features/shop/shopSlice';
+import { setProducts, setPage, setIsLastPage, setGridItemWidth } from 'features/shop/shopSlice';
 
 import ProductService from 'services/ProductService';
 
@@ -23,7 +23,8 @@ const ShopProductsGrid = () => {
     const pageSize = 3;
     const isInitialMount = useRef(true);
     const dispatch = useDispatch();
-    const [itemWidth, setItemWidth] = useState(4);
+    // const [itemWidth, setItemWidth] = useState(4);
+    const itemWidth = useSelector(state => state.shop.gridItemWidth);
     const products = useSelector(state => state.shop.products);
     const page = useSelector(state => state.shop.page);
     const isLastPage = useSelector(state => state.shop.isLastPage);
@@ -83,7 +84,7 @@ const ShopProductsGrid = () => {
                             id='grid-layout-btn'
                             startIcon={<img src={itemWidth === 4 ? gridPurpleIcon : gridGrayIcon} alt='grid' />}
                             color={itemWidth === 4 ? 'primary' : 'secondary'}
-                            onClick={() => {setItemWidth(4)}}
+                            onClick={() => {dispatch(setGridItemWidth(4))}}
                         >
                             Grid
                         </Button>
@@ -91,7 +92,7 @@ const ShopProductsGrid = () => {
                             id='list-layout-btn'
                             startIcon={<img src={itemWidth === 12 ? listPurpleIcon : listGrayIcon} alt='list' />}
                             color={itemWidth === 12 ? 'primary' : 'secondary'}
-                            onClick={() => {setItemWidth(12)}}
+                            onClick={() => {dispatch(setGridItemWidth(12))}}
                         >
                             List
                         </Button>

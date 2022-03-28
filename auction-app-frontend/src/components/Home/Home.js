@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import { setProducts, setPage, setIsLastPage } from 'features/shop/shopSlice';
+import { setProducts, setPage, setIsLastPage, setGridItemWidth } from 'features/shop/shopSlice';
 
 import HomeMain from 'components/Home/HomeMain/HomeMain';
 import HomeProductsTabContainer from 'components/Home/HomeProductsTabContainer/HomeProductsTabContainer';
@@ -15,6 +15,7 @@ const Home = () => {
         dispatch(setProducts([]));
         dispatch(setPage(0));
         dispatch(setIsLastPage(false));
+        dispatch(setGridItemWidth(4));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
