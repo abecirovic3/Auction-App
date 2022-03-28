@@ -1,7 +1,11 @@
 import { Checkbox, Collapse, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setDisableFilters, setTopLevelCategories, setSubCategories } from 'features/productFilters/productFiltersSlice';
+import {
+    setDisableFilters,
+    setTopLevelCategories,
+    setSubCategories
+} from 'features/productFilters/productFiltersSlice';
 
 import plusIcon from 'assets/img/plus.png';
 import minusIcon from 'assets/img/minus.png';
@@ -15,11 +19,17 @@ const TopLevelCategory = ({ category }) => {
 
     function handleCheckboxChange(e) {
         dispatch(setDisableFilters(true));
-        dispatch(setSubCategories({...filters.subCategories, [e.currentTarget.id]: e.currentTarget.checked}));
+        dispatch(setSubCategories({
+            ...filters.subCategories,
+            [e.currentTarget.id]: e.currentTarget.checked
+        }));
     }
 
     function expandCategory() {
-        dispatch(setTopLevelCategories({...filters.topLevelCategories, [category.id.toString()]: !filters.topLevelCategories[category.id.toString()]}));
+        dispatch(setTopLevelCategories({
+            ...filters.topLevelCategories,
+            [category.id.toString()]: !filters.topLevelCategories[category.id.toString()]
+        }));
     }
 
     return (

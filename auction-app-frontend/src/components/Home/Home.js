@@ -12,6 +12,7 @@ const Home = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        // TODO Implement custom hook for hanlding shop state
         dispatch(setProducts([]));
         dispatch(setPage(0));
         dispatch(setIsLastPage(false));

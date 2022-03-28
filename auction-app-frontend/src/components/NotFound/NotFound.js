@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setNotFoundError } from 'features/notFounHandler/notFoundSlice'
 
 import appLogo from 'assets/img/appLogo.svg';
+
 import 'assets/style/not-found.scss';
 
 const NotFound = () => {

@@ -9,7 +9,7 @@ import 'assets/style/product.scss';
 
 const Product = ({ product, layoutStyle }) => {
     const navigate = useNavigate();
-    
+
     return (
         <div className='product-container'>
             <div className={layoutStyle}>

@@ -28,7 +28,10 @@ const ProductOverview = () => {
             .catch(err => {
                 setErrorAlert(
                     err.response?.data ||
-                    { error: 'Connection Error', message: 'Could not establish connection to server' }
+                    {
+                        error: 'Connection Error',
+                        message: 'Could not establish connection to server'
+                    }
                 );
             });
     }, [params.id, bidInfoAlerts]);
