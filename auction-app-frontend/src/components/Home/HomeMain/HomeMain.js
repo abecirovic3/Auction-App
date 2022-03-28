@@ -24,7 +24,6 @@ const HomeMain = () => {
             .then(response => {
                 setCategories(response.data);
 
-                // TODO need to refactor this to load on app load
                 const tlc = {};
                 const sc = {};
                 for (let category of response.data) {

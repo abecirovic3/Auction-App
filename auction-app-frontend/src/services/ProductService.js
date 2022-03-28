@@ -27,7 +27,7 @@ function getProducts(page, size, filters, sortKey, sortDirection) {
     if (sortDirection) {
         queryArray.push(`sortDirection=${sortDirection}`);
     }
-    
+
     return api.get('/products' + (queryArray.length > 0 ? `?${queryArray.join('&')}` : ''));
 }
 

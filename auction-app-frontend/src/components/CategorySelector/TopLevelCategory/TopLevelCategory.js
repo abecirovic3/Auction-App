@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Checkbox, Collapse, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,29 +9,24 @@ import minusIcon from 'assets/img/minus.png';
 import 'assets/style/top-level-category.scss';
 
 const TopLevelCategory = ({ category }) => {
-    const [expand, setExpand] = useState(false);
     const disableFilters = useSelector(state => state.productFilters.disableFilters);
     const filters = useSelector(state => state.productFilters.filters);
     const dispatch = useDispatch();
 
     function handleCheckboxChange(e) {
-        console.log("Change");
-        // dispatch(setDisableFilters(true));
-        // const categoryId = parseInt(e.currentTarget.id);
-        //
-        // if (!e.currentTarget.checked) {
-        //     let categoryIds = filters.categories.filter(id => id !== categoryId);
-        //     dispatch(setFilters({...filters, categories: categoryIds}));
-        // } else {
-        //     dispatch(setFilters({...filters, categories: [...filters.categories, categoryId]}));
-        // }
+        dispatch(setDisableFilters(true));
+        dispatch(setSubCategories({...filters.subCategories, [e.currentTarget.id]: e.currentTarget.checked}));
+    }
+
+    function expandCategory() {
+        dispatch(setTopLevelCategories({...filters.topLevelCategories, [category.id.toString()]: !filters.topLevelCategories[category.id.toString()]}));
     }
 
     return (
         <div className='top-level-category-container'>
             <div className="selector">
                 <h3 className='top-level-category-name'>{category.name}</h3>
-                <IconButton size='medium' onClick={() => {dispatch(setTopLevelCategories({...filters.topLevelCategories, [category.id.toString()]: !filters.topLevelCategories[category.id.toString()]}))}}>
+                <IconButton size='medium' onClick={() => {expandCategory()}}>
                     <img src={filters.topLevelCategories[category.id.toString()] ? minusIcon : plusIcon} alt='toggle'/>
                 </IconButton>
             </div>
@@ -43,7 +37,7 @@ const TopLevelCategory = ({ category }) => {
                             <Checkbox
                                 id={subCategory.id.toString()}
                                 color='primary'
-                                defaultChecked={filters.subCategories[subCategory.id.toString()]}
+                                checked={filters.subCategories[subCategory.id.toString()]}
                                 disabled={disableFilters}
                                 onChange={e => {handleCheckboxChange(e)}}
                             />
