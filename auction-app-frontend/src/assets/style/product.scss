@@ -1,3 +1,5 @@
+@use "base";
+
 .product-container {
   display: flex;
   flex-direction: column;
@@ -15,7 +17,7 @@
   }
 
   .price-tag {
-    color: #8367D8;
+    color: base.$primary-color;
     font-size: 18px;
     display: inline;
   }
@@ -24,4 +26,8 @@
     height: 350px;
     max-width: 100%;
   }
+}
+
+.product-container:hover {
+  cursor: pointer;
 }

@@ -7,11 +7,10 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import { setRegistered } from 'features/register/registerSlice';
 import { setLoggedIn } from 'features/login/loginSlice';
 import AuthService from 'services/AuthService';
 
@@ -22,6 +21,7 @@ import 'assets/style/form.scss'
 
 const Login = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,14 +30,7 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
-    const userRegistered = useSelector((state) => state.register.userRegistered);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        return () => {
-            dispatch(setRegistered(false));
-        }
-    })
 
     function handleSubmit() {
         setLoading(true);
@@ -46,7 +39,11 @@ const Login = () => {
                 response => {
                     setLoading(false);
                     dispatch(setLoggedIn(true));
-                    navigate('/');
+                    if (state?.loginAfterRegister) {
+                        navigate('/');
+                    } else {
+                        navigate(-1);
+                    }
                 },
                 err => {
                     setLoading(false);
@@ -61,11 +58,20 @@ const Login = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={MainTheme}>
-                {userRegistered && <CustomAlert
-                                        color='success'
-                                        title='Registration successful!'
-                                        message='You may now login.'
-                                    />
+                {state?.loginAfterRegister &&
+                    <CustomAlert
+                        color='success'
+                        title='Registration successful!'
+                        message='You may now login.'
+                    />
+                }
+                {state?.reinitiateLogin &&
+                    <CustomAlert
+                        color='warning'
+                        title='You have been logged out!'
+                        message='Please login again to proceed'
+                        showAlertDuration={7000}
+                    />
                 }
                 <div className='form-style'>
                     <Container className='form-container' maxWidth='sm'>

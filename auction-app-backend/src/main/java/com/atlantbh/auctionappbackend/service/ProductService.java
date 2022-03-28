@@ -1,7 +1,9 @@
 package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
+import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,14 +17,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductUserBidRepository productUserBidRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository) {
         this.productRepository = productRepository;
+        this.productUserBidRepository = productUserBidRepository;
     }
 
     public PaginatedResponse<Product> getAllProductsPaginated(int page, int size, String sortKey, String sortDirection) {
@@ -58,4 +63,22 @@ public class ProductService {
     private Direction getSortDirection(String direction) {
         return direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
     }
+
+    public Product getProductOverview(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Product with id " + id + " doesn't exist"
+            );
+        } else {
+            Product product = optionalProduct.get();
+            List<ProductUserBid> productBids =
+                    productUserBidRepository.findByProduct(product, Sort.by("amount").descending());
+            product.setHighestBid(productBids.size() > 0 ? productBids.get(0).getAmount() : null);
+            product.setNumberOfBids(productBids.size());
+            return product;
+        }
+    }
+
 }

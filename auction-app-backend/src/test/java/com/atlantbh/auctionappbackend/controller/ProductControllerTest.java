@@ -1,13 +1,9 @@
 package com.atlantbh.auctionappbackend.controller;
 
-import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
-import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.security.SecurityConfig;
 import com.atlantbh.auctionappbackend.service.ProductService;
-import com.atlantbh.auctionappbackend.service.UserService;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +12,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.any;
-
 import javax.servlet.Filter;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -58,8 +52,8 @@ public class ProductControllerTest {
                 "First Product",
                 "Description of first product",
                 10.10,
-                LocalDate.of(2022, 3, 10),
-                LocalDate.of(2022, 4, 10),
+                LocalDateTime.of(2022, 3, 10, 10, 15),
+                LocalDateTime.of(2022, 4, 10, 10, 15),
                 null,
                 null,
                 null
@@ -69,8 +63,8 @@ public class ProductControllerTest {
                 "Second Product",
                 "Description of second product",
                 20.20,
-                LocalDate.of(2022, 3, 10),
-                LocalDate.of(2022, 4, 10),
+                LocalDateTime.of(2022, 3, 10, 10, 15),
+                LocalDateTime.of(2022, 4, 10, 10, 15),
                 null,
                 null,
                 null
