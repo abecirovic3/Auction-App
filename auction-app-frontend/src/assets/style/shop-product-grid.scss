@@ -24,4 +24,19 @@
       margin-right: 20px;
     }
   }
+
+  .explore-more-container {
+    text-align: center;
+    margin: 50px auto 40px auto;
+
+    .MuiButton-root {
+      text-transform: capitalize;
+      font-size: 18px;
+      font-weight: 700;
+      width: 30%;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border-radius: 0;
+    }
+  }
 }

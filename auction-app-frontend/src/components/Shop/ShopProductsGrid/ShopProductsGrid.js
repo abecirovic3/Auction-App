@@ -17,6 +17,7 @@ import listPurpleIcon from 'assets/img/list-purple.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
+import { LoadingButton } from '@mui/lab';
 
 const ShopProductsGrid = () => {
     const pageSize = 3;
@@ -27,6 +28,7 @@ const ShopProductsGrid = () => {
     const page = useSelector(state => state.shop.page);
     const isLastPage = useSelector(state => state.shop.isLastPage);
     const filters = useSelector(state => state.productFilters.filters);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
@@ -49,9 +51,9 @@ const ShopProductsGrid = () => {
     }, [filters]);
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, initFetch) {
+        setLoading(true);
         ProductService.getProducts(page, size, filters, sortKey, sortDirection)
             .then(response => {
-                console.log(response.data);
                 if (initFetch) {
                     dispatch(setProducts(response.data.data));
                 } else {
@@ -59,9 +61,11 @@ const ShopProductsGrid = () => {
                 }
                 dispatch(setIsLastPage(response.data.currentPage + 1 === response.data.totalPages));
                 dispatch(setDisableFilters(false));
+                setLoading(false);
             })
             .catch(err => {
                 console.log(err);
+                setLoading(false);
             });
     }
 
@@ -103,9 +107,19 @@ const ShopProductsGrid = () => {
                         </Grid>
                     ))}
                 </Grid>
-                {!isLastPage &&
-                    <Button onClick={() => {dispatch(setPage(page + 1))}} variant='contained'>Load more</Button>
-                }
+                <div className='explore-more-container'>
+                    {!isLastPage &&
+                        <LoadingButton
+                            loading={loading}
+                            loadingPosition='end'
+                            endIcon={<div/>}
+                            onClick={() => {dispatch(setPage(page + 1))}}
+                            variant='contained'
+                        >
+                            Explore More
+                        </LoadingButton>
+                    }
+                </div>
             </div>
         </ThemeProvider>
     );
