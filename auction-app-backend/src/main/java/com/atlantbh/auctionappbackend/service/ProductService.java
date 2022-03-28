@@ -58,9 +58,15 @@ public class ProductService {
     ) {
         boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
+
         Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
                 categoryIds, categoriesAvailable, minPrice, maxPrice, PageRequest.of(page, size, Sort.by(sortOrders))
         );
+
+        for (Product p : pageProducts.getContent()) {
+            p.setHighestBid((Double) productUserBidRepository.findHighestBidForProduct(p.getId()));
+        }
+
         return new PaginatedResponse<>(
                 pageProducts.getContent(),
                 pageProducts.getNumber(),

@@ -26,8 +26,8 @@ const Product = ({ product, layoutStyle }) => {
                         }
                     </div>
                     <div>
-                        <p className='start-price-label'>Start from</p>
-                        <p className='price-tag'> &nbsp;${product.startPrice}</p>
+                        <p className='start-price-label'>{product.highestBid ? 'Highest bid' : 'Start from'}</p>
+                        <p className='price-tag'> &nbsp;${product.highestBid ? product.highestBid : product.startPrice}</p>
                     </div>
                     {layoutStyle === 'horizontal-container' &&
                         <div>
