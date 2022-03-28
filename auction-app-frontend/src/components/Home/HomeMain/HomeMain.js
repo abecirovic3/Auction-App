@@ -12,12 +12,14 @@ import highlightedProduct from 'assets/img/home-main-product.png';
 import bidNowIcon from 'assets/img/bid-now.svg';
 
 import 'assets/style/home-page-main.scss';
+import CustomAlert from 'components/Alert/CustomAlert';
 
 const HomeMain = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const filters = useSelector((state) => state.productFilters.filters);
+    const [alert, setAlert] = useState(null);
 
     useEffect(() => {
         CategoryService.getAllCategories()
@@ -36,7 +38,10 @@ const HomeMain = () => {
                 dispatch(setSubCategories(sc));
             })
             .catch(err => {
-                console.log(err);
+                setAlert(
+                    err.response?.data ||
+                    { error: 'Connection Error', message: 'Could not establish connection to server' }
+                );
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -62,6 +67,15 @@ const HomeMain = () => {
         <StyledEngineProvider injectFirst>
             <div className='home-page-main-container'>
                 <div className='home-page-main-content-container'>
+                    {
+                        alert &&
+                        <CustomAlert
+                            color='error'
+                            title={alert.error}
+                            message={alert.message}
+                            showAlertDuration={60000}
+                        />
+                    }
                     <Grid
                         container
                         columnSpacing={2}

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Stack } from '@mui/material';
+
+import { setErrorAlerts } from 'features/shop/shopSlice';
 
 import CategoryService from 'services/CategoryService';
 
@@ -7,6 +10,8 @@ import TopLevelCategory from 'components/CategorySelector/TopLevelCategory/TopLe
 
 const CategorySelector = () => {
     const [categories, setCategories] = useState([]);
+    const errorAlerts = useSelector(state => state.shop.errorAlerts);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         CategoryService.getAllCategories()
@@ -14,8 +19,16 @@ const CategorySelector = () => {
                 setCategories(response.data);
             })
             .catch(err => {
-                console.log(err);
+                dispatch(setErrorAlerts([
+                    ...errorAlerts,
+                    err.response?.data ||
+                    {
+                        error: 'Connection Error',
+                        message: 'Could not establish connection to server'
+                    }
+                ]));
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

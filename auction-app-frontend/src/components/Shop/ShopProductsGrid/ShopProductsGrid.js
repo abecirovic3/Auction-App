@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setDisableFilters } from 'features/productFilters/productFiltersSlice';
-import { setProducts, setPage, setIsLastPage, setGridItemWidth } from 'features/shop/shopSlice';
+import { setProducts, setPage, setIsLastPage, setGridItemWidth, setErrorAlerts } from 'features/shop/shopSlice';
 
 import ProductService from 'services/ProductService';
 
@@ -23,13 +23,13 @@ const ShopProductsGrid = () => {
     const pageSize = 3;
     const isInitialMount = useRef(true);
     const dispatch = useDispatch();
-    // const [itemWidth, setItemWidth] = useState(4);
     const itemWidth = useSelector(state => state.shop.gridItemWidth);
     const products = useSelector(state => state.shop.products);
     const page = useSelector(state => state.shop.page);
     const isLastPage = useSelector(state => state.shop.isLastPage);
     const filters = useSelector(state => state.productFilters.filters);
     const [loading, setLoading] = useState(false);
+    const errorAlerts = useSelector(state => state.shop.errorAlerts);
 
     useEffect(() => {
         if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
@@ -65,7 +65,14 @@ const ShopProductsGrid = () => {
                 setLoading(false);
             })
             .catch(err => {
-                console.log(err);
+                dispatch(setErrorAlerts([
+                    ...errorAlerts,
+                    // err.response?.data ||
+                    {
+                        error: 'Connection Error',
+                        message: 'Could not establish connection to server'
+                    }
+                ]));
                 setLoading(false);
             });
     }

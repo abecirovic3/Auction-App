@@ -6,7 +6,8 @@ export const shopSlice = createSlice({
         products: [],
         page: 0,
         isLastPage: false,
-        gridItemWidth: 4
+        gridItemWidth: 4,
+        errorAlerts: []
     },
     reducers: {
         setProducts: (state, action) => {
@@ -20,6 +21,9 @@ export const shopSlice = createSlice({
         },
         setGridItemWidth: (state, action) => {
             state.gridItemWidth = action.payload
+        },
+        setErrorAlerts: (state, action) => {
+            state.errorAlerts = action.payload
         }
     },
 });
@@ -28,7 +32,8 @@ export const {
     setProducts,
     setPage,
     setIsLastPage,
-    setGridItemWidth
+    setGridItemWidth,
+    setErrorAlerts
 } = shopSlice.actions;
 
 export default shopSlice.reducer;
