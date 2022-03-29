@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Select, MenuItem, Grid, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,6 +10,7 @@ import { setProducts, setPage, setIsLastPage, setGridItemWidth, setErrorAlerts }
 import ProductService from 'services/ProductService';
 
 import Product from 'components/Product/Product';
+import ActiveFiltersBar from 'components/Shop/ShopFilters/ActiveFiltersBar';
 
 import gridGrayIcon from 'assets/img/grid-gray.png';
 import gridPurpleIcon from 'assets/img/grid-purple.png';
@@ -17,7 +19,6 @@ import listPurpleIcon from 'assets/img/list-purple.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
-import { LoadingButton } from '@mui/lab';
 
 const ShopProductsGrid = () => {
     const pageSize = 3;
@@ -81,6 +82,7 @@ const ShopProductsGrid = () => {
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='shop-products-grid-container'>
+                <ActiveFiltersBar />
                 <div className='sort-and-layout-selector'>
                     <Select className='sort-select' value={1}>
                         <MenuItem value={1}>Default Sorting</MenuItem>
