@@ -15,6 +15,7 @@ import 'assets/style/top-level-category.scss';
 const TopLevelCategory = ({ category }) => {
     const disableFilters = useSelector(state => state.productFilters.disableFilters);
     const filters = useSelector(state => state.productFilters.filters);
+    const topLevelCategories = useSelector(state => state.productFilters.topLevelCategories)
     const dispatch = useDispatch();
 
     function handleCheckboxChange(e) {
@@ -27,8 +28,8 @@ const TopLevelCategory = ({ category }) => {
 
     function expandCategory() {
         dispatch(setTopLevelCategories({
-            ...filters.topLevelCategories,
-            [category.id.toString()]: !filters.topLevelCategories[category.id.toString()]
+            ...topLevelCategories,
+            [category.id.toString()]: !topLevelCategories[category.id.toString()]
         }));
     }
 
@@ -37,10 +38,10 @@ const TopLevelCategory = ({ category }) => {
             <div className="selector">
                 <h3 className='top-level-category-name'>{category.name}</h3>
                 <IconButton size='medium' onClick={() => {expandCategory()}}>
-                    <img src={filters.topLevelCategories[category.id.toString()] ? minusIcon : plusIcon} alt='toggle'/>
+                    <img src={topLevelCategories[category.id.toString()] ? minusIcon : plusIcon} alt='toggle'/>
                 </IconButton>
             </div>
-            <Collapse in={filters.topLevelCategories[category.id.toString()]}>
+            <Collapse in={topLevelCategories[category.id.toString()]}>
                 <div className='sub-categories-container'>
                     {category.subCategories.map(subCategory => (
                         <div key={subCategory.id} className='sub-category-selector'>
