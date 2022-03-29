@@ -47,7 +47,11 @@ const TopLevelCategory = ({ category }) => {
                             <Checkbox
                                 id={subCategory.id.toString()}
                                 color='primary'
-                                checked={filters.subCategories[subCategory.id.toString()]}
+                                checked={
+                                    filters.subCategories[subCategory.id.toString()] ?
+                                        filters.subCategories[subCategory.id.toString()] :
+                                        false
+                                }
                                 disabled={disableFilters}
                                 onChange={e => {handleCheckboxChange(e)}}
                             />
