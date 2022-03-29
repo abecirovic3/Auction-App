@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -106,5 +108,24 @@ public class ProductService {
 
     private Direction getSortDirection(String direction) {
         return direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
+    }
+
+    public Map<String, Double> getProductPriceRange() {
+        List<Object[]> record = productRepository.findProductPriceRange();
+        for (Object[] o : record) {
+            System.out.println("--------------------------");
+            for (Object obj : o) {
+                System.out.println(obj);
+            }
+            System.out.println("--------------------------");
+        }
+        Map<String, Double> response = new HashMap<>();
+        response.put("min", (Double) record.get(0)[0]);
+        if (record.get(0)[2] != null && (Double) record.get(0)[2] > (Double) record.get(0)[1]) {
+            response.put("max", (Double) record.get(0)[2]);
+        } else {
+            response.put("max", (Double) record.get(0)[1]);
+        }
+        return response;
     }
 }

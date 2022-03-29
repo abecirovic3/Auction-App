@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE (:categoriesAvailable = FALSE or p.category.id IN :categories) AND (:minPrice is null or p.startPrice >= :minPrice) AND (:maxPrice is null or p.startPrice <= :maxPrice and ((SELECT MAX(pub1.amount) FROM ProductUserBid pub1 WHERE pub1.product.id = p.id) is null or (SELECT MAX(pub1.amount) FROM ProductUserBid pub1 WHERE pub1.product.id = p.id) <= :maxPrice))")
@@ -18,4 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("maxPrice") Double maxPrice,
             Pageable pageable
     );
+
+    @Query("SELECT min(p.startPrice), max(p.startPrice), (SELECT max(pub.amount) FROM ProductUserBid pub) FROM Product p")
+    List<Object[]> findProductPriceRange();
 }
