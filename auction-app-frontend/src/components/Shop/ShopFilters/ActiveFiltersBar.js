@@ -2,25 +2,27 @@ import { IconButton } from '@mui/material';
 import removeFilter from 'assets/img/x.png';
 
 import 'assets/style/active-filters-bar.scss';
+import { useSelector } from 'react-redux';
 
 const ActiveFiltersBar = () => {
+    const filters = useSelector(state => state.productFilters.filters);
+
     return (
         <div className='active-filters-container'>
             <div>
-                <h5 className='filter-type'>Filter Type</h5>
+                <h5 className='filter-type'>Category</h5>
                 <div className='filter-names-container'>
-                    <div>
-                        <h5 className='filter-name'>Filter name</h5>
-                        <IconButton>
-                            <img src={removeFilter} alt='remove'/>
-                        </IconButton>
-                    </div>
-                    <div>
-                        <h5 className='filter-name'>Filter name</h5>
-                        <IconButton>
-                            <img src={removeFilter} alt='remove'/>
-                        </IconButton>
-                    </div>
+                    {Object.keys(filters.subCategories).map(subCategoryId => (
+                        filters.subCategories[subCategoryId].selected &&
+                        <div key={subCategoryId}>
+                            <h5 className='filter-name'>
+                                {filters.subCategories[subCategoryId].parentCategoryName}
+                                /{filters.subCategories[subCategoryId].name}</h5>
+                            <IconButton>
+                                <img src={removeFilter} alt='remove'/>
+                            </IconButton>
+                        </div>
+                    ))}
                 </div>
             </div>
             <div className='filter-box'>

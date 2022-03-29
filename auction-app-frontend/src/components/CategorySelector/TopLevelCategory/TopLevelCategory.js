@@ -52,7 +52,7 @@ const TopLevelCategory = ({ category }) => {
                                 id={subCategory.id.toString()}
                                 color='primary'
                                 checked={
-                                    filters.subCategories[subCategory.id.toString()].selected ?
+                                    filters.subCategories[subCategory.id.toString()]?.selected ?
                                         filters.subCategories[subCategory.id.toString()].selected :
                                         false
                                 }
