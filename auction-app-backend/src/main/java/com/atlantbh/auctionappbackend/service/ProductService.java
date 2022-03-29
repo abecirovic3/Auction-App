@@ -61,6 +61,15 @@ public class ProductService {
         boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
 
+        if (minPrice == null ^ maxPrice == null) {
+            Map<String, Double> priceRange = getProductPriceRange();
+            if (minPrice == null) {
+                minPrice = priceRange.get("min");
+            } else {
+                maxPrice = priceRange.get("max");
+            }
+        }
+
         Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
                 categoryIds, categoriesAvailable, minPrice, maxPrice, PageRequest.of(page, size, Sort.by(sortOrders))
         );
@@ -112,13 +121,6 @@ public class ProductService {
 
     public Map<String, Double> getProductPriceRange() {
         List<Object[]> record = productRepository.findProductPriceRange();
-        for (Object[] o : record) {
-            System.out.println("--------------------------");
-            for (Object obj : o) {
-                System.out.println(obj);
-            }
-            System.out.println("--------------------------");
-        }
         Map<String, Double> response = new HashMap<>();
         response.put("min", (Double) record.get(0)[0]);
         if (record.get(0)[2] != null && (Double) record.get(0)[2] > (Double) record.get(0)[1]) {
