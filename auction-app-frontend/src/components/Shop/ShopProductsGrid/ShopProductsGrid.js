@@ -55,12 +55,13 @@ const ShopProductsGrid = () => {
         setLoading(true);
         ProductService.getProducts(page, size, filters, sortKey, sortDirection)
             .then(response => {
+                console.log(response.data);
                 if (initFetch) {
                     dispatch(setProducts(response.data.data));
                 } else {
                     dispatch(setProducts([...products, ...response.data.data]));
                 }
-                dispatch(setIsLastPage(response.data.currentPage + 1 === response.data.totalPages));
+                dispatch(setIsLastPage(response.data.currentPage + 1 >= response.data.totalPages));
                 dispatch(setDisableFilters(false));
                 setLoading(false);
             })
@@ -116,6 +117,9 @@ const ShopProductsGrid = () => {
                     ))}
                 </Grid>
                 <div className='explore-more-container'>
+                    {products.length === 0 &&
+                        <h3>No products match desired filters</h3>
+                    }
                     {!isLastPage &&
                         <LoadingButton
                             loading={loading}
