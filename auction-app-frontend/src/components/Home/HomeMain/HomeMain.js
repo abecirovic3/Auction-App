@@ -31,7 +31,11 @@ const HomeMain = () => {
                 for (let category of response.data) {
                     tlc[category.id.toString()] = false;
                     for (let subCategory of category.subCategories) {
-                        sc[subCategory.id.toString()] = false;
+                        sc[subCategory.id.toString()] = {
+                            name: subCategory.name,
+                            parentCategoryName: category.name,
+                            selected: false
+                        };
                     }
                 }
                 dispatch(setTopLevelCategories(tlc));
@@ -53,7 +57,11 @@ const HomeMain = () => {
             for (let category of categories) {
                 if (category.id === parseInt(categoryId)) {
                     for (let subCategory of category.subCategories) {
-                        sc[subCategory.id.toString()] = true;
+                        sc[subCategory.id.toString()] = {
+                            name: subCategory.name,
+                            parentCategoryName: category.name,
+                            selected: true
+                        };
                     }
                 }
             }

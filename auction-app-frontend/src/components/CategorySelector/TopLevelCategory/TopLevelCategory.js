@@ -22,7 +22,10 @@ const TopLevelCategory = ({ category }) => {
         dispatch(setDisableFilters(true));
         dispatch(setSubCategories({
             ...filters.subCategories,
-            [e.currentTarget.id]: e.currentTarget.checked
+            [e.currentTarget.id]: {
+                ...filters.subCategories[e.currentTarget.id],
+                selected: e.currentTarget.checked
+            }
         }));
     }
 
@@ -49,8 +52,8 @@ const TopLevelCategory = ({ category }) => {
                                 id={subCategory.id.toString()}
                                 color='primary'
                                 checked={
-                                    filters.subCategories[subCategory.id.toString()] ?
-                                        filters.subCategories[subCategory.id.toString()] :
+                                    filters.subCategories[subCategory.id.toString()].selected ?
+                                        filters.subCategories[subCategory.id.toString()].selected :
                                         false
                                 }
                                 disabled={disableFilters}

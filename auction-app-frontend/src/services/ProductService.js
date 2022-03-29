@@ -34,7 +34,7 @@ function getProducts(page, size, filters, sortKey, sortDirection) {
 function getCategoriesQuery(categoriesMap) {
     let categories = [];
     for (let keyId of Object.keys(categoriesMap)) {
-        if (categoriesMap[keyId]) {
+        if (categoriesMap[keyId].selected) {
             categories.push(keyId);
         }
     }
