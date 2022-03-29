@@ -33,7 +33,7 @@ const ShopProductsGrid = () => {
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
 
     useEffect(() => {
-        if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
+        if (!isInitialMount.current || (isInitialMount.current && products.length === 0 && Object.keys(filters.subCategories).length !== 0)) {
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,10 +79,25 @@ const ShopProductsGrid = () => {
             });
     }
 
+    function showActiveFiltersBar() {
+        if (filters.minPrice != null) {
+            return true;
+        } else {
+            for (const subCategoryId in filters.subCategories) {
+                if (filters.subCategories[subCategoryId].selected) {
+                    return true
+                }
+            }
+        }
+        return false;
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='shop-products-grid-container'>
-                <ActiveFiltersBar />
+                {showActiveFiltersBar() &&
+                    <ActiveFiltersBar />
+                }
                 <div className='sort-and-layout-selector'>
                     <Select className='sort-select' value={1}>
                         <MenuItem value={1}>Default Sorting</MenuItem>

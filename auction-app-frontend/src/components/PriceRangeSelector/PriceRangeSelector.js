@@ -17,6 +17,7 @@ const PriceRangeSelector = () => {
     const [maxPriceField, setMaxPriceField] = useState('');
     const [priceSlider, setPriceSlider] = useState([0, 0]);
     const disableFilters = useSelector(state => state.productFilters.disableFilters);
+    const filters = useSelector(state => state.productFilters.filters);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -43,6 +44,14 @@ const PriceRangeSelector = () => {
         }
     }, [dispatch, priceRangeFilter]);
 
+    useEffect(() => {
+        if (filters.minPrice === null && filters.maxPrice === null) {
+            setPriceSlider([minMaxPrice[0], minMaxPrice[1]]);
+            setMinPriceField(minMaxPrice[0].toString());
+            setMaxPriceField(minMaxPrice[1].toString());
+        }
+    }, [minMaxPrice, filters])
+
     function handleSliderChange(event, newValue) {
         setPriceSlider(newValue);
         setMaxPriceField(newValue[1].toString());
@@ -51,7 +60,11 @@ const PriceRangeSelector = () => {
 
     function handleChangeCommitted() {
         if (priceSlider[0] !== priceRangeFilter[0] || priceSlider[1] !== priceRangeFilter[1]) {
-            setPriceRangeFilter(priceSlider);
+            if (priceSlider[0] === minMaxPrice[0] && priceSlider[1] === minMaxPrice[1]) {
+                setPriceRangeFilter([null, null])
+            } else {
+                setPriceRangeFilter(priceSlider);
+            }
         }
     }
 
@@ -70,15 +83,19 @@ const PriceRangeSelector = () => {
             const newValue = [];
 
             if (e.target.id === 'minPriceInput') {
-                newValue.push(value, priceRangeFilter[1]);
+                newValue.push(value, priceSlider[1]);
             }
             else if (e.target.id === 'maxPriceInput') {
-                newValue.push(priceRangeFilter[0], value);
+                newValue.push(priceSlider[0], value);
             }
 
             if (newValue[0] !== priceRangeFilter[0] || newValue[1] !== priceRangeFilter[1]) {
                 setPriceSlider(newValue);
-                setPriceRangeFilter(newValue);
+                if (newValue[0] === minMaxPrice[0] && newValue[1] === minMaxPrice[1]) {
+                    setPriceRangeFilter([null, null]);
+                } else {
+                    setPriceRangeFilter(newValue);
+                }
             }
         } else {
             setMinPriceField(priceRangeFilter[0].toString());
