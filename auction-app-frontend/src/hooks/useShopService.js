@@ -83,8 +83,8 @@ function useShopService() {
     }
 
     function removePriceFilters() {
-        setMinPrice(null);
-        setMaxPrice(null);
+        setMinPriceFilter(null);
+        setMaxPriceFilter(null);
     }
 
     function setMinPriceFilter(value) {
