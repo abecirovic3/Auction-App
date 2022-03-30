@@ -1,9 +1,5 @@
 import { Checkbox, Collapse, IconButton } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-
-import {
-    setDisableFilters,
-} from 'features/productFilters/productFiltersSlice';
+import { useSelector } from 'react-redux';
 
 import useShopService from 'hooks/useShopService';
 
@@ -15,12 +11,10 @@ import 'assets/style/top-level-category.scss';
 const TopLevelCategory = ({ category }) => {
     const disableFilters = useSelector(state => state.productFilters.disableFilters);
     const filters = useSelector(state => state.productFilters.filters);
-    const topLevelCategories = useSelector(state => state.productFilters.topLevelCategories)
-    const dispatch = useDispatch();
+    const topLevelCategories = useSelector(state => state.productFilters.topLevelCategories);
     const shopService = useShopService();
 
     function handleCheckboxChange(e) {
-        dispatch(setDisableFilters(true));
         shopService.setSubCategoryFilter(e.currentTarget.id, e.currentTarget.checked);
     }
 
