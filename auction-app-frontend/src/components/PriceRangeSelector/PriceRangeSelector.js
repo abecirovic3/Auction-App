@@ -11,7 +11,7 @@ import ProductPriceRangeService from 'services/ProductPriceRangeService';
 
 const PriceRangeSelector = () => {
     const isInitialMount = useRef(true);
-    const [priceRangeFilter, setPriceRangeFilter] = useState([0, 0]);
+    const [priceRangeFilter, setPriceRangeFilter] = useState([null, null]);
     const [minMaxPrice, setMinMaxPrice] = useState([0, 0]);
     const [minPriceField, setMinPriceField] = useState('');
     const [maxPriceField, setMaxPriceField] = useState('');
@@ -36,21 +36,28 @@ const PriceRangeSelector = () => {
     }, []);
 
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            dispatch(setDisableFilters(true));
-            dispatch(setPriceRange(priceRangeFilter));
+        if (!isInitialMount.current) {
+            if (filters.minPrice !== priceRangeFilter[0] || filters.maxPrice !== priceRangeFilter[1]) {
+                dispatch(setDisableFilters(true));
+                dispatch(setPriceRange(priceRangeFilter));
+            }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, priceRangeFilter]);
 
     useEffect(() => {
-        if (filters.minPrice === null && filters.maxPrice === null) {
-            setPriceSlider([minMaxPrice[0], minMaxPrice[1]]);
-            setMinPriceField(minMaxPrice[0].toString());
-            setMaxPriceField(minMaxPrice[1].toString());
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            if (filters.minPrice === null && filters.maxPrice === null) {
+                setPriceSlider([minMaxPrice[0], minMaxPrice[1]]);
+                setMinPriceField(minMaxPrice[0].toString());
+                setMaxPriceField(minMaxPrice[1].toString());
+                setPriceRangeFilter([null, null]);
+            }
         }
-    }, [minMaxPrice, filters])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters.minPrice, filters.maxPrice]);
 
     function handleSliderChange(event, newValue) {
         setPriceSlider(newValue);
