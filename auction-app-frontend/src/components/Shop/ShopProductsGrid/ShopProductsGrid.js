@@ -35,14 +35,33 @@ const ShopProductsGrid = () => {
     const shopService = useShopService();
 
     useEffect(() => {
+        console.log("Page use effect: ");
         if (Object.keys(filters.subCategories).length === 0) {
+            console.log("Usao prvi if");
             shopService.setInitialCategoryFilters(null);
         } else if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
+            console.log("Usao else if");
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
-        isInitialMount.current = false;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, filters]);
+    }, [page]);
+
+    useEffect(() => {
+        console.log("Filters useEffect");
+        if (isInitialMount.current) {
+            console.log("Prvi if");
+            isInitialMount.current = false;
+        } else {
+            if (page === 0) {
+                console.log("else sa page === 0");
+                fetchProducts(page, pageSize, filters, null, null, true);
+            } else {
+                console.log("else sa else");
+                dispatch(setPage(0));
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filters])
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, initFetch) {
         setLoading(true);
