@@ -38,6 +38,7 @@ const ShopProductsGrid = () => {
         if (Object.keys(filters.subCategories).length === 0) {
             shopService.setInitialCategoryFilters(null);
         } else if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
+            dispatch(setDisableFilters(true));
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,6 +49,7 @@ const ShopProductsGrid = () => {
             isInitialMount.current = false;
         } else {
             if (page === 0) {
+                dispatch(setDisableFilters(true));
                 fetchProducts(page, pageSize, filters, null, null, true);
             } else {
                 dispatch(setPage(0));

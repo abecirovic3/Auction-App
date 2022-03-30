@@ -3,7 +3,6 @@ import { InputAdornment, Slider, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-    setDisableFilters,
     setPriceRange
 } from 'features/productFilters/productFiltersSlice';
 
@@ -11,7 +10,6 @@ import ProductPriceRangeService from 'services/ProductPriceRangeService';
 
 const PriceRangeSelector = () => {
     const isInitialMount = useRef(true);
-    const [priceRangeFilter, setPriceRangeFilter] = useState([null, null]);
     const [minMaxPrice, setMinMaxPrice] = useState([0, 0]);
     const [minPriceField, setMinPriceField] = useState('');
     const [maxPriceField, setMaxPriceField] = useState('');
@@ -36,16 +34,6 @@ const PriceRangeSelector = () => {
     }, []);
 
     useEffect(() => {
-        if (!isInitialMount.current) {
-            if (filters.minPrice !== priceRangeFilter[0] || filters.maxPrice !== priceRangeFilter[1]) {
-                dispatch(setDisableFilters(true));
-                dispatch(setPriceRange(priceRangeFilter));
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, priceRangeFilter]);
-
-    useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
@@ -53,7 +41,6 @@ const PriceRangeSelector = () => {
                 setPriceSlider([minMaxPrice[0], minMaxPrice[1]]);
                 setMinPriceField(minMaxPrice[0].toString());
                 setMaxPriceField(minMaxPrice[1].toString());
-                setPriceRangeFilter([null, null]);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,11 +53,14 @@ const PriceRangeSelector = () => {
     }
 
     function handleChangeCommitted() {
-        if (priceSlider[0] !== priceRangeFilter[0] || priceSlider[1] !== priceRangeFilter[1]) {
-            if (priceSlider[0] === minMaxPrice[0] && priceSlider[1] === minMaxPrice[1]) {
-                setPriceRangeFilter([null, null])
+        const min = priceSlider[0] === minMaxPrice[0] ? null : priceSlider[0];
+        const max = priceSlider[1] === minMaxPrice[1] ? null : priceSlider[1];
+
+        if (min !== filters.minPrice || max !== filters.maxPrice) {
+            if (min == null && max == null) {
+                dispatch(setPriceRange([min, max]));
             } else {
-                setPriceRangeFilter(priceSlider);
+                dispatch(setPriceRange([priceSlider[0], priceSlider[1]]));
             }
         }
     }
@@ -96,17 +86,20 @@ const PriceRangeSelector = () => {
                 newValue.push(priceSlider[0], value);
             }
 
-            if (newValue[0] !== priceRangeFilter[0] || newValue[1] !== priceRangeFilter[1]) {
-                setPriceSlider(newValue);
-                if (newValue[0] === minMaxPrice[0] && newValue[1] === minMaxPrice[1]) {
-                    setPriceRangeFilter([null, null]);
+            const min = newValue[0] === minMaxPrice[0] ? null : priceSlider[0];
+            const max = newValue[1] === minMaxPrice[1] ? null : priceSlider[1];
+
+            if (min !== filters.minPrice || max !== filters.maxPrice) {
+                if (min == null && max == null) {
+                    dispatch(setPriceRange([min, max]));
                 } else {
-                    setPriceRangeFilter(newValue);
+                    dispatch(setPriceRange([newValue[0], newValue[1]]));
                 }
+                setPriceSlider(newValue);
             }
         } else {
-            setMinPriceField(priceRangeFilter[0].toString());
-            setMaxPriceField(priceRangeFilter[1].toString());
+            setMinPriceField(priceSlider[0].toString());
+            setMaxPriceField(priceSlider[1].toString());
         }
     }
 
