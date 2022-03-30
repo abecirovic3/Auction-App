@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Select, MenuItem, Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider } from '@mui/material/styles';
@@ -19,10 +19,10 @@ import listPurpleIcon from 'assets/img/list-purple.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
+import useShopService from 'hooks/useShopService';
 
 const ShopProductsGrid = () => {
     const pageSize = 3;
-    const isInitialMount = useRef(true);
     const dispatch = useDispatch();
     const itemWidth = useSelector(state => state.shop.gridItemWidth);
     const products = useSelector(state => state.shop.products);
@@ -31,26 +31,16 @@ const ShopProductsGrid = () => {
     const filters = useSelector(state => state.productFilters.filters);
     const [loading, setLoading] = useState(false);
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
+    const shopService = useShopService();
 
     useEffect(() => {
-        if (!isInitialMount.current) {
+        if (Object.keys(filters.subCategories).length === 0) {
+            shopService.setInitialCategoryFilters(null);
+        } else {
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page]);
-
-    useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-        } else {
-            if (page === 0) {
-                fetchProducts(page, pageSize, filters, null, null, true);
-            } else {
-                dispatch(setPage(0));
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters]);
+    }, [page, filters]);
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, initFetch) {
         setLoading(true);
@@ -69,7 +59,7 @@ const ShopProductsGrid = () => {
             .catch(err => {
                 dispatch(setErrorAlerts([
                     ...errorAlerts,
-                    // err.response?.data ||
+                    err.response?.data ||
                     {
                         error: 'Connection Error',
                         message: 'Could not establish connection to server'

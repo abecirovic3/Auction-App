@@ -12,7 +12,7 @@ const Home = () => {
 
     useEffect(() => {
         shopService.setInitialShopProductsState();
-        shopService.setInitialProductFilters()
+        shopService.setInitialProductFilters();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

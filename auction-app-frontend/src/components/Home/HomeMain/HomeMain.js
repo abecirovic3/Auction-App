@@ -9,19 +9,18 @@ import bidNowIcon from 'assets/img/bid-now.svg';
 
 import 'assets/style/home-page-main.scss';
 import CustomAlert from 'components/Alert/CustomAlert';
+import useShopService from 'hooks/useShopService';
 
 const HomeMain = () => {
     const categories = useSelector(state => state.category.categories);
     const navigate = useNavigate();
     // TODO make error alerts global
     const [alert] = useState(null);
+    const shopService = useShopService();
 
     function handleSelectCategory(categoryId) {
-        navigate('/shop', {
-            state: {
-                categoryId: parseInt(categoryId)
-            }
-        });
+        shopService.setInitialCategoryFilters(parseInt(categoryId));
+        navigate('/shop');
     }
 
     return (
