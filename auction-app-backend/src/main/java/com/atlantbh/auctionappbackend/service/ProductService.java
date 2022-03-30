@@ -56,7 +56,8 @@ public class ProductService {
                                                                             Double minPrice,
                                                                             Double maxPrice,
                                                                             String sortKey,
-                                                                            String sortDirection
+                                                                            String sortDirection,
+                                                                            String search
     ) {
         boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
@@ -71,7 +72,7 @@ public class ProductService {
         }
 
         Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
-                categoryIds, categoriesAvailable, minPrice, maxPrice, PageRequest.of(page, size, Sort.by(sortOrders))
+                categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, Sort.by(sortOrders))
         );
 
         for (Product p : pageProducts.getContent()) {

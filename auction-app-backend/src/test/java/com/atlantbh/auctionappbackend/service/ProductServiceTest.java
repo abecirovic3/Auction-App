@@ -67,7 +67,7 @@ public class ProductServiceTest {
 
         Page<Product> page = new PageImpl<>(products, PageRequest.of(0,1), 2);
 
-        when(productRepository.findAllWithFiltersAndSortPaginated(any(), anyBoolean(), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(productRepository.findAllWithFiltersAndSortPaginated(any(), anyBoolean(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
 
         PaginatedResponse<Product> paginatedResponse
                 = productService.getAllProductsFilteredSortedAndPaginated(
@@ -77,7 +77,8 @@ public class ProductServiceTest {
                         null,
                         null,
                         "startDate",
-                        "desc"
+                        "desc",
+                        null
         );
 
         assertThat(paginatedResponse.getCurrentPage()).isEqualTo(0);

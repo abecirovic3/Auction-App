@@ -41,11 +41,12 @@ public class ProductController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "name") String sortKey,
-            @RequestParam(defaultValue = "asc") String sortDirection
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = "") String search
     ) {
         return new ResponseEntity<>(
                 productService.getAllProductsFilteredSortedAndPaginated(
-                        page, size, categories, minPrice, maxPrice, sortKey, sortDirection
+                        page, size, categories, minPrice, maxPrice, sortKey, sortDirection, search
                 ),
                 HttpStatus.OK
         );

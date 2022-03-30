@@ -11,12 +11,13 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query("SELECT p FROM Product p WHERE (:categoriesAvailable = FALSE or p.category.id IN :categories) AND (:minPrice is null and :maxPrice is null or ((SELECT MAX(pub1.amount) FROM ProductUserBid pub1 WHERE pub1.product.id = p.id) is null and p.startPrice between :minPrice and :maxPrice or (SELECT MAX(pub2.amount) FROM ProductUserBid pub2 WHERE pub2.product.id = p.id) between :minPrice and :maxPrice))")
+    @Query("SELECT p FROM Product p WHERE (:categoriesAvailable = FALSE or p.category.id IN :categories) AND (:minPrice is null and :maxPrice is null or ((SELECT MAX(pub1.amount) FROM ProductUserBid pub1 WHERE pub1.product.id = p.id) is null and p.startPrice between :minPrice and :maxPrice or (SELECT MAX(pub2.amount) FROM ProductUserBid pub2 WHERE pub2.product.id = p.id) between :minPrice and :maxPrice)) AND (:search = '' or (lower(p.name) LIKE lower(concat('%', :search, '%'))))")
     Page<Product> findAllWithFiltersAndSortPaginated(
             @Param("categories") Collection<Long> categories,
             @Param("categoriesAvailable") boolean categoriesAvailable,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
+            @Param("search") String search,
             Pageable pageable
     );
 
