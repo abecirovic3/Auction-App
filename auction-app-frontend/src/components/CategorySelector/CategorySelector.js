@@ -9,12 +9,15 @@ import useShopService from 'hooks/useShopService';
 const CategorySelector = () => {
     const shopService = useShopService();
     const categories = useSelector(state => state.category.categories);
+    // const filters = useSelector(state => state.productFilters.filters);
     // TODO move error handling to shopService
     // const errorAlerts = useSelector(state => state.shop.errorAlerts);
     const { state } = useLocation();
 
     useEffect(() => {
-        shopService.setInitialCategoryFilters(state.categoryId);
+        if (categories.length === 0) {
+            shopService.setInitialCategoryFilters(state?.categoryId ? state.categoryId : null);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
