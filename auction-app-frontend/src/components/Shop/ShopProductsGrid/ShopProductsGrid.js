@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Select, MenuItem, Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider } from '@mui/material/styles';
@@ -23,6 +23,7 @@ import useShopService from 'hooks/useShopService';
 
 const ShopProductsGrid = () => {
     const pageSize = 3;
+    const isInitialMount = useRef(true);
     const dispatch = useDispatch();
     const itemWidth = useSelector(state => state.shop.gridItemWidth);
     const products = useSelector(state => state.shop.products);
@@ -36,9 +37,10 @@ const ShopProductsGrid = () => {
     useEffect(() => {
         if (Object.keys(filters.subCategories).length === 0) {
             shopService.setInitialCategoryFilters(null);
-        } else {
+        } else if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
+        isInitialMount.current = false;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, filters]);
 
