@@ -35,28 +35,21 @@ const ShopProductsGrid = () => {
     const shopService = useShopService();
 
     useEffect(() => {
-        console.log("Page use effect: ");
         if (Object.keys(filters.subCategories).length === 0) {
-            console.log("Usao prvi if");
             shopService.setInitialCategoryFilters(null);
         } else if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
-            console.log("Usao else if");
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
     useEffect(() => {
-        console.log("Filters useEffect");
         if (isInitialMount.current) {
-            console.log("Prvi if");
             isInitialMount.current = false;
         } else {
             if (page === 0) {
-                console.log("else sa page === 0");
                 fetchProducts(page, pageSize, filters, null, null, true);
             } else {
-                console.log("else sa else");
                 dispatch(setPage(0));
             }
         }
@@ -67,7 +60,6 @@ const ShopProductsGrid = () => {
         setLoading(true);
         ProductService.getProducts(page, size, filters, sortKey, sortDirection)
             .then(response => {
-                console.log(response.data);
                 if (initFetch) {
                     dispatch(setProducts(response.data.data));
                 } else {
