@@ -1,12 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Paper, Stack } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
-
-import CategoryService from 'services/CategoryService';
-
-import { setTopLevelCategories, setSubCategories } from 'features/productFilters/productFiltersSlice';
+import { useSelector } from 'react-redux';
 
 import highlightedProduct from 'assets/img/home-main-product.png';
 import bidNowIcon from 'assets/img/bid-now.svg';
@@ -15,60 +11,17 @@ import 'assets/style/home-page-main.scss';
 import CustomAlert from 'components/Alert/CustomAlert';
 
 const HomeMain = () => {
-    const [categories, setCategories] = useState([]);
+    const categories = useSelector(state => state.category.categories);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const filters = useSelector((state) => state.productFilters.filters);
-    const [alert, setAlert] = useState(null);
-
-    useEffect(() => {
-        CategoryService.getAllCategories()
-            .then(response => {
-                setCategories(response.data);
-
-                const tlc = {};
-                const sc = {};
-                for (let category of response.data) {
-                    tlc[category.id.toString()] = false;
-                    for (let subCategory of category.subCategories) {
-                        sc[subCategory.id.toString()] = {
-                            name: subCategory.name,
-                            parentCategoryName: category.name,
-                            selected: false
-                        };
-                    }
-                }
-                dispatch(setTopLevelCategories(tlc));
-                dispatch(setSubCategories(sc));
-            })
-            .catch(err => {
-                setAlert(
-                    err.response?.data ||
-                    { error: 'Connection Error', message: 'Could not establish connection to server' }
-                );
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // TODO make error alerts global
+    const [alert] = useState(null);
 
     function handleSelectCategory(categoryId) {
-        if (categoryId !== null) {
-            dispatch(setTopLevelCategories({...filters.topLevelCategories, [categoryId]: true}));
-            const sc = {};
-            for (let category of categories) {
-                if (category.id === parseInt(categoryId)) {
-                    for (let subCategory of category.subCategories) {
-                        sc[subCategory.id.toString()] = {
-                            name: subCategory.name,
-                            parentCategoryName: category.name,
-                            selected: true
-                        };
-                    }
-                }
+        navigate('/shop', {
+            state: {
+                categoryId: parseInt(categoryId)
             }
-            dispatch(setSubCategories({...filters.subCategories, ...sc}))
-        }
-
-        navigate('/shop');
+        });
     }
 
     return (

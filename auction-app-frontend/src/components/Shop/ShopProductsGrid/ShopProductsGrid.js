@@ -33,7 +33,7 @@ const ShopProductsGrid = () => {
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
 
     useEffect(() => {
-        if (!isInitialMount.current || (isInitialMount.current && products.length === 0 && Object.keys(filters.subCategories).length !== 0)) {
+        if (!isInitialMount.current) {
             fetchProducts(page, pageSize, filters, null, null, page === 0);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

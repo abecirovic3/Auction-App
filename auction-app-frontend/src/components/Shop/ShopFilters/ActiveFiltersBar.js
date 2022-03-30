@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { IconButton } from '@mui/material';
-
-import { setSubCategories, setMinPrice, setMaxPrice, setFilters } from 'features/productFilters/productFiltersSlice';
 
 import removeFilter from 'assets/img/x.png';
 
 import 'assets/style/active-filters-bar.scss';
+import useShopService from 'hooks/useShopService';
 
 const ActiveFiltersBar = () => {
     const filters = useSelector(state => state.productFilters.filters);
-    const dispatch = useDispatch();
+    const shopService = useShopService();
 
     function showCategoryFilterContainer() {
         for (const subCategoryId in filters.subCategories) {
@@ -21,35 +20,15 @@ const ActiveFiltersBar = () => {
     }
 
     function removeCategoryFilter(subCategoryId) {
-        dispatch(setSubCategories({
-            ...filters.subCategories,
-            [subCategoryId]: {
-                ...filters.subCategories[subCategoryId],
-                selected: false
-            }
-        }));
+        shopService.setSubCategoryFilter(subCategoryId, false);
     }
 
     function removePriceRangeFilter() {
-        dispatch(setMinPrice(null));
-        dispatch(setMaxPrice(null));
+        shopService.removePriceFilters();
     }
 
     function removeAllFilters() {
-        const clearedCategoryFilters = {};
-        for (const categoryId in filters.subCategories) {
-            clearedCategoryFilters[categoryId] = {
-                name: filters.subCategories[categoryId].name,
-                parentCategoryName: filters.subCategories[categoryId].parentCategoryName,
-                selected: false
-            }
-        }
-        dispatch(setFilters({
-            minPrice: null,
-            maxPrice: null,
-            subCategories: clearedCategoryFilters,
-            search: null
-        }));
+        shopService.setInitialProductFilters();
     }
 
     return (

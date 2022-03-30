@@ -4,6 +4,7 @@ import loginReducer from 'features/login/loginSlice'
 import notFoundHandlerReducer from 'features/notFounHandler/notFoundSlice'
 import productFiltersReducer from 'features/productFilters/productFiltersSlice';
 import shopReducer from 'features/shop/shopSlice';
+import categoryReducer from 'features/category/categorySlice';
 
 export default configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export default configureStore({
         login: loginReducer,
         notFoundHandler: notFoundHandlerReducer,
         productFilters: productFiltersReducer,
-        shop: shopReducer
+        shop: shopReducer,
+        category: categoryReducer
     },
 });

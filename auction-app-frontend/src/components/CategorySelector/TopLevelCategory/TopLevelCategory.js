@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
     setDisableFilters,
-    setTopLevelCategories,
-    setSubCategories
 } from 'features/productFilters/productFiltersSlice';
+
+import useShopService from 'hooks/useShopService';
 
 import plusIcon from 'assets/img/plus.png';
 import minusIcon from 'assets/img/minus.png';
@@ -17,23 +17,15 @@ const TopLevelCategory = ({ category }) => {
     const filters = useSelector(state => state.productFilters.filters);
     const topLevelCategories = useSelector(state => state.productFilters.topLevelCategories)
     const dispatch = useDispatch();
+    const shopService = useShopService();
 
     function handleCheckboxChange(e) {
         dispatch(setDisableFilters(true));
-        dispatch(setSubCategories({
-            ...filters.subCategories,
-            [e.currentTarget.id]: {
-                ...filters.subCategories[e.currentTarget.id],
-                selected: e.currentTarget.checked
-            }
-        }));
+        shopService.setSubCategoryFilter(e.currentTarget.id, e.currentTarget.checked);
     }
 
     function expandCategory() {
-        dispatch(setTopLevelCategories({
-            ...topLevelCategories,
-            [category.id.toString()]: !topLevelCategories[category.id.toString()]
-        }));
+        shopService.flipTopLevelCategoryFilterValue(category.id);
     }
 
     return (
