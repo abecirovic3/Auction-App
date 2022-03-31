@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { Grid, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import { setSearch } from 'features/productFilters/productFiltersSlice';
 
 import appLogo from 'assets/img/appLogo.svg';
 import searchIcon from 'assets/img/search.svg';
@@ -12,6 +16,8 @@ import 'assets/style/navbar-bottom.scss';
 const NavbarBottom = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState('');
+    const dispatch = useDispatch();
 
     const hideSearchAndNavigationPaths = [
         'login',
@@ -35,6 +41,13 @@ const NavbarBottom = () => {
             return !locationPath.startsWith('/shop') && !locationPath.startsWith('/account');
         }
         return locationPath.startsWith(path);
+    }
+
+    function handleSearchSubmit() {
+        if (searchValue) {
+            dispatch(setSearch(searchValue));
+            navigate('/shop');
+        }
     }
 
     return (
@@ -63,11 +76,17 @@ const NavbarBottom = () => {
                                 <Grid item xs={9.5}>
                                     <div className='search-navigation-container'>
                                         <OutlinedInput
+                                            onChange={e => {setSearchValue(e.target.value)}}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter') {
+                                                    handleSearchSubmit();
+                                                }
+                                            }}
                                             placeholder='Try enter: Shoes'
                                             className='search-bar'
                                             endAdornment={
                                                 <InputAdornment position='end' >
-                                                    <IconButton>
+                                                    <IconButton onClick={() => {handleSearchSubmit()}}>
                                                         <img src={searchIcon} alt='Search' />
                                                     </IconButton>
                                                 </InputAdornment>
