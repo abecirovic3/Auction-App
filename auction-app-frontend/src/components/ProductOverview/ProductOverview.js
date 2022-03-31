@@ -12,7 +12,6 @@ import ProductImageGallery from 'components/ProductImageGallery/ProductImageGall
 import ProductOverviewInfo from 'components/ProductOverviewInfo/ProductOverviewInfo';
 
 import 'assets/style/product-overview.scss';
-import TokenService from 'services/TokenService';
 
 const ProductOverview = () => {
     const params = useParams();
