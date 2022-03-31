@@ -7,14 +7,14 @@ import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 
 import 'assets/style/product.scss';
 
-const Product = ({ product, layoutStyle }) => {
+const Product = ({ product, layoutStyle, imageStyle }) => {
     const navigate = useNavigate();
 
     return (
         <div className='product-container'>
             <div className={layoutStyle}>
                 <Link to={`/shop/product-overview/${product.id}`}>
-                    <img className='cover-img' src={product.images[0]?.imageUrl || imagePlaceholder} alt={'Product'}/>
+                    <img className={imageStyle} src={product.images[0]?.imageUrl || imagePlaceholder} alt={'Product'}/>
                 </Link>
                 <div className='product-details'>
                     <div>
@@ -54,7 +54,8 @@ const Product = ({ product, layoutStyle }) => {
 };
 
 Product.defaultProps = {
-    layoutStyle: 'vertical-container'
+    layoutStyle: 'vertical-container',
+    imageStyle: 'cover-img'
 }
 
 export default Product;

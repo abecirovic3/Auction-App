@@ -134,6 +134,7 @@ const ShopProductsGrid = () => {
                             <Product
                                 product={product}
                                 layoutStyle={itemWidth === 4 ? 'vertical-container' : 'horizontal-container'}
+                                imageStyle='shop-cover-img'
                             />
                         </Grid>
                     ))}
