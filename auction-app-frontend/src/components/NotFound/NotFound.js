@@ -20,7 +20,7 @@ const NotFound = () => {
 
     return (
         <div className='not-found-container'>
-            <img src={appLogo} alt='logo' />
+            <img src={appLogo} alt='logo' onClick={() => navigate('/')}/>
             <h1 className='status-code'>404</h1>
             <h2 className='message'>Ooops! Looks like the page is Not Found</h2>
             <Button
