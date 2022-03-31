@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 
 import wishlistIcon from 'assets/img/wishlist.png';
@@ -9,16 +9,27 @@ import 'assets/style/product.scss';
 
 const Product = ({ product, layoutStyle, imageStyle }) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <div className='product-container'>
             <div className={layoutStyle}>
-                <Link to={`/shop/product-overview/${product.id}`}>
+                <Link
+                    to={`/shop/product-overview/${product.id}`}
+                    state={{
+                        fromShopPage: location.pathname.includes('/shop')
+                    }}
+                >
                     <img className={imageStyle} src={product.images[0]?.imageUrl || imagePlaceholder} alt={'Product'}/>
                 </Link>
                 <div className='product-details'>
                     <div>
-                        <Link to={`/shop/product-overview/${product.id}`}>
+                        <Link
+                            to={`/shop/product-overview/${product.id}`}
+                            state={{
+                                fromShopPage: location.pathname.includes('/shop')
+                            }}
+                        >
                             <h3 className='name'>{product.name}</h3>
                         </Link>
                         {layoutStyle === 'horizontal-container' &&

@@ -9,11 +9,14 @@ import searchIcon from 'assets/img/search.svg';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/navbar-bottom.scss';
+import useShopService from 'hooks/useShopService';
 
 const NavbarBottom = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState('');
+    const { state } = useLocation();
+    const shopService = useShopService();
 
     const hideSearchAndNavigationPaths = [
         'login',
@@ -22,12 +25,18 @@ const NavbarBottom = () => {
     ];
 
     useEffect(() => {
-        if (location.pathname.includes('/shop/search')) {
+        if (location.pathname.includes('/search')) {
             const pathElements = location.pathname.split('/');
-            setSearchValue(pathElements[pathElements.length - 1]);
-        } else if (location.pathname === '/') {
+            setSearchValue(decodeURI(pathElements[pathElements.length - 1]));
+        } else {
             setSearchValue('');
         }
+
+        if (!location.pathname.includes('/shop')) {
+            shopService.setInitialShopProductsState();
+            shopService.setInitialProductFilters();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);
 
     function showSearchAndNavigation() {
@@ -50,7 +59,7 @@ const NavbarBottom = () => {
 
     function handleSearchSubmit() {
         if (searchValue) {
-            navigate(`/shop/search/${searchValue}`);
+            navigate(`/shop/search/${encodeURI(searchValue)}`);
         } else if (searchValue === '') {
             navigate(`/shop`);
         }
@@ -107,7 +116,7 @@ const NavbarBottom = () => {
                                             HOME
                                         </NavLink>
                                         <NavLink
-                                            to='/shop'
+                                            to={state?.fromShopPage ? - 1 : '/shop'}
                                             className={isActive('/shop') ? 'nav-link-active' : 'nav-link'}
                                         >
                                             SHOP

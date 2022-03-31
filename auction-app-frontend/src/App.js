@@ -36,7 +36,7 @@ function App() {
                     dispatch(setLoggedIn(false));
                 })
         }
-    });
+    }, [dispatch]);
 
     return (
         <BrowserRouter>

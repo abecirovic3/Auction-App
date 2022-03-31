@@ -1,17 +1,21 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { Grid } from '@mui/material';
+
+import { setErrorAlerts } from 'features/shop/shopSlice';
 
 import ShopFilters from 'components/Shop/ShopFilters/ShopFilters';
 import ShopProductsGrid from 'components/Shop/ShopProductsGrid/ShopProductsGrid';
+import CustomAlert from 'components/Alert/CustomAlert';
+import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 
 import 'assets/style/shop-page.scss';
-import CustomAlert from 'components/Alert/CustomAlert';
-import { setErrorAlerts } from 'features/shop/shopSlice';
 
 const Shop = () => {
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
     const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         return () => {
@@ -33,6 +37,9 @@ const Shop = () => {
                         marginBottom='10px'
                     />
                 ))
+            }
+            {location.pathname.includes('/search') &&
+                <BreadCrumbsBar />
             }
             <div className='shop-page-content-container'>
                 <Grid

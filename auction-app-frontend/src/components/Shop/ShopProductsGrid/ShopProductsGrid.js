@@ -81,7 +81,7 @@ const ShopProductsGrid = () => {
             return null;
         }
         const routeElements = path.split('/');
-        return routeElements[routeElements.length - 1];
+        return decodeURI(routeElements[routeElements.length - 1]);
     }
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, search, initFetch) {
