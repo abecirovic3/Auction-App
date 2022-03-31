@@ -41,29 +41,52 @@ const ShopProductsGrid = () => {
             shopService.setInitialCategoryFilters(null);
         } else if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
             dispatch(setDisableFilters(true));
-            fetchProducts(page, pageSize, filters, null, null, page === 0);
+            fetchProducts(
+                page,
+                pageSize,
+                filters,
+                null,
+                null,
+                getSearchParameter(location.pathname),
+                page === 0
+            );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
     useEffect(() => {
-        console.log("Bilo bi dobro kad bi ferceralo");
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
             if (page === 0) {
                 dispatch(setDisableFilters(true));
-                fetchProducts(page, pageSize, filters, null, null, true);
+                fetchProducts(
+                    page,
+                    pageSize,
+                    filters,
+                    null,
+                    null,
+                    getSearchParameter(location.pathname),
+                    true
+                );
             } else {
                 dispatch(setPage(0));
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters]);
+    }, [filters, location.pathname]);
 
-    function fetchProducts(page, size, filters, sortKey, sortDirection, initFetch) {
+    function getSearchParameter(path) {
+        if (!path || !path.includes('search')) {
+            return null;
+        }
+        const routeElements = path.split('/');
+        return routeElements[routeElements.length - 1];
+    }
+
+    function fetchProducts(page, size, filters, sortKey, sortDirection, search, initFetch) {
         setLoading(true);
-        ProductService.getProducts(page, size, filters, sortKey, sortDirection)
+        ProductService.getProducts(page, size, filters, sortKey, sortDirection, search)
             .then(response => {
                 if (initFetch) {
                     dispatch(setProducts(response.data.data));

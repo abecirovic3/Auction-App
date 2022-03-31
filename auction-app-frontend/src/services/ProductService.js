@@ -1,6 +1,6 @@
 import api from 'services/Api';
 
-function getProducts(page, size, filters, sortKey, sortDirection) {
+function getProducts(page, size, filters, sortKey, sortDirection, search) {
     let queryArray = [];
     if (page || page === 0) {
         queryArray.push(`page=${page}`);
@@ -26,6 +26,9 @@ function getProducts(page, size, filters, sortKey, sortDirection) {
     }
     if (sortDirection) {
         queryArray.push(`sortDirection=${sortDirection}`);
+    }
+    if (search) {
+        queryArray.push(`search=${search}`);
     }
 
     return api.get('/products' + (queryArray.length > 0 ? `?${queryArray.join('&')}` : ''));

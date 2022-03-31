@@ -1,11 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Grid, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-
-import { setSearch } from 'features/productFilters/productFiltersSlice';
 
 import appLogo from 'assets/img/appLogo.svg';
 import searchIcon from 'assets/img/search.svg';
@@ -17,13 +14,21 @@ const NavbarBottom = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState('');
-    const dispatch = useDispatch();
 
     const hideSearchAndNavigationPaths = [
         'login',
         'register',
         'forgot-password',
     ];
+
+    useEffect(() => {
+        if (location.pathname.includes('/shop/search')) {
+            const pathElements = location.pathname.split('/');
+            setSearchValue(pathElements[pathElements.length - 1]);
+        } else if (location.pathname === '/') {
+            setSearchValue('');
+        }
+    }, [location.pathname]);
 
     function showSearchAndNavigation() {
         const path = location.pathname;
@@ -45,8 +50,9 @@ const NavbarBottom = () => {
 
     function handleSearchSubmit() {
         if (searchValue) {
-            dispatch(setSearch(searchValue));
             navigate(`/shop/search/${searchValue}`);
+        } else if (searchValue === '') {
+            navigate(`/shop`);
         }
     }
 
@@ -82,6 +88,7 @@ const NavbarBottom = () => {
                                                     handleSearchSubmit();
                                                 }
                                             }}
+                                            value={searchValue}
                                             placeholder='Try enter: Shoes'
                                             className='search-bar'
                                             endAdornment={
