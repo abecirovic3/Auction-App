@@ -53,6 +53,7 @@ function App() {
                         <Route path='/about' element={<About/>}/>
                         <Route path='/shop' element={<Shop />} />
                         <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
+                        <Route path='/shop/search/:search' element={<Shop />}/>
                         <Route path='*' element={<NotFound/>}/>
                     </Routes>
                 </div>

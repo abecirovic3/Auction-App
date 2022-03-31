@@ -46,7 +46,7 @@ const NavbarBottom = () => {
     function handleSearchSubmit() {
         if (searchValue) {
             dispatch(setSearch(searchValue));
-            navigate('/shop');
+            navigate(`/shop/search/${searchValue}`);
         }
     }
 

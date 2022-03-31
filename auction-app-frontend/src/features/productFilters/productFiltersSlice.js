@@ -7,8 +7,8 @@ export const productFiltersSlice = createSlice({
             minPrice: null,
             maxPrice: null,
             subCategories: {},
-            search: null
         },
+        search: null,
         topLevelCategories: {},
         disableFilters: false
     },
@@ -36,7 +36,7 @@ export const productFiltersSlice = createSlice({
             state.filters.maxPrice = action.payload[1]
         },
         setSearch: (state, action) => {
-            state.filters.search = action.payload;
+            state.search = action.payload;
         }
     },
 });

@@ -20,6 +20,7 @@ import listPurpleIcon from 'assets/img/list-purple.png';
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
 import useShopService from 'hooks/useShopService';
+import { useLocation } from 'react-router-dom';
 
 const ShopProductsGrid = () => {
     const pageSize = 3;
@@ -33,6 +34,7 @@ const ShopProductsGrid = () => {
     const [loading, setLoading] = useState(false);
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
     const shopService = useShopService();
+    const location = useLocation();
 
     useEffect(() => {
         if (Object.keys(filters.subCategories).length === 0) {
@@ -45,6 +47,7 @@ const ShopProductsGrid = () => {
     }, [page]);
 
     useEffect(() => {
+        console.log("Bilo bi dobro kad bi ferceralo");
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
@@ -56,7 +59,7 @@ const ShopProductsGrid = () => {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters])
+    }, [filters]);
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, initFetch) {
         setLoading(true);
