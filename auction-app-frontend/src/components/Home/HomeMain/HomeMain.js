@@ -1,21 +1,18 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Paper, Stack } from '@mui/material';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
+import useShopService from 'hooks/useShopService';
+
 import highlightedProduct from 'assets/img/home-main-product.png';
 import bidNowIcon from 'assets/img/bid-now.svg';
 
 import 'assets/style/home-page-main.scss';
-import CustomAlert from 'components/Alert/CustomAlert';
-import useShopService from 'hooks/useShopService';
 
 const HomeMain = () => {
     const categories = useSelector(state => state.category.categories);
     const navigate = useNavigate();
-    // TODO make error alerts global
-    const [alert] = useState(null);
     const shopService = useShopService();
 
     function handleSelectCategory(categoryId) {
@@ -27,15 +24,6 @@ const HomeMain = () => {
         <StyledEngineProvider injectFirst>
             <div className='home-page-main-container'>
                 <div className='home-page-main-content-container'>
-                    {
-                        alert &&
-                        <CustomAlert
-                            color='error'
-                            title={alert.error}
-                            message={alert.message}
-                            showAlertDuration={60000}
-                        />
-                    }
                     <Grid
                         container
                         columnSpacing={2}

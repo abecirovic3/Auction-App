@@ -3,11 +3,13 @@ import { Select, MenuItem, Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { setDisableFilters, setSort } from 'features/productFilters/productFiltersSlice';
-import { setProducts, setPage, setIsLastPage, setGridItemWidth, setErrorAlerts } from 'features/shop/shopSlice';
+import { setProducts, setPage, setIsLastPage, setGridItemWidth } from 'features/shop/shopSlice';
 
 import ProductService from 'services/ProductService';
+import useShopService from 'hooks/useShopService';
 
 import Product from 'components/Product/Product';
 import ActiveFiltersBar from 'components/Shop/ShopFilters/ActiveFiltersBar';
@@ -19,8 +21,7 @@ import listPurpleIcon from 'assets/img/list-purple.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
-import useShopService from 'hooks/useShopService';
-import { useLocation } from 'react-router-dom';
+
 
 const ShopProductsGrid = () => {
     const pageSize = 3;
@@ -33,7 +34,6 @@ const ShopProductsGrid = () => {
     const filters = useSelector(state => state.productFilters.filters);
     const sort = useSelector(state => state.productFilters.sort);
     const [loading, setLoading] = useState(false);
-    const errorAlerts = useSelector(state => state.shop.errorAlerts);
     const shopService = useShopService();
     const location = useLocation();
     const [sortSelect, setSortSelect] = useState('name-asc');
@@ -100,14 +100,7 @@ const ShopProductsGrid = () => {
                 setLoading(false);
             })
             .catch(err => {
-                dispatch(setErrorAlerts([
-                    ...errorAlerts,
-                    err.response?.data ||
-                    {
-                        error: 'Connection Error',
-                        message: 'Could not establish connection to server'
-                    }
-                ]));
+                shopService.handleError(err);
                 setLoading(false);
             });
     }

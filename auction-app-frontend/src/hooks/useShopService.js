@@ -1,5 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setProducts, setPage, setIsLastPage, setGridItemWidth } from 'features/shop/shopSlice';
+import {
+    setProducts,
+    setPage,
+    setIsLastPage,
+    setGridItemWidth,
+    setErrorAlerts
+} from 'features/shop/shopSlice';
 import { setCategories } from 'features/category/categorySlice';
 import {
     setFilters, setMaxPrice,
@@ -14,6 +20,7 @@ function useShopService() {
     const categories = useSelector(state => state.category.categories);
     const filters = useSelector(state => state.productFilters.filters);
     const topLevelCategories = useSelector(state => state.productFilters.topLevelCategories);
+    const errorAlerts = useSelector(state => state.shop.errorAlerts);
 
     function setInitialShopProductsState() {
         dispatch(setProducts([]));
@@ -36,8 +43,8 @@ function useShopService() {
                 dispatch(setTopLevelCategories(categoryFilters.topLevelCategories));
             })
             .catch(err => {
-                console.log(err);
-            })
+                handleError(err);
+            });
     }
 
     function setInitialCategoryFilters(categoryId) {
@@ -54,7 +61,7 @@ function useShopService() {
                     dispatch(setSubCategories(categoryFilters.subCategories));
                 })
                 .catch(err => {
-                    console.log(err);
+                    handleError(err);
                 });
         }
     }
@@ -112,6 +119,17 @@ function useShopService() {
         }));
     }
 
+    function handleError(err) {
+        dispatch(setErrorAlerts([
+            ...errorAlerts,
+            err.response?.data ||
+            {
+                error: 'Connection Error',
+                message: 'Could not establish connection to server'
+            }
+        ]));
+    }
+
     return {
         setInitialShopProductsState,
         setInitialProductFilters,
@@ -120,7 +138,8 @@ function useShopService() {
         setMinPriceFilter,
         setMaxPriceFilter,
         setSubCategoryFilter,
-        flipTopLevelCategoryFilterValue
+        flipTopLevelCategoryFilterValue,
+        handleError
     }
 }
 

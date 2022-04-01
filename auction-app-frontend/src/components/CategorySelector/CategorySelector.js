@@ -5,8 +5,6 @@ import TopLevelCategory from 'components/CategorySelector/TopLevelCategory/TopLe
 
 const CategorySelector = () => {
     const categories = useSelector(state => state.category.categories);
-    // TODO move error handling to shopService
-    // const errorAlerts = useSelector(state => state.shop.errorAlerts);
 
     return (
         <div className='category-selector-container'>

@@ -7,6 +7,7 @@ import {
 } from 'features/productFilters/productFiltersSlice';
 
 import ProductPriceRangeService from 'services/ProductPriceRangeService';
+import useShopService from 'hooks/useShopService';
 
 const PriceRangeSelector = () => {
     const isInitialMount = useRef(true);
@@ -17,6 +18,7 @@ const PriceRangeSelector = () => {
     const disableFilters = useSelector(state => state.productFilters.disableFilters);
     const filters = useSelector(state => state.productFilters.filters);
     const dispatch = useDispatch();
+    const shopService = useShopService();
 
     useEffect(() => {
         ProductPriceRangeService.getPriceRange()
@@ -29,8 +31,9 @@ const PriceRangeSelector = () => {
                 setMaxPriceField(max);
             })
             .catch(err => {
-                console.log(err.response);
+                shopService.handleError(err);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
