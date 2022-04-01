@@ -4,7 +4,7 @@ import { LoadingButton } from '@mui/lab';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setDisableFilters } from 'features/productFilters/productFiltersSlice';
+import { setDisableFilters, setSort } from 'features/productFilters/productFiltersSlice';
 import { setProducts, setPage, setIsLastPage, setGridItemWidth, setErrorAlerts } from 'features/shop/shopSlice';
 
 import ProductService from 'services/ProductService';
@@ -31,10 +31,12 @@ const ShopProductsGrid = () => {
     const page = useSelector(state => state.shop.page);
     const isLastPage = useSelector(state => state.shop.isLastPage);
     const filters = useSelector(state => state.productFilters.filters);
+    const sort = useSelector(state => state.productFilters.sort);
     const [loading, setLoading] = useState(false);
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
     const shopService = useShopService();
     const location = useLocation();
+    const [sortSelect, setSortSelect] = useState('name-asc');
 
     useEffect(() => {
         if (Object.keys(filters.subCategories).length === 0) {
@@ -45,8 +47,8 @@ const ShopProductsGrid = () => {
                 page,
                 pageSize,
                 filters,
-                null,
-                null,
+                sort.sortKey,
+                sort.sortDirection,
                 getSearchParameter(location.pathname),
                 page === 0
             );
@@ -64,8 +66,8 @@ const ShopProductsGrid = () => {
                     page,
                     pageSize,
                     filters,
-                    null,
-                    null,
+                    sort.sortKey,
+                    sort.sortDirection,
                     getSearchParameter(location.pathname),
                     true
                 );
@@ -74,7 +76,7 @@ const ShopProductsGrid = () => {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filters, location.pathname]);
+    }, [filters, sort, location.pathname]);
 
     function getSearchParameter(path) {
         if (!path || !path.includes('search')) {
@@ -123,6 +125,19 @@ const ShopProductsGrid = () => {
         return false;
     }
 
+    function handleSelectChange(e) {
+        setSortSelect(e.target.value);
+        dispatch(setSort(extractSortObject(e.target.value)));
+    }
+
+    function extractSortObject(sortString) {
+        const fields = sortString.split('-');
+        return {
+            sortKey: fields[0],
+            sortDirection: fields[1]
+        };
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='shop-products-grid-container'>
@@ -130,10 +145,32 @@ const ShopProductsGrid = () => {
                     <ActiveFiltersBar />
                 }
                 <div className='sort-and-layout-selector'>
-                    <Select className='sort-select' value={1}>
-                        <MenuItem value={1}>Default Sorting</MenuItem>
-                        <MenuItem value={2}>Other Sorting</MenuItem>
-                        <MenuItem value={3}>Some Other Sorting</MenuItem>
+                    <Select
+                        className='sort-select'
+                        value={sortSelect || ''}
+                        onChange={handleSelectChange}
+                    >
+                        <MenuItem
+                            value='name-asc'
+                        >
+                            Default Sorting
+                        </MenuItem>
+                        <MenuItem value='startDate-desc'
+                        >
+                            Added: New to Old
+                        </MenuItem>
+                        <MenuItem value='endDate-asc'
+                        >
+                            Time left
+                        </MenuItem>
+                        <MenuItem value='startPrice-asc'
+                        >
+                            Price: Low to High
+                        </MenuItem>
+                        <MenuItem value='price-desc'
+                        >
+                            Price: High to Low
+                        </MenuItem>
                     </Select>
                     <div>
                         <Button

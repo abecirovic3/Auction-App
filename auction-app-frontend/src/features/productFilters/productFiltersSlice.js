@@ -8,6 +8,10 @@ export const productFiltersSlice = createSlice({
             maxPrice: null,
             subCategories: {},
         },
+        sort: {
+            sortKey: null,
+            sortDirection: null
+        },
         topLevelCategories: {},
         disableFilters: false
     },
@@ -33,6 +37,15 @@ export const productFiltersSlice = createSlice({
         setPriceRange: (state, action) => {
             state.filters.minPrice = action.payload[0]
             state.filters.maxPrice = action.payload[1]
+        },
+        setSort: (state, action) => {
+            state.sort = action.payload;
+        },
+        setSortKey: (state, action) => {
+            state.sort.sortKey = action.payload;
+        },
+        setSortDirection: (state, action) => {
+            state.sort.sortDirection = action.payload;
         }
     },
 });
@@ -44,7 +57,10 @@ export const {
     setDisableFilters,
     setMinPrice,
     setMaxPrice,
-    setPriceRange
+    setPriceRange,
+    setSort,
+    setSortKey,
+    setSortDirection
 } = productFiltersSlice.actions;
 
 export default productFiltersSlice.reducer;
