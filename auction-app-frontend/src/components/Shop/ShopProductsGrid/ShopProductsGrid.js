@@ -142,6 +142,20 @@ const ShopProductsGrid = () => {
                         className='sort-select'
                         value={sortSelect || ''}
                         onChange={handleSelectChange}
+                        MenuProps={{
+                            PaperProps: {
+                                sx: {
+                                    '& .MuiMenuItem-root.Mui-selected, .MuiMenuItem-root.Mui-selected:focus': {
+                                        backgroundColor: '#8367D8',
+                                        color: 'white'
+                                    },
+                                    '& .MuiMenuItem-root.Mui-selected:hover': {
+                                        backgroundColor: 'rgba(131,103,216,0.5)',
+                                        color: 'white'
+                                    },
+                                },
+                            },
+                        }}
                     >
                         <MenuItem
                             value='name-asc'
@@ -160,7 +174,7 @@ const ShopProductsGrid = () => {
                         >
                             Price: Low to High
                         </MenuItem>
-                        <MenuItem value='price-desc'
+                        <MenuItem value='startPrice-desc'
                         >
                             Price: High to Low
                         </MenuItem>
