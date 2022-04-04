@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -71,13 +72,21 @@ public class ProductService {
             }
         }
 
-        Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
-                categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, Sort.by(sortOrders))
-        );
+        Sort sort;
 
-        for (Product p : pageProducts.getContent()) {
-            p.setHighestBid((Double) productUserBidRepository.findHighestBidForProduct(p.getId()));
+        if (sortKey.contains("price")) {
+            JpaSort unsafeSort = JpaSort.unsafe(sortOrders.get(0).getDirection(), sortOrders.get(0).getProperty());
+            for (int i = 1; i < sortOrders.size(); i++) {
+                unsafeSort = unsafeSort.andUnsafe(sortOrders.get(i).getDirection(), sortOrders.get(i).getProperty());
+            }
+            sort = unsafeSort;
+        } else {
+            sort = Sort.by(sortOrders);
         }
+
+        Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
+                categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, sort)
+        );
 
         return new PaginatedResponse<>(
                 pageProducts.getContent(),
@@ -102,10 +111,20 @@ public class ProductService {
             }
 
             for (int i = 0; i < _sortKeys.length; i++) {
-                orders.add(new Order(getSortDirection(_sortDirections[i]), _sortKeys[i]));
+                // If products should be sorted py price then sort is based on highest_bid if exists
+                // else the starting_price
+                if (_sortKeys[i].equals("price")) {
+                    orders.add(new Order(getSortDirection(_sortDirections[i]), "COALESCE(highestBid, startPrice)"));
+                } else {
+                    orders.add(new Order(getSortDirection(_sortDirections[i]), _sortKeys[i]));
+                }
             }
         } else {
-            orders.add(new Order(getSortDirection(sortDirection), sortKey));
+            if (sortKey.equals("price")) {
+                orders.add(new Order(getSortDirection(sortDirection), "COALESCE(highestBid, startPrice)"));
+            } else {
+                orders.add(new Order(getSortDirection(sortDirection), sortKey));
+            }
         }
 
         // Add order by id because of pagination problems when 2 or more products are ordered at same position

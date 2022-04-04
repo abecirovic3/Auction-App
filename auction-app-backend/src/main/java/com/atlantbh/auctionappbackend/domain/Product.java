@@ -76,8 +76,6 @@ public class Product {
 
     private Integer size;
     private String color;
-
-    @Transient
     private Double highestBid;
 
     @Transient

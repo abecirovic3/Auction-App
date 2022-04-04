@@ -170,11 +170,11 @@ const ShopProductsGrid = () => {
                         >
                             Time left
                         </MenuItem>
-                        <MenuItem value='startPrice-asc'
+                        <MenuItem value='price-asc'
                         >
                             Price: Low to High
                         </MenuItem>
-                        <MenuItem value='startPrice-desc'
+                        <MenuItem value='price-desc'
                         >
                             Price: High to Low
                         </MenuItem>

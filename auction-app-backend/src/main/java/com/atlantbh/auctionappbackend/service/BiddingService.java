@@ -42,19 +42,19 @@ public class BiddingService {
             );
         }
 
-        Optional<ProductUserBid> higherBidOptional =
-                productUserBidRepository.findFirstByProductAndAmountGreaterThanEqual(product, bid.getAmount());
-        if (higherBidOptional.isPresent()) {
+        if (product.getHighestBid() != null && bid.getAmount() <= product.getHighestBid()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "There are higher bids than yours. You could give a second try!"
             );
-        } else if (bid.getAmount() <= product.getStartPrice()) {
+        } else if (bid.getAmount() < product.getStartPrice()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Bid must be higher than start price. You could give a second try!"
+                    "Bid must be higher or equal than start price. You could give a second try!"
             );
         }
+
+        product.setHighestBid(bid.getAmount());
 
         bid.setDate(LocalDateTime.now());
         return productUserBidRepository.save(bid);
