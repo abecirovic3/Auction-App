@@ -122,7 +122,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testGetProductsFilteredByCategory1() {
-        Page<Product> productsPage = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> productsPage = productRepository.findAll(
                 Collections.singletonList(savedCategories.get(0).getId()),
                 true,
                 null,
@@ -135,7 +135,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testGetProductsFilteredByCategory2() {
-        Page<Product> productsPage = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> productsPage = productRepository.findAll(
                 Arrays.asList(savedCategories.get(0).getId(), savedCategories.get(1).getId()),
                 true,
                 null,
@@ -148,7 +148,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testGetProductsFilteredByPrice() {
-        Page<Product> productsPage = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> productsPage = productRepository.findAll(
                 null,
                 false,
                 30.0,
@@ -161,7 +161,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testGetAllProductsWithPageSize() {
-        Page<Product> productsPage = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> productsPage = productRepository.findAll(
                 null,
                 false,
                 null,
@@ -174,7 +174,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testGetAllProductsSortedByEndDate() {
-        Page<Product> productsPage = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> productsPage = productRepository.findAll(
                 null,
                 false,
                 null,
@@ -190,7 +190,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testGetAllProductsSortedByName() {
-        Page<Product> productsPage = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> productsPage = productRepository.findAll(
                 null,
                 false,
                 null,

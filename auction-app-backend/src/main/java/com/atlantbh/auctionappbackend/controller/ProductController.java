@@ -45,7 +45,7 @@ public class ProductController {
             @RequestParam(defaultValue = "") String search
     ) {
         return new ResponseEntity<>(
-                productService.getAllProductsFilteredSortedAndPaginated(
+                productService.getAll(
                         page, size, categories, minPrice, maxPrice, sortKey, sortDirection, search
                 ),
                 HttpStatus.OK

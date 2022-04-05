@@ -1,7 +1,9 @@
 package com.atlantbh.auctionappbackend.service;
 
+import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
+import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
@@ -9,28 +11,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductUserBidRepository productUserBidRepository;
+    private final PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
+        this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
     }
 
     public Product getProductOverview(Long id) {
@@ -50,25 +52,25 @@ public class ProductService {
         }
     }
 
-    public PaginatedResponse<Product> getAllProductsFilteredSortedAndPaginated(
-                                                                            int page,
-                                                                            int size,
-                                                                            List<Long> categoryIds,
-                                                                            Double minPrice,
-                                                                            Double maxPrice,
-                                                                            String sortKey,
-                                                                            String sortDirection,
-                                                                            String search
+    public PaginatedResponse<Product> getAll(
+                                                int page,
+                                                int size,
+                                                List<Long> categoryIds,
+                                                Double minPrice,
+                                                Double maxPrice,
+                                                String sortKey,
+                                                String sortDirection,
+                                                String search
     ) {
         boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
 
         if (minPrice == null ^ maxPrice == null) {
-            Map<String, Double> priceRange = getProductPriceRange();
+            PriceRange priceRange = getProductPriceRange();
             if (minPrice == null) {
-                minPrice = priceRange.get("min");
+                minPrice = priceRange.getMinPrice();
             } else {
-                maxPrice = priceRange.get("max");
+                maxPrice = priceRange.getMaxPrice();
             }
         }
 
@@ -84,7 +86,7 @@ public class ProductService {
             sort = Sort.by(sortOrders);
         }
 
-        Page<Product> pageProducts = productRepository.findAllWithFiltersAndSortPaginated(
+        Page<Product> pageProducts = productRepository.findAll(
                 categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, sort)
         );
 
@@ -139,15 +141,7 @@ public class ProductService {
         return direction.equalsIgnoreCase("asc") ? Direction.ASC : Direction.DESC;
     }
 
-    public Map<String, Double> getProductPriceRange() {
-        List<Object[]> record = productRepository.findProductPriceRange();
-        Map<String, Double> response = new HashMap<>();
-        response.put("min", (Double) record.get(0)[0]);
-        if (record.get(0)[2] != null && (Double) record.get(0)[2] > (Double) record.get(0)[1]) {
-            response.put("max", (Double) record.get(0)[2]);
-        } else {
-            response.put("max", (Double) record.get(0)[1]);
-        }
-        return response;
+    public PriceRange getProductPriceRange() {
+        return priceRangeRepositoryImplementation.getProductPriceRange();
     }
 }

@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
@@ -32,11 +33,14 @@ public class ProductServiceTest {
     @Mock
     private ProductUserBidRepository productUserBidRepository;
 
+    @Mock
+    private PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
+
     private ProductService productService;
 
     @BeforeEach
     void initUseCase() {
-        productService = new ProductService(productRepository, productUserBidRepository);
+        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation);
     }
 
     @Test
@@ -67,10 +71,10 @@ public class ProductServiceTest {
 
         Page<Product> page = new PageImpl<>(products, PageRequest.of(0,1), 2);
 
-        when(productRepository.findAllWithFiltersAndSortPaginated(any(), anyBoolean(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(productRepository.findAll(any(), anyBoolean(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
 
         PaginatedResponse<Product> paginatedResponse
-                = productService.getAllProductsFilteredSortedAndPaginated(
+                = productService.getAll(
                         0,
                         4,
                         null,

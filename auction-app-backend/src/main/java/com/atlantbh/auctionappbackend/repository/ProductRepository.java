@@ -8,11 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE (p.endDate > CURRENT_TIMESTAMP) AND (:categoriesAvailable = FALSE or p.category.id IN :categories) AND (:minPrice is null and :maxPrice is null or (p.highestBid is null and p.startPrice between :minPrice and :maxPrice or p.highestBid between :minPrice and :maxPrice)) AND (:search = '' or (lower(p.name) LIKE lower(concat('%', :search, '%'))))")
-    Page<Product> findAllWithFiltersAndSortPaginated(
+    Page<Product> findAll(
             @Param("categories") Collection<Long> categories,
             @Param("categoriesAvailable") boolean categoriesAvailable,
             @Param("minPrice") Double minPrice,
@@ -20,7 +19,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("search") String search,
             Pageable pageable
     );
-
-    @Query("SELECT min(p.startPrice), max(p.startPrice), max(p.highestBid) FROM Product p")
-    List<Object[]> findProductPriceRange();
 }

@@ -24,7 +24,7 @@ import 'assets/style/shop-product-grid.scss';
 
 
 const ShopProductsGrid = () => {
-    const pageSize = 3;
+    const pageSize = 9;
     const isInitialMount = useRef(true);
     const dispatch = useDispatch();
     const itemWidth = useSelector(state => state.shop.gridItemWidth);

@@ -25,7 +25,7 @@ public class CategoryService {
     public List<Category> getAllCategories() {
         List<Category> categories = categoryRepository.findAllBySuperCategoryIsNull();
         for (Category c : categories) {
-            c.setSubCategories(categoryRepository.countProductsByCategory(c.getId()));
+            c.setSubCategories(categoryRepository.findAllSubCategoriesWithProductCountBySuperCategory(c.getId()));
         }
         return categories;
     }

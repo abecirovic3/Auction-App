@@ -23,8 +23,8 @@ const PriceRangeSelector = () => {
     useEffect(() => {
         ProductPriceRangeService.getPriceRange()
             .then(response => {
-                const min = response.data.min;
-                const max = response.data.max;
+                const min = response.data.minPrice;
+                const max = response.data.maxPrice;
                 setMinMaxPrice([min, max]);
                 setPriceSlider([min, max]);
                 setMinPriceField(min);

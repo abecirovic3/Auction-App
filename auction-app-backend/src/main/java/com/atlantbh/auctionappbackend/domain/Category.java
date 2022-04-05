@@ -35,7 +35,7 @@ import java.util.List;
         )
 )
 @NamedNativeQuery(
-        name = "Category.countProductsByCategory",
+        name = "Category.findAllSubCategoriesWithProductCountBySuperCategory",
         resultClass = Category.class,
         resultSetMapping = "categoryProductCountMapping",
         query = "SELECT c.id, c.name, COUNT(c.id) FROM category c, product p WHERE c.id = p.category_id and c.super_category_id = ?1 group by c.id, c.name"

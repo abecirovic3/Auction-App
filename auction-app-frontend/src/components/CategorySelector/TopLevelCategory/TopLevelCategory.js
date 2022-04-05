@@ -22,6 +22,11 @@ const TopLevelCategory = ({ category }) => {
         shopService.flipTopLevelCategoryFilterValue(category.id);
     }
 
+    function isSubCategoryChecked(subCategoryId) {
+        return filters.subCategories[subCategoryId.toString()]?.selected ?
+            filters.subCategories[subCategoryId.toString()].selected : false
+    }
+
     return (
         <div className='top-level-category-container'>
             <div className="selector">
@@ -37,11 +42,7 @@ const TopLevelCategory = ({ category }) => {
                             <Checkbox
                                 id={subCategory.id.toString()}
                                 color='primary'
-                                checked={
-                                    filters.subCategories[subCategory.id.toString()]?.selected ?
-                                        filters.subCategories[subCategory.id.toString()].selected :
-                                        false
-                                }
+                                checked={isSubCategoryChecked(subCategory.id)}
                                 disabled={disableFilters}
                                 onChange={e => {handleCheckboxChange(e)}}
                             />

@@ -10,5 +10,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllBySuperCategoryIsNull();
 
     @Query(nativeQuery = true)
-    List<Category> countProductsByCategory(Long superCategoryId);
+    List<Category> findAllSubCategoriesWithProductCountBySuperCategory(Long superCategoryId);
 }
