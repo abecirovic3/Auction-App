@@ -34,4 +34,3 @@ build/
 
 ### LocalProps ###
 /src/main/resources/application-dev.properties
-/src/main/resources/application-prod.properties

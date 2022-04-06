@@ -69,7 +69,7 @@ const HomeProductsTabContainer = () => {
         let sortKey = tab.newArrivals ? 'startDate' : 'endDate';
         let sortDirection = tab.newArrivals ? 'desc' : 'asc';
 
-        ProductService.getProducts(page, size, sortKey, sortDirection)
+        ProductService.getProducts(page, size, null, sortKey, sortDirection)
             .then(response => {
                 setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
                 if (tabChanged) {

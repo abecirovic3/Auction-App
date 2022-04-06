@@ -1,7 +1,50 @@
 import api from 'services/Api';
 
-function getProducts(page, size, sortKey, sortDirection) {
-    return api.get(`/products?page=${page}&size=${size}&sortKey=${sortKey}&sortDirection=${sortDirection}`);
+function getProducts(page, size, filters, sortKey, sortDirection, search) {
+    let queryArray = [];
+    if (page || page === 0) {
+        queryArray.push(`page=${page}`);
+    }
+    if (size) {
+        queryArray.push(`size=${size}`);
+    }
+    if (filters) {
+        for (const filterKey in filters) {
+            if (filters[filterKey] && filterKey !== "topLevelCategories" && filterKey !== "subCategories") {
+                queryArray.push(`${filterKey}=${filters[filterKey]}`);
+            }
+            if (filterKey === "subCategories" && Object.keys(filters[filterKey]).length > 0) {
+                const categoriesQuery = getCategoriesQuery(filters[filterKey]);
+                if (categoriesQuery) {
+                    queryArray.push(categoriesQuery);
+                }
+            }
+        }
+    }
+    if (sortKey) {
+        queryArray.push(`sortKey=${sortKey}`);
+    }
+    if (sortDirection) {
+        queryArray.push(`sortDirection=${sortDirection}`);
+    }
+    if (search) {
+        queryArray.push(`search=${search}`);
+    }
+
+    return api.get('/products' + (queryArray.length > 0 ? `?${queryArray.join('&')}` : ''));
+}
+
+function getCategoriesQuery(categoriesMap) {
+    let categories = [];
+    for (let keyId of Object.keys(categoriesMap)) {
+        if (categoriesMap[keyId].selected) {
+            categories.push(keyId);
+        }
+    }
+    if (categories.length > 0) {
+        return `categories=${categories.join(',')}`;
+    }
+    return '';
 }
 
 function getProductById(id) {

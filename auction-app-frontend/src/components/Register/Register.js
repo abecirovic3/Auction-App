@@ -67,7 +67,9 @@ const Register = () => {
                 }, err => {
                     setLoading(false);
                     if (err.response.data.hasOwnProperty('message')) {
-                        setErrors({ email: err.response.data.message });
+                        setErrors({
+                            email: err.response.data.message
+                        });
                     } else {
                         setErrors(err.response.data);
                     }

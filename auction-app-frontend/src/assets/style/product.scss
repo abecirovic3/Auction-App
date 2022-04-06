@@ -1,9 +1,71 @@
 @use "base";
 
 .product-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  a {
+    text-decoration: none;
+  }
+
+  .vertical-container,
+  .horizontal-container {
+    display: flex;
+    gap: 10px;
+
+    .start-price-label {
+      display: inline;
+    }
+
+    .price-tag {
+      color: base.$primary-color;
+      display: inline;
+    }
+  }
+
+  .vertical-container {
+    flex-direction: column;
+
+    .start-price-label {
+      color: #9B9B9B;
+    }
+
+    .price-tag {
+      font-size: 18px;
+    }
+
+    .shop-cover-img {
+      width: 100%;
+      height: 400px;
+    }
+  }
+
+  .horizontal-container {
+    flex-direction: row;
+
+    .product-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .start-price-label {
+      color: base.$primary-color;
+      font-size: 32px;
+    }
+
+    .price-tag {
+      font-size: 32px;
+    }
+
+    .shop-cover-img {
+      width: 350px;
+      height: 400px;
+    }
+  }
+
+  .description {
+    font-size: 16px;
+    font-weight: 400;
+    color: #9B9B9B;
+  }
 
   .name {
     font-size: 24px;
@@ -11,23 +73,24 @@
     margin-bottom: 5px;
   }
 
-  .start-price-label {
-    color: #9B9B9B;
-    display: inline;
+  .name:hover,
+  .cover-img:hover {
+    cursor: pointer;
   }
 
-  .price-tag {
-    color: base.$primary-color;
-    font-size: 18px;
-    display: inline;
+  .MuiButton-root {
+    border-radius: 0;
+    border-color: base.$border-color;
+    text-transform: capitalize;
+    color: #252525;
+    font-size: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-right: 20px;
   }
 
   .cover-img {
+    width: 100%;
     height: 350px;
-    max-width: 100%;
   }
-}
-
-.product-container:hover {
-  cursor: pointer;
 }

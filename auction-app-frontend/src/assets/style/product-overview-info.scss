@@ -44,6 +44,10 @@
     align-items: flex-start;
     justify-content: space-between;
 
+    .Mui-disabled {
+      opacity: 50%;
+    }
+
     .MuiInputBase-root,
     .MuiButton-root {
       border-radius: 0;

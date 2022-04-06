@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "${application.api.prefix}/products")
 public class ProductController {
@@ -23,23 +25,29 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<PaginatedResponse<Product>> getAllProductsPage(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size,
-            @RequestParam(defaultValue = "startDate") String sortKey,
-            @RequestParam(defaultValue = "desc") String sortDirection
-    ) {
-        return new ResponseEntity<>(
-                productService.getAllProductsPaginated(page, size, sortKey, sortDirection),
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         return new ResponseEntity<>(
                 productService.getProductOverview(id),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<PaginatedResponse<Product>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestParam(required = false) List<Long> categories,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "name") String sortKey,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = "") String search
+    ) {
+        return new ResponseEntity<>(
+                productService.getAll(
+                        page, size, categories, minPrice, maxPrice, sortKey, sortDirection, search
+                ),
                 HttpStatus.OK
         );
     }

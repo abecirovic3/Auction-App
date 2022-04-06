@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setNotFoundError } from 'features/notFounHandler/notFoundSlice'
 
 import appLogo from 'assets/img/appLogo.svg';
+
 import 'assets/style/not-found.scss';
 
 const NotFound = () => {
@@ -19,7 +20,7 @@ const NotFound = () => {
 
     return (
         <div className='not-found-container'>
-            <img src={appLogo} alt='logo' />
+            <img src={appLogo} alt='logo' onClick={() => navigate('/')}/>
             <h1 className='status-code'>404</h1>
             <h2 className='message'>Ooops! Looks like the page is Not Found</h2>
             <Button

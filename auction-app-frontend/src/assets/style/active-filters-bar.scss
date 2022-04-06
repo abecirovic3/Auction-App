@@ -1,0 +1,46 @@
+@use "base";
+
+.active-filters-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  padding-top: 20px;
+
+  .filter-names-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-box {
+    border: 1px solid base.$border-color;
+    padding: 12px 10px 12px 10px;
+    h5 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #9B9B9B;
+      display: inline;
+      margin-right: 5px;
+    }
+  }
+
+  .filter-type {
+    font-size: 14px;
+    font-weight: 300;
+    color: #9B9B9B;
+    margin-bottom: 5px;
+  }
+
+  .filter-name {
+    font-size: 16px;
+    font-weight: 400;
+    color: #252525;
+    display: inline;
+    padding-right: 5px;
+  }
+}

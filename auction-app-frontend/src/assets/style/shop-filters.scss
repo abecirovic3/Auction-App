@@ -1,0 +1,50 @@
+@use "base";
+
+.shop-filters-container {
+  .category-selector-container,
+  .price-range-selector-container {
+    border: 1px solid base.$border-color;
+    padding: 20px;
+  }
+
+  .filter-title {
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 700;
+    color: base.$primary-color;
+  }
+
+  .MuiSlider-thumb {
+    border: 3px solid white;
+  }
+
+  .price-range-labels-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+
+    .MuiInputBase-root {
+      border-radius: 0;
+      height: 3.5em;
+      font-size: 16px;
+      font-weight: 300;
+      color: #9B9B9B;
+    }
+
+    .label-input {
+      width: 45%;
+    }
+
+    .spacer,
+    .price-label {
+      font-size: 16px;
+      font-weight: 300;
+    }
+
+    .price-label {
+      color: #9B9B9B;
+    }
+  }
+}

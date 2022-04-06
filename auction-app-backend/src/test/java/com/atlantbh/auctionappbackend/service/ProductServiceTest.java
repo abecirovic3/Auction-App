@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
@@ -16,12 +17,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,11 +33,14 @@ public class ProductServiceTest {
     @Mock
     private ProductUserBidRepository productUserBidRepository;
 
+    @Mock
+    private PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
+
     private ProductService productService;
 
     @BeforeEach
     void initUseCase() {
-        productService = new ProductService(productRepository, productUserBidRepository);
+        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation);
     }
 
     @Test
@@ -67,9 +71,19 @@ public class ProductServiceTest {
 
         Page<Product> page = new PageImpl<>(products, PageRequest.of(0,1), 2);
 
-        when(productRepository.findAll(any(Pageable.class))).thenReturn(page);
+        when(productRepository.findAll(any(), anyBoolean(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
 
-        PaginatedResponse<Product> paginatedResponse = productService.getAllProductsPaginated(0, 1, "startDate", "desc");
+        PaginatedResponse<Product> paginatedResponse
+                = productService.getAll(
+                        0,
+                        4,
+                        null,
+                        null,
+                        null,
+                        "startDate",
+                        "desc",
+                        null
+        );
 
         assertThat(paginatedResponse.getCurrentPage()).isEqualTo(0);
         assertThat(paginatedResponse.getData().size()).isEqualTo(2);

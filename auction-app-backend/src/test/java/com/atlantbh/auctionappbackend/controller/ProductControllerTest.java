@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.Filter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,7 @@ public class ProductControllerTest {
 
         PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products, 0, 2, 2);
 
-        when(productService.getAllProductsPaginated(anyInt(), anyInt(), any(), any())).thenReturn(paginatedResponse);
+        when(productService.getAll(anyInt(), anyInt(), any(), any(), any(), any(), any(), any())).thenReturn(paginatedResponse);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get(apiPrefix + "/products")

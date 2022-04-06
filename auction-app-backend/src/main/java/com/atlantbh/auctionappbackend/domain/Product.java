@@ -3,7 +3,18 @@ package com.atlantbh.auctionappbackend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,10 +65,17 @@ public class Product {
     )
     private User seller;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "category_id",
+            foreignKey = @ForeignKey(name = "category_id"),
+            nullable = false
+    )
+    @JsonIgnore
+    private Category category;
+
     private Integer size;
     private String color;
-
-    @Transient
     private Double highestBid;
 
     @Transient
@@ -227,6 +245,14 @@ public class Product {
 
     public void setSeller(User seller) {
         this.seller = seller;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Double getHighestBid() {

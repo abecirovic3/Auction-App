@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ProductService from 'services/ProductService';
 import BiddingService from 'services/BiddingService';
 import useLoginService from 'hooks/useLoginService';
+import TokenService from 'services/TokenService';
 
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 import CustomAlert from 'components/Alert/CustomAlert';
@@ -11,7 +12,6 @@ import ProductImageGallery from 'components/ProductImageGallery/ProductImageGall
 import ProductOverviewInfo from 'components/ProductOverviewInfo/ProductOverviewInfo';
 
 import 'assets/style/product-overview.scss';
-import TokenService from 'services/TokenService';
 
 const ProductOverview = () => {
     const params = useParams();
@@ -28,7 +28,10 @@ const ProductOverview = () => {
             .catch(err => {
                 setErrorAlert(
                     err.response?.data ||
-                    { error: 'Connection Error', message: 'Could not establish connection to server' }
+                    {
+                        error: 'Connection Error',
+                        message: 'Could not establish connection to server'
+                    }
                 );
             });
     }, [params.id, bidInfoAlerts]);

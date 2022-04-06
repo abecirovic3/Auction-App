@@ -1,0 +1,8 @@
+@use "base";
+
+.shop-page-container {
+  .shop-page-content-container {
+    width: base.$main-width;
+    margin: auto;
+  }
+}
