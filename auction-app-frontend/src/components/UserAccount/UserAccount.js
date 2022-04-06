@@ -26,18 +26,13 @@ const UserAccount = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (location.pathname === '/account') {
-            navigate('/account/profile');
-        } else {
-            setActiveTab({
-                profile: location.pathname === '/account/profile',
-                seller: location.pathname === '/account/seller',
-                bids: location.pathname === '/account/bids',
-                wishlist: location.pathname === '/account/wishlist',
-                settings: location.pathname === '/account/settings',
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        setActiveTab({
+            profile: location.pathname === '/account',
+            seller: location.pathname === '/account/seller',
+            bids: location.pathname === '/account/bids',
+            wishlist: location.pathname === '/account/wishlist',
+            settings: location.pathname === '/account/settings',
+        });
     }, [location.pathname]);
 
     function getBreadcrumbsBarTitle() {
@@ -57,7 +52,7 @@ const UserAccount = () => {
                                 color={activeTab.profile ? 'primary' : 'dark'}
                                 startIcon={<PersonIcon />}
                                 variant={activeTab.profile ? 'contained' : 'text'}
-                                onClick={() => {navigate('/account/profile')}}
+                                onClick={() => {navigate('/account')}}
                             >
                                 Profile
                             </Button>

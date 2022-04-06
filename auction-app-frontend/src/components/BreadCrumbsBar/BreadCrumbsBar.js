@@ -29,6 +29,15 @@ const BreadCrumbsBar = ({ title }) => {
                                         {breadcrumb}
                                     </NavLink>
                                     {i + 1 !== data.length && <p> &#8594; </p>}
+                                    {
+                                        match.pathname === '/account' && i+1 === data.length &&
+                                        <>
+                                            <p> &#8594; </p>
+                                            <NavLink to={'/account'}>
+                                                Profile
+                                            </NavLink>
+                                        </>
+                                    }
                                 </span>
                             )
                         )
