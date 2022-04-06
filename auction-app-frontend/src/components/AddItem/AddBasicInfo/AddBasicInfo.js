@@ -2,7 +2,7 @@ import { Button, Container, Select, Stack, TextField, ThemeProvider } from '@mui
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
-import 'assets/style/image-upload.scss';
+import 'assets/style/add-item-basic-info.scss';
 
 const AddBasicInfo = () => {
     function handleFileDrop(ev) {
@@ -31,7 +31,7 @@ const AddBasicInfo = () => {
 
     return (
         <ThemeProvider theme={MainTheme}>
-            <div className='form-style'>
+            <div className='form-style add-item-basic-info'>
                 <Container className='form-container' maxWidth='sm'>
                     <h5>ADD ITEM</h5>
 
@@ -83,8 +83,18 @@ const AddBasicInfo = () => {
                         </div>
 
                         <Stack spacing={2} direction='row'>
-                            <Button>Cancel</Button>
-                            <Button>Next</Button>
+                            <Button
+                                variant='outlined'
+                                className='nav-buttons'
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant='contained'
+                                className='nav-buttons'
+                            >
+                                Next
+                            </Button>
                         </Stack>
                     </Stack>
                 </Container>

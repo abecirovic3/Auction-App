@@ -1,0 +1,30 @@
+@use "base";
+
+.add-item-basic-info {
+  .image-upload-container {
+    border: 1px dashed base.$border-color;
+    min-height: 300px;
+    background-color: #FCFCFC;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    .MuiButton-root {
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .info-label {
+      color: #9B9B9B;
+      font-size: 14px;
+      padding-top: 20px;
+    }
+  }
+
+  .nav-buttons {
+    width: 50%;
+  }
+}
