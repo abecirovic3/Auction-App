@@ -17,6 +17,8 @@ import PrivacyAndPolicy from 'components/PricacyAndPolicy/PrivacyAndPolicy';
 import TermsAndConditions from 'components/TermsAndConditions/TermsAndConditions';
 import About from 'components/About/About';
 import NotFound from 'components/NotFound/NotFound';
+import ProductOverview from 'components/ProductOverview/ProductOverview';
+import Shop from 'components/Shop/Shop';
 
 function App() {
     const dispatch = useDispatch();
@@ -34,22 +36,25 @@ function App() {
                     dispatch(setLoggedIn(false));
                 })
         }
-    });
+    }, [dispatch]);
 
     return (
         <BrowserRouter>
             <Navbar/>
-            <div className="main-page-container">
-                <div className="main-page-content-container">
+            <div className='main-page-container'>
+                <div className='main-page-content-container'>
                     <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/login" element={<Login/>}/>
-                        <Route path="/register" element={<Register/>}/>
-                        <Route path="/forgot-password" element={<ForgotPassword/>}/>
-                        <Route path="/privacy" element={<PrivacyAndPolicy/>}/>
-                        <Route path="/terms" element={<TermsAndConditions/>}/>
-                        <Route path="/about" element={<About/>}/>
-                        <Route path="*" element={<NotFound/>}/>
+                        <Route path='/' element={<Home/>}/>
+                        <Route path='/login' element={<Login/>}/>
+                        <Route path='/register' element={<Register/>}/>
+                        <Route path='/forgot-password' element={<ForgotPassword/>}/>
+                        <Route path='/privacy' element={<PrivacyAndPolicy/>}/>
+                        <Route path='/terms' element={<TermsAndConditions/>}/>
+                        <Route path='/about' element={<About/>}/>
+                        <Route path='/shop' element={<Shop />} />
+                        <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
+                        <Route path='/shop/search/:search' element={<Shop />}/>
+                        <Route path='*' element={<NotFound/>}/>
                     </Routes>
                 </div>
                 <Footer/>

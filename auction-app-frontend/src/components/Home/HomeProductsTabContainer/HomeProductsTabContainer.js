@@ -1,48 +1,58 @@
-import { useState } from 'react';
-import { Button, Grid } from '@mui/material';
+import { useState, useEffect, useRef } from 'react';
+import { Button } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+import ProductService from 'services/ProductService';
 
 import Product from 'components/Product/Product';
+import CustomAlert from 'components/Alert/CustomAlert';
 
-import productImg1 from 'assets/img/products/productHome1.png';
-import productImg2 from 'assets/img/products/productHome2.png';
-import productImg3 from 'assets/img/products/productHome3.png';
-import productImg4 from 'assets/img/products/productHome4.png';
-import productImg5 from 'assets/img/products/productHome5.png';
-import productImg6 from 'assets/img/products/productHome6.png';
-import productImg7 from 'assets/img/products/productHome7.png';
-import productImg8 from 'assets/img/products/productHome8.png';
-import productImg9 from 'assets/img/products/productHome9.png';
-import productImg10 from 'assets/img/products/productHome10.png';
-import productImg11 from 'assets/img/products/productHome11.png';
-import productImg12 from 'assets/img/products/productHome12.png';
-
-import 'assets/style/home-page-product-tabs.scss'
+import 'assets/style/home-page-product-tabs.scss';
+import 'assets/style/infinite-scroll-grid.scss';
 
 const HomeProductsTabContainer = () => {
-    const newArrivalsProducts = [
-        { id: 1, img: productImg1, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 2, img: productImg2, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 3, img: productImg3, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 4, img: productImg4, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 5, img: productImg5, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 6, img: productImg6, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 7, img: productImg7, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 8, img: productImg8, name: 'Shoes Collection', startPrice: '59.00' },
-    ];
+    const pageSize = 4;
 
-    const lastChanceProducts = [
-        { id: 1, img: productImg3, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 2, img: productImg10, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 3, img: productImg1, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 4, img: productImg11, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 5, img: productImg5, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 6, img: productImg2, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 7, img: productImg9, name: 'Shoes Collection', startPrice: '59.00' },
-        { id: 8, img: productImg12, name: 'Shoes Collection', startPrice: '59.00' },
-    ];
-
-    const [products, setProducts] = useState(newArrivalsProducts);
+    const isInitialMount = useRef(true);
+    const [products, setProducts] = useState([]);
+    const [loadedInitialProducts, setLoadedInitialProducts] = useState(false);
+    const [page, setPage] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(false);
     const [activeTab, setActiveTab] = useState({ newArrivals: true, lastChance: false });
+    const [tabLoading, setTabLoading] = useState(false);
+    const [alert, setAlert] = useState(null);
+
+    useEffect(() => {
+        setTabLoading(false);
+        if (!isInitialMount.current && !loadedInitialProducts) {
+            setLoadedInitialProducts(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [products]);
+
+    useEffect(() => {
+        if (page === 0) {
+            fetchProductsForTab(activeTab, page, pageSize, true);
+        } else {
+            fetchProductsForTab(activeTab, page, pageSize, false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            setTabLoading(true);
+            if (page === 0) {
+                fetchProductsForTab(activeTab, 0, pageSize, true);
+            } else {
+                setPage(0);
+                setIsLastPage(false);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeTab]);
 
     function setTabToActive(tab) {
         const tabSelector = {
@@ -53,21 +63,45 @@ const HomeProductsTabContainer = () => {
         setActiveTab(tabSelector);
     }
 
+    function fetchProductsForTab(tab, page, size, tabChanged) {
+        if (isLastPage) return;
+
+        let sortKey = tab.newArrivals ? 'startDate' : 'endDate';
+        let sortDirection = tab.newArrivals ? 'desc' : 'asc';
+
+        ProductService.getProducts(page, size, null, sortKey, sortDirection)
+            .then(response => {
+                setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
+                if (tabChanged) {
+                    setProducts(response.data.data);
+                } else {
+                    setProducts([...products, ...response.data.data]);
+                }
+            })
+            .catch(err => {
+                setAlert(
+                    err.response?.data ||
+                    { error: 'Connection Error', message: 'Could not establish connection to server' }
+                );
+            });
+    }
+
     function handleTabChange(tab) {
         if (!activeTab[tab]) {
             setTabToActive(tab);
-            if (tab === 'newArrivals') {
-                setProducts(newArrivalsProducts);
-            } else {
-                setProducts(lastChanceProducts);
-            }
+        }
+    }
+
+    function handleProductsScroll() {
+        if (loadedInitialProducts === true) {
+            setPage(page + 1);
         }
     }
 
     return (
-        <div className="home-product-tabs-container">
-            <div className="home-product-tabs-content-container">
-                <div className="tab-selector">
+        <div className='home-product-tabs-container'>
+            <div className='home-product-tabs-content-container'>
+                <div className='tab-selector'>
                     <Button
                         onClick={() => {handleTabChange('newArrivals')}}
                         className={activeTab.newArrivals ? 'tab-selector-btn-active' : 'tab-selector-btn'}
@@ -81,15 +115,36 @@ const HomeProductsTabContainer = () => {
                         Last Chance
                     </Button>
                 </div>
-                <Grid container spacing={3}>
-                    {
-                        products.map(product => (
-                            <Grid key={product.id} item xs={3}>
-                                <Product img={product.img} name={product.name} startPrice={product.startPrice} />
-                            </Grid>
-                        ))
-                    }
-                </Grid>
+
+                {
+                    alert &&
+                    <CustomAlert
+                        color='error'
+                        title={alert.error}
+                        message={alert.message}
+                        showAlertDuration={60000}
+                    />
+                }
+
+                {tabLoading ?
+                    <p className='loading-label'>Loading...</p>
+                    :
+                    <InfiniteScroll
+                        className='infinite-scroll-grid'
+                        next={handleProductsScroll}
+                        hasMore={!isLastPage}
+                        loader={<p className='loading-label'>Loading...</p>}
+                        dataLength={products.length}
+                    >
+                        {
+                            products.map(product => (
+                                <div key={product.id} className='grid-item'>
+                                    <Product product={product} />
+                                </div>
+                            ))
+                        }
+                    </InfiniteScroll>
+                }
             </div>
         </div>
     );

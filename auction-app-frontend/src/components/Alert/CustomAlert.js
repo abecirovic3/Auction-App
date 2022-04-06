@@ -4,25 +4,27 @@ import { useState, useEffect } from 'react';
 import AlertTheme from 'themes/AlertTheme';
 import 'assets/style/custom-alert.scss'
 
-const CustomAlert = ({ color, title, message, showAlertDuration }) => {
+const CustomAlert = ({ color, title, message, showAlertDuration, marginBottom }) => {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
-        const hideAlertTimeout = setTimeout(() => {setShowAlert(false)}, showAlertDuration);
-        return () => {
-            clearTimeout(hideAlertTimeout);
+        if (showAlertDuration > 0) {
+            const hideAlertTimeout = setTimeout(() => {setShowAlert(false)}, showAlertDuration);
+            return () => {
+                clearTimeout(hideAlertTimeout);
+            }
         }
     }, [showAlertDuration]);
 
     return (
         <ThemeProvider theme={AlertTheme} >
-            <div className='custom-alert-container'>
+            <div className='custom-alert-container' style={{marginBottom: marginBottom}}>
                 <Collapse in={showAlert}>
                     <Alert
                         icon={false}
                         color={color}
                     >
-                        <p className='strong'>{title} &nbsp; </p>
+                        <p className='strong'>{title}</p>
                         <p>{message}</p>
                     </Alert>
                 </Collapse>
@@ -33,7 +35,8 @@ const CustomAlert = ({ color, title, message, showAlertDuration }) => {
 
 CustomAlert.defaultProps = {
     color: 'info',
-    showAlertDuration: 5000
+    showAlertDuration: 5000,
+    marginBottom: '20px'
 }
 
 export default CustomAlert;

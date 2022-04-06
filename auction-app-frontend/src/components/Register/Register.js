@@ -62,12 +62,14 @@ const Register = () => {
                 .then(response => {
                     setLoading(false);
                     dispatch(setRegistered(true));
-                    navigate('/login');
+                    navigate('/login', { state: {loginAfterRegister: true} });
 
                 }, err => {
                     setLoading(false);
                     if (err.response.data.hasOwnProperty('message')) {
-                        setErrors({ email: err.response.data.message });
+                        setErrors({
+                            email: err.response.data.message
+                        });
                     } else {
                         setErrors(err.response.data);
                     }
@@ -99,7 +101,7 @@ const Register = () => {
                                 <Stack spacing={2}>
                                     <label htmlFor='lastName'>Last Name</label>
                                     <TextField
-                                        id='Last Name'
+                                        id='lastName'
                                         variant='outlined'
                                         value={lastName}
                                         onChange={e => setLastName(e.target.value)}
@@ -111,7 +113,7 @@ const Register = () => {
                                 <Stack spacing={2}>
                                     <label htmlFor='email'>Enter Email</label>
                                     <TextField
-                                        id='Last Name'
+                                        id='email'
                                         variant='outlined'
                                         type='email'
                                         value={email}
@@ -124,7 +126,7 @@ const Register = () => {
                                 <Stack spacing={2}>
                                     <label htmlFor='password'>Password</label>
                                     <TextField
-                                        id='Last Name'
+                                        id='password'
                                         variant='outlined'
                                         type='password'
                                         value={password}

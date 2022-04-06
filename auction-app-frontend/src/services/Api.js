@@ -1,8 +1,24 @@
 import axios from 'axios';
 import TokenService from 'services/TokenService';
 
+const whitelistRoutes = [
+    "/auth/login",
+    "/auth/register",
+    "/auth/token/refresh",
+    "/products",
+];
+
+function isWhitelistRoute(route) {
+    for (let i = 0; i < whitelistRoutes.length; i++) {
+        if (route.includes(whitelistRoutes[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/api/v1',
+    baseURL: process.env.REACT_APP_BASE_URL || 'http://localhost:8080/api/v1',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -27,18 +43,13 @@ instance.interceptors.response.use(
     },
     async (err) => {
         const originalConfig = err.config;
-        // TODO implement some whitelist routes logic
-        if (!originalConfig.url.includes('/auth/login') && err.response) {
+        if (!isWhitelistRoute(originalConfig.url) && err.response) {
             // Access Token was expired
-            if (err.response.status === 403 && !originalConfig._retry) {
-                originalConfig._retry = true;
+            if (err.response.status === 403) {
                 try {
-                    const headers = {
-                        'Authorization': `Bearer ${TokenService.getLocalRefreshToken()}`
-                    }
-                    const rs = await instance.post('/auth/token/refresh', {}, {
-                        headers: headers
-                    });
+                    // set refresh_token temporarily to be access_token, to fetch the new access_token
+                    TokenService.updateLocalAccessToken(TokenService.getLocalRefreshToken());
+                    const rs = await instance.get('/auth/token/refresh');
                     const { access_token, refresh_token } = rs.data;
                     TokenService.updateLocalAccessToken(access_token);
                     TokenService.updateLocalRefreshToken(refresh_token);

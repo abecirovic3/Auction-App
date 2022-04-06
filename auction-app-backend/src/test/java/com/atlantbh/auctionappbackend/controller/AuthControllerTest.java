@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,6 +33,9 @@ public class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Value("${application.api.prefix}")
+    private String apiPrefix;
 
     @MockBean
     private UserService userService;
@@ -64,7 +68,7 @@ public class AuthControllerTest {
         when(userService.registerUser(any())).thenReturn(user);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/auth/register")
+                MockMvcRequestBuilders.post(apiPrefix + "/auth/register")
                         .content(asJsonString(user))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -78,7 +82,7 @@ public class AuthControllerTest {
         user.setFirstName(null);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/auth/register")
+                MockMvcRequestBuilders.post(apiPrefix + "/auth/register")
                         .content(asJsonString(user))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -92,7 +96,7 @@ public class AuthControllerTest {
         user.setLastName("Invalid1234");
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/auth/register")
+                        MockMvcRequestBuilders.post(apiPrefix + "/auth/register")
                                 .content(asJsonString(user))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -106,7 +110,7 @@ public class AuthControllerTest {
         user.setEmail("foo@not_valid");
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/auth/register")
+                        MockMvcRequestBuilders.post(apiPrefix + "/auth/register")
                                 .content(asJsonString(user))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -121,7 +125,7 @@ public class AuthControllerTest {
         user.setPassword("");
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/api/v1/auth/register")
+                        MockMvcRequestBuilders.post(apiPrefix + "/auth/register")
                                 .content(asJsonString(user))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -138,6 +142,4 @@ public class AuthControllerTest {
             throw new RuntimeException(e);
         }
     }
-
-
 }

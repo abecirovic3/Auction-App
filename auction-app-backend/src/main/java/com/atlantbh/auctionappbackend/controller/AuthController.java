@@ -104,14 +104,14 @@ public class AuthController {
             } catch (JWTVerificationException e) {
                 log.error("Refresh token is not valid");
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
+                        HttpStatus.FORBIDDEN,
                         e.getMessage()
                 );
             }
 
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.FORBIDDEN,
                     "Refresh token is missing"
             );
         }

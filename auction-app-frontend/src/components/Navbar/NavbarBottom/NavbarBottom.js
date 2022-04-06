@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Grid, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
@@ -8,16 +9,35 @@ import searchIcon from 'assets/img/search.svg';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/navbar-bottom.scss';
+import useShopService from 'hooks/useShopService';
 
 const NavbarBottom = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState('');
+    const { state } = useLocation();
+    const shopService = useShopService();
 
     const hideSearchAndNavigationPaths = [
         'login',
         'register',
         'forgot-password',
     ];
+
+    useEffect(() => {
+        if (location.pathname.includes('/search')) {
+            const pathElements = location.pathname.split('/');
+            setSearchValue(decodeURI(pathElements[pathElements.length - 1]));
+        } else {
+            setSearchValue('');
+        }
+
+        if (!location.pathname.includes('/shop')) {
+            shopService.setInitialShopProductsState();
+            shopService.setInitialProductFilters();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname]);
 
     function showSearchAndNavigation() {
         const path = location.pathname;
@@ -35,6 +55,14 @@ const NavbarBottom = () => {
             return !locationPath.startsWith('/shop') && !locationPath.startsWith('/account');
         }
         return locationPath.startsWith(path);
+    }
+
+    function handleSearchSubmit() {
+        if (searchValue) {
+            navigate(`/shop/search/${encodeURI(searchValue)}`);
+        } else if (searchValue === '') {
+            navigate(`/shop`);
+        }
     }
 
     return (
@@ -63,11 +91,18 @@ const NavbarBottom = () => {
                                 <Grid item xs={9.5}>
                                     <div className='search-navigation-container'>
                                         <OutlinedInput
+                                            onChange={e => {setSearchValue(e.target.value)}}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter') {
+                                                    handleSearchSubmit();
+                                                }
+                                            }}
+                                            value={searchValue}
                                             placeholder='Try enter: Shoes'
                                             className='search-bar'
                                             endAdornment={
                                                 <InputAdornment position='end' >
-                                                    <IconButton>
+                                                    <IconButton onClick={() => {handleSearchSubmit()}}>
                                                         <img src={searchIcon} alt='Search' />
                                                     </IconButton>
                                                 </InputAdornment>
@@ -81,7 +116,7 @@ const NavbarBottom = () => {
                                             HOME
                                         </NavLink>
                                         <NavLink
-                                            to='/shop'
+                                            to={state?.fromShopPage ? - 1 : '/shop'}
                                             className={isActive('/shop') ? 'nav-link-active' : 'nav-link'}
                                         >
                                             SHOP
