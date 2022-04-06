@@ -20,6 +20,7 @@ import NotFound from 'components/NotFound/NotFound';
 import ProductOverview from 'components/ProductOverview/ProductOverview';
 import Shop from 'components/Shop/Shop';
 import UserAccount from 'components/UserAccount/UserAccount';
+import AddItem from 'components/AddItem/AddItem';
 
 function App() {
     const dispatch = useDispatch();
@@ -62,7 +63,7 @@ function App() {
                             <Route path='wishlist' element={<h1>Wishlist</h1>} />
                             <Route path='settings' element={<h1>Settings</h1>} />
                         </Route>
-                        <Route path='/account/add-item' element={<h1>Add Item</h1>} />
+                        <Route path='/account/add-item' element={<AddItem />} />
                         <Route path='*' element={<NotFound/>}/>
                     </Routes>
                 </div>
