@@ -26,6 +26,9 @@
     .MuiButton-root,
     .MuiInputBase-root {
         border-radius: 0;
+    }
+
+    .MuiButton-root {
         height: 3.5em;
     }
 
@@ -69,5 +72,20 @@
         font-size: 18px;
         font-weight: 400;
         text-align: right;
+    }
+
+    .nav-buttons {
+        font-weight: 700;
+        width: 100%;
+    }
+
+    .cancel-btn {
+        border: 2px solid base.$border-color;
+        color: #252525;
+    }
+
+    .back-btn {
+        border: 2px solid base.$primary-color;
+        color: #252525;
     }
 }

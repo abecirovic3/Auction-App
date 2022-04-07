@@ -1,11 +1,23 @@
-import { Box, Button, Container, Grid, Paper, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Box, Button, Container, Grid, InputAdornment, Stack, TextField, ThemeProvider } from '@mui/material';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import { useState } from 'react';
+
+import CalendarIcon from '@mui/icons-material/CalendarTodayOutlined';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-price-info.scss';
-import * as React from 'react';
 
-const AddPriceInfo = () => {
+const AddPriceInfo = ({ cancel, back, nextStep }) => {
+    const [value, setValue] = useState(null);
+
+    const CustomCalendarIcon = () => {
+        return (
+            <CalendarIcon color='dark' />
+        );
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='form-style add-item-price-info'>
@@ -19,29 +31,55 @@ const AddPriceInfo = () => {
                                 <TextField
                                     id='price'
                                     variant='outlined'
+                                    InputProps={{
+                                        startAdornment:
+                                            <InputAdornment position='start'>
+                                                <div className='dollar-adornment'>
+                                                    <h3>$</h3>
+                                                </div>
+                                            </InputAdornment>
+                                    }}
                                 />
                             </Stack>
 
                             <Stack spacing={2} direction='row'>
-                                <Stack spacing={2}>
+                                <Stack width='50%' spacing={2}>
                                     <label htmlFor='startDate'>Start Date</label>
-                                    <TextField
-                                        id='startDate'
-                                        variant='outlined'
-                                        type='date'
-                                    />
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            value={value}
+                                            onChange={(newValue) => {
+                                                setValue(newValue);
+                                            }}
+                                            renderInput={(params) => <TextField
+                                                {...params}
+                                            />}
+                                            components={{
+                                                OpenPickerIcon: CustomCalendarIcon
+                                            }}
+                                        />
+                                    </LocalizationProvider>
                                 </Stack>
-                                <Stack spacing={2}>
+                                <Stack width='50%' spacing={2}>
                                     <label htmlFor='endDate'>End Date</label>
-                                    <TextField
-                                        id='endDate'
-                                        variant='outlined'
-                                        type='date'
-                                    />
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            value={value}
+                                            onChange={(newValue) => {
+                                                setValue(newValue);
+                                            }}
+                                            renderInput={(params) => <TextField
+                                                {...params}
+                                            />}
+                                            components={{
+                                                OpenPickerIcon: CustomCalendarIcon
+                                            }}
+                                        />
+                                    </LocalizationProvider>
                                 </Stack>
                             </Stack>
 
-                            <p>The auction will be automatically closed when the end time comes. The highest bid will win the auction.</p>
+                            <p className='info-label'>The auction will be automatically closed when the end time comes. The highest bid will win the auction.</p>
                         </Stack>
 
                         <Box>
@@ -49,7 +87,8 @@ const AddPriceInfo = () => {
                                 <Grid item xs={3}>
                                     <Button
                                         variant='outlined'
-                                        className='nav-buttons'
+                                        className='nav-buttons cancel-btn'
+                                        onClick={() => {cancel()}}
                                     >
                                         Cancel
                                     </Button>
@@ -60,7 +99,8 @@ const AddPriceInfo = () => {
                                 <Grid item xs={3}>
                                     <Button
                                         variant='outlined'
-                                        className='nav-buttons'
+                                        className='nav-buttons back-btn'
+                                        onClick={() => {back()}}
                                     >
                                         Back
                                     </Button>
@@ -69,6 +109,7 @@ const AddPriceInfo = () => {
                                     <Button
                                         variant='contained'
                                         className='nav-buttons'
+                                        onClick={() => {nextStep()}}
                                     >
                                         Next
                                     </Button>

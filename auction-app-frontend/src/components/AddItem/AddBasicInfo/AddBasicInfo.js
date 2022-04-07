@@ -1,10 +1,14 @@
-import { Button, Container, Select, Stack, TextField, ThemeProvider } from '@mui/material';
+import { useState } from 'react';
+import { Button, Container, MenuItem, Select, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-basic-info.scss';
 
-const AddBasicInfo = () => {
+
+const AddBasicInfo = ({ cancel, nextStep }) => {
+    const [category, setCategory] = useState('');
+
     function handleFileDrop(ev) {
         ev.preventDefault();
         console.log(ev);
@@ -42,12 +46,31 @@ const AddBasicInfo = () => {
                                 <TextField
                                     id='name'
                                     variant='outlined'
+                                    placeholder='eg. Targeal 7.1 Surround Sound Gaming Headset for PS4 '
                                 />
                             </Stack>
 
                             <Stack spacing={2} direction='row'>
-                                <Select />
-                                <Select />
+                                <TextField
+                                    className='category-select'
+                                    select
+                                    label='Select Category'
+                                    value={''}
+                                >
+                                    <MenuItem value='ctg1'>Category 1</MenuItem>
+                                    <MenuItem value='ctg2'>Category 2</MenuItem>
+                                    <MenuItem value='ctg3'>Category 3</MenuItem>
+                                </TextField>
+                                <TextField
+                                    className='category-select'
+                                    select
+                                    label='Select Subcategory'
+                                    value={''}
+                                >
+                                    <MenuItem value='ctg1'>Category 1</MenuItem>
+                                    <MenuItem value='ctg2'>Category 2</MenuItem>
+                                    <MenuItem value='ctg3'>Category 3</MenuItem>
+                                </TextField>
                             </Stack>
 
                             <Stack spacing={2}>
@@ -56,6 +79,7 @@ const AddBasicInfo = () => {
                                     id='description'
                                     variant='outlined'
                                     multiline
+                                    rows={4}
                                 />
                                 <h3 className='form-label-description'>100 words (700 characters)</h3>
                             </Stack>
@@ -85,13 +109,15 @@ const AddBasicInfo = () => {
                         <Stack spacing={2} direction='row'>
                             <Button
                                 variant='outlined'
-                                className='nav-buttons'
+                                className='nav-buttons cancel-btn'
+                                onClick={() => {cancel()}}
                             >
                                 Cancel
                             </Button>
                             <Button
                                 variant='contained'
                                 className='nav-buttons'
+                                onClick={() => {nextStep()}}
                             >
                                 Next
                             </Button>

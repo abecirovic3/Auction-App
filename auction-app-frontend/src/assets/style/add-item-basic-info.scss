@@ -27,4 +27,16 @@
   .nav-buttons {
     width: 50%;
   }
+
+  .category-select {
+    width: 50%;
+  }
+
+  .category-select label {
+    color: #252525;
+  }
+
+  .category-select label.Mui-focused {
+    color: base.$primary-color;
+  }
 }

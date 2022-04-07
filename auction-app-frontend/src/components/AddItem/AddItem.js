@@ -7,9 +7,28 @@ import MainTheme from 'themes/MainTheme';
 import AddBasicInfo from 'components/AddItem/AddBasicInfo/AddBasicInfo';
 import AddPriceInfo from 'components/AddItem/AddPriceInfo/AddPriceInfo';
 import AddLocationInfo from 'components/AddItem/AddLocationInfo/AddLocationInfo';
+import { useNavigate } from 'react-router-dom';
 
 const AddItem = () => {
     const [activeStep, setActiveStep] = useState(0);
+    const navigate = useNavigate();
+
+    function cancel() {
+        navigate('/account');
+    }
+
+    function next() {
+        setActiveStep(activeStep + 1);
+    }
+
+    function back() {
+        setActiveStep(activeStep - 1);
+    }
+
+    function submit() {
+        // temporary
+        navigate('/account/seller');
+    }
 
     return (
         <ThemeProvider theme={MainTheme}>
@@ -20,32 +39,16 @@ const AddItem = () => {
                 <Stepper step={activeStep} />
 
                 {activeStep === 0 &&
-                    <AddBasicInfo />
+                    <AddBasicInfo cancel={cancel} nextStep={next} />
                 }
 
                 {activeStep === 1 &&
-                    <AddPriceInfo />
+                    <AddPriceInfo cancel={cancel} nextStep={next} back={back} />
                 }
 
                 {activeStep === 2 &&
-                    <AddLocationInfo />
+                    <AddLocationInfo cancel={cancel} back={back} submit={submit} />
                 }
-
-                <div className='form-navigation'>
-                    <Button variant='outlined'>
-                        Cancel
-                    </Button>
-                    <div>
-                        {activeStep >= 1 &&
-                            <Button variant='outlined' onClick={() => setActiveStep(activeStep - 1)}>
-                                Back
-                            </Button>
-                        }
-                        <Button variant='contained' onClick={() => setActiveStep(activeStep + 1)}>
-                            Next
-                        </Button>
-                    </div>
-                </div>
             </div>
         </ThemeProvider>
     );
