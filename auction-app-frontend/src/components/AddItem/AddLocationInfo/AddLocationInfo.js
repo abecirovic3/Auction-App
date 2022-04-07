@@ -1,8 +1,6 @@
-import { Box, Button, Container, Grid, InputAdornment, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Box, Button, Container, Grid, Stack, TextField, ThemeProvider } from '@mui/material';
 import MainTheme from 'themes/MainTheme';
-import { Autocomplete, DatePicker, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import DownArrow from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { Autocomplete } from '@mui/material';
 
 const AddLocationInfo = ({ cancel, back, submit }) => {
     const countries = [
@@ -57,11 +55,10 @@ const AddLocationInfo = ({ cancel, back, submit }) => {
                                 <label htmlFor='country'>Country</label>
                                 <Autocomplete
                                     id="country"
-                                    disablePortal
+                                    // disablePortal
                                     freeSolo
                                     options={countries}
                                     renderInput={(params) => <TextField {...params} />}
-                                    popupIcon={<DownArrow color='dark' />}
                                     forcePopupIcon
                                 />
                             </Stack>

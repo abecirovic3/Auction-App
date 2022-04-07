@@ -5,6 +5,7 @@ import notFoundHandlerReducer from 'features/notFounHandler/notFoundSlice'
 import productFiltersReducer from 'features/productFilters/productFiltersSlice';
 import shopReducer from 'features/shop/shopSlice';
 import categoryReducer from 'features/category/categorySlice';
+import addItemReducer from 'features/addItem/addItemSlice';
 
 export default configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export default configureStore({
         notFoundHandler: notFoundHandlerReducer,
         productFilters: productFiltersReducer,
         shop: shopReducer,
-        category: categoryReducer
+        category: categoryReducer,
+        addItem: addItemReducer
     },
 });

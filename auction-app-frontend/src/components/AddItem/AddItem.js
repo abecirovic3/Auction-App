@@ -1,17 +1,33 @@
-import { useState } from 'react';
-import { Button, ThemeProvider } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { ThemeProvider } from '@mui/material';
 
 import Stepper from 'components/Stepper/Stepper';
 
-import MainTheme from 'themes/MainTheme';
 import AddBasicInfo from 'components/AddItem/AddBasicInfo/AddBasicInfo';
 import AddPriceInfo from 'components/AddItem/AddPriceInfo/AddPriceInfo';
 import AddLocationInfo from 'components/AddItem/AddLocationInfo/AddLocationInfo';
-import { useNavigate } from 'react-router-dom';
+
+import MainTheme from 'themes/MainTheme';
+import CategoryService from 'services/CategoryService';
+import { setCategories } from 'features/category/categorySlice';
 
 const AddItem = () => {
     const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        CategoryService.getAllCategories()
+            .then(response => {
+                dispatch(setCategories(response.data));
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     function cancel() {
         navigate('/account');

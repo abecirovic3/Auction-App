@@ -8,14 +8,55 @@ import CalendarIcon from '@mui/icons-material/CalendarTodayOutlined';
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-price-info.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { setStartPrice, setStartDate, setEndDate } from 'features/addItem/addItemSlice';
 
 const AddPriceInfo = ({ cancel, back, nextStep }) => {
-    const [value, setValue] = useState(null);
-
     const CustomCalendarIcon = () => {
         return (
             <CalendarIcon color='dark' />
         );
+    }
+
+    const startPrice = useSelector(state => state.addItem.startPrice);
+    const startDate = useSelector(state => state.addItem.startDate);
+    const endDate = useSelector(state => state.addItem.endDate);
+    const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
+
+    function validate() {
+        let err = {};
+
+        if (isNaN(parseFloat(startPrice))) {
+            err.startPrice = 'Please enter valid start price';
+        }
+
+        const today = new Date();
+        const sd = new Date(startDate);
+        const ed = new Date(endDate);
+
+        if (!startDate) {
+            err.startDate = 'Please choose a start date for the auction';
+        } else if (sd < today) {
+            err.startDate = 'Auction start cannot be in the past';
+        }
+
+        if (!endDate) {
+            err.endDate = 'Please choose an end date for the auction';
+        } else if (ed < today) {
+            err.endDate = 'Auction end cannot be in the past'
+        }
+
+        setErrors(err);
+
+        return Object.keys(err).length === 0;
+    }
+
+    function handleNextStep() {
+        if (validate()) {
+            // dispatch state set
+            nextStep();
+        }
     }
 
     return (
@@ -39,6 +80,10 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
                                                 </div>
                                             </InputAdornment>
                                     }}
+                                    value={startPrice}
+                                    onChange={event => {dispatch(setStartPrice(event.target.value))}}
+                                    error={!!errors.startPrice}
+                                    helperText={errors.startPrice}
                                 />
                             </Stack>
 
@@ -47,16 +92,20 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
                                     <label htmlFor='startDate'>Start Date</label>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DatePicker
-                                            value={value}
+                                            value={startDate ? new Date(startDate) : null}
                                             onChange={(newValue) => {
-                                                setValue(newValue);
+                                                dispatch(setStartDate(newValue?.toString() || null));
                                             }}
-                                            renderInput={(params) => <TextField
-                                                {...params}
-                                            />}
+                                            renderInput={(params) =>
+                                                <TextField
+                                                    {...params}
+                                                    error={!!errors.startDate}
+                                                    helperText={errors.startDate}
+                                                />}
                                             components={{
                                                 OpenPickerIcon: CustomCalendarIcon
                                             }}
+                                            minDate={new Date()}
                                         />
                                     </LocalizationProvider>
                                 </Stack>
@@ -64,16 +113,20 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
                                     <label htmlFor='endDate'>End Date</label>
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DatePicker
-                                            value={value}
+                                            value={endDate ? new Date(endDate) : null}
                                             onChange={(newValue) => {
-                                                setValue(newValue);
+                                                dispatch(setEndDate(newValue?.toString() || null))
                                             }}
-                                            renderInput={(params) => <TextField
-                                                {...params}
-                                            />}
+                                            renderInput={(params) =>
+                                                <TextField
+                                                    {...params}
+                                                    error={!!errors.endDate}
+                                                    helperText={errors.endDate}
+                                                />}
                                             components={{
                                                 OpenPickerIcon: CustomCalendarIcon
                                             }}
+                                            minDate={new Date()}
                                         />
                                     </LocalizationProvider>
                                 </Stack>
@@ -109,7 +162,7 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
                                     <Button
                                         variant='contained'
                                         className='nav-buttons'
-                                        onClick={() => {nextStep()}}
+                                        onClick={handleNextStep}
                                     >
                                         Next
                                     </Button>

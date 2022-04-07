@@ -1,5 +1,8 @@
-import { useState } from 'react';
-import { Button, Container, MenuItem, Select, Stack, TextField, ThemeProvider } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Container, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
+
+import { setName, setDescription, setCategory, setSubCategory } from 'features/addItem/addItemSlice';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
@@ -7,7 +10,28 @@ import 'assets/style/add-item-basic-info.scss';
 
 
 const AddBasicInfo = ({ cancel, nextStep }) => {
-    const [category, setCategory] = useState('');
+    // const [category, setCategory] = useState('');
+    const category = useSelector(state => state.addItem.category);
+    const subCategory = useSelector(state => state.addItem.subCategory);
+    const [subCategoriesForCategory, setSubCategoriesForCategory] = useState([]);
+    // TODO should use local state in AddItem for categories and pass in here
+    // because global categories array contains only categories which have products in them
+    const categories = useSelector(state => state.category.categories);
+    const name = useSelector(state => state.addItem.name);
+    const description = useSelector(state => state.addItem.description);
+    const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (category !== '') {
+            for (let c of categories) {
+                if (c.name === category) {
+                    setSubCategoriesForCategory(c.subCategories);
+                    break;
+                }
+            }
+        }
+    }, [categories, category]);
 
     function handleFileDrop(ev) {
         ev.preventDefault();
@@ -33,6 +57,41 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
         console.log(event.target.files);
     }
 
+    function handleSelectCategory(event) {
+        dispatch(setSubCategory(''));
+        dispatch(setCategory(event.target.value));
+    }
+
+    function validate() {
+        let err = {};
+        if (!name) {
+            err.name = 'Please enter product name';
+        }
+
+        if (!description) {
+            err.description = 'Please enter product description';
+        }
+
+        if (!category) {
+            err.category = 'Please select a category';
+        }
+
+        if (!subCategory) {
+            err.subCategory = 'Please select a subcategory';
+        }
+
+        setErrors(err);
+
+        return Object.keys(err).length === 0;
+    }
+
+    function handleNextStep() {
+        if (validate()) {
+            // dispatch state set
+            nextStep();
+        }
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='form-style add-item-basic-info'>
@@ -47,6 +106,10 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                                     id='name'
                                     variant='outlined'
                                     placeholder='eg. Targeal 7.1 Surround Sound Gaming Headset for PS4 '
+                                    value={name}
+                                    onChange={event => {dispatch(setName(event.target.value))}}
+                                    error={!!errors.name}
+                                    helperText={errors.name}
                                 />
                             </Stack>
 
@@ -55,21 +118,38 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                                     className='category-select'
                                     select
                                     label='Select Category'
-                                    value={''}
+                                    value={category}
+                                    onChange={handleSelectCategory}
+                                    error={!!errors.category}
+                                    helperText={errors.category}
                                 >
-                                    <MenuItem value='ctg1'>Category 1</MenuItem>
-                                    <MenuItem value='ctg2'>Category 2</MenuItem>
-                                    <MenuItem value='ctg3'>Category 3</MenuItem>
+                                    {categories.map(category => (
+                                        <MenuItem
+                                            key={category.id}
+                                            value={category.name}
+                                        >
+                                            {category.name}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
+
                                 <TextField
                                     className='category-select'
                                     select
                                     label='Select Subcategory'
-                                    value={''}
+                                    value={subCategoriesForCategory.length > 0 ? subCategory : ''}
+                                    onChange={event => {dispatch(setSubCategory(event.target.value))}}
+                                    error={!!errors.subCategory}
+                                    helperText={errors.subCategory}
                                 >
-                                    <MenuItem value='ctg1'>Category 1</MenuItem>
-                                    <MenuItem value='ctg2'>Category 2</MenuItem>
-                                    <MenuItem value='ctg3'>Category 3</MenuItem>
+                                    {subCategoriesForCategory.map(sc => (
+                                        <MenuItem
+                                            key={sc.id}
+                                            value={sc.name}
+                                        >
+                                            {sc.name}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                             </Stack>
 
@@ -80,6 +160,10 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                                     variant='outlined'
                                     multiline
                                     rows={4}
+                                    value={description}
+                                    onChange={event => {dispatch(setDescription(event.target.value))}}
+                                    error={!!errors.description}
+                                    helperText={errors.description}
                                 />
                                 <h3 className='form-label-description'>100 words (700 characters)</h3>
                             </Stack>
@@ -117,7 +201,7 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                             <Button
                                 variant='contained'
                                 className='nav-buttons'
-                                onClick={() => {nextStep()}}
+                                onClick={handleNextStep}
                             >
                                 Next
                             </Button>
