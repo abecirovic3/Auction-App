@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import useShopService from 'hooks/useShopService';
 
 import highlightedProduct from 'assets/img/home-main-product.png';
-import bidNowIcon from 'assets/img/bid-now.svg';
+import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 
 import 'assets/style/home-page-main.scss';
 
@@ -67,7 +67,7 @@ const HomeMain = () => {
                                         disabled={true}
                                         variant='outlined'
                                         className='bid-now-btn'
-                                        endIcon={<img src={bidNowIcon} alt='Bid Now' />}
+                                        endIcon={<RightArrow />}
                                     >
                                         Bid now
                                     </Button>

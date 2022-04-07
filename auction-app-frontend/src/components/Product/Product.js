@@ -1,9 +1,9 @@
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-import wishlistIcon from 'assets/img/wishlist.png';
-import bidIcon from 'assets/img/bid-round.png';
 import imagePlaceholder from 'assets/img/imagePlaceholder.png';
+import HeartIcon from '@mui/icons-material/FavoriteBorder';
+import BidIcon from '@mui/icons-material/MonetizationOnOutlined';
 
 import 'assets/style/product.scss';
 
@@ -45,13 +45,14 @@ const Product = ({ product, layoutStyle, imageStyle }) => {
                             <Button
                                 disabled={true}
                                 variant='outlined'
-                                endIcon={<img src={wishlistIcon} alt='wishlist'/>}
+                                // endIcon={<img src={wishlistIcon} alt='wishlist'/>}
+                                endIcon={<HeartIcon />}
                             >
                                 Wishlist
                             </Button>
                             <Button
                                 variant='outlined'
-                                endIcon={<img src={bidIcon} alt='bid'/>}
+                                endIcon={<BidIcon />}
                                 onClick={() => {navigate(`/shop/product-overview/${product.id}`)}}
                             >
                                 Bid
