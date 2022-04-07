@@ -117,7 +117,6 @@ const ShopProductsGrid = () => {
     }
 
     function handleSelectChange(e) {
-        // setSortSelect(e.target.value);
         dispatch(setSort(extractSortObject(e.target.value)));
     }
 
