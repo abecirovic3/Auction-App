@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Container, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Button, CircularProgress, Container, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import { setName, setDescription, setCategory, setSubCategory } from 'features/addItem/addItemSlice';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-basic-info.scss';
+import ImgurService from 'services/ImgurService';
 
 
 const AddBasicInfo = ({ cancel, nextStep }) => {
@@ -21,6 +22,9 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
     const description = useSelector(state => state.addItem.description);
     const [errors, setErrors] = useState({});
     const dispatch = useDispatch();
+
+    const [imageFiles, setImageFiles] = useState([]);
+    const [uploadedImages, setUploadedImages] = useState([]);
 
     useEffect(() => {
         if (category !== '') {
@@ -55,6 +59,30 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
 
     function handleFileSelect(event) {
         console.log(event.target.files);
+        setImageFiles([...imageFiles, ...event.target.files]);
+        handleImageUpload(event.target.files);
+    }
+
+    function handleImageUpload(imageFiles) {
+        let PromiseArray = [];
+        for (let imageFile of imageFiles) {
+            PromiseArray.push(ImgurService.uploadImage(imageFile));
+        }
+        Promise.all(PromiseArray)
+            .then(responseArray => {
+                console.log(responseArray);
+                const images = responseArray.map(response => {
+                    return {
+                        id: response.data.data.id,
+                        url: response.data.data.link,
+                        delete_hash: response.data.data.deletehash
+                    }
+                });
+                setUploadedImages([...uploadedImages, ...images]);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     function handleSelectCategory(event) {
@@ -87,7 +115,6 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
 
     function handleNextStep() {
         if (validate()) {
-            // dispatch state set
             nextStep();
         }
     }
@@ -175,6 +202,17 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                             onDragOver={(event) => {event.preventDefault()}}
                         >
                             <div>
+                                {
+                                    imageFiles.map((imageFile, i) => {
+                                        if (i < uploadedImages.length) {
+                                            return <img key={uploadedImages[i].id} src={uploadedImages[i].url} alt='ok'/>
+                                        } else {
+                                            return <CircularProgress key={i} />
+                                        }
+                                    })
+                                }
+                            </div>
+                            <div>
                                 <Button component='label'>
                                     Upload Photos
                                     <input
@@ -202,6 +240,7 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                                 variant='contained'
                                 className='nav-buttons'
                                 onClick={handleNextStep}
+                                disabled={imageFiles.length !== uploadedImages.length}
                             >
                                 Next
                             </Button>
