@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, CircularProgress, Container, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
 
-import { setName, setDescription, setCategory, setSubCategory } from 'features/addItem/addItemSlice';
+import { setName, setDescription, setCategory, setSubCategory, setImageData } from 'features/addItem/addItemSlice';
+
+import ImagePreview from 'components/AddItem/AddBasicInfo/ImagePreview/ImagePreview';
+
+import ImgurService from 'services/ImgurService';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-basic-info.scss';
-import ImgurService from 'services/ImgurService';
 
 
 const AddBasicInfo = ({ cancel, nextStep }) => {
-    // const [category, setCategory] = useState('');
     const category = useSelector(state => state.addItem.category);
     const subCategory = useSelector(state => state.addItem.subCategory);
     const [subCategoriesForCategory, setSubCategoriesForCategory] = useState([]);
@@ -23,8 +25,9 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
     const [errors, setErrors] = useState({});
     const dispatch = useDispatch();
 
-    const [imageFiles, setImageFiles] = useState([]);
-    const [uploadedImages, setUploadedImages] = useState([]);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const imageData = useSelector(state => state.addItem.imageData);
+    const imageDeleteInProgress = useSelector(state => state.addItem.imageDeleteInProgress);
 
     useEffect(() => {
         if (category !== '') {
@@ -58,10 +61,32 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
     }
 
     function handleFileSelect(event) {
+        console.log("Handle file select event");
         console.log(event.target.files);
-        setImageFiles([...imageFiles, ...event.target.files]);
-        handleImageUpload(event.target.files);
+        setSelectedFiles([...event.target.files]);
     }
+
+    useEffect(() => {
+        if (selectedFiles.length > 0) {
+            const newImages = selectedFiles.map(file => {
+                return {
+                    name: file.name
+                }
+            });
+            dispatch(setImageData({
+                uploaded: false,
+                images: [...imageData.images, ...newImages]
+            }));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedFiles]);
+
+    useEffect(() => {
+        if (imageData.uploaded === false && imageData.images.length !== 0) {
+            handleImageUpload(selectedFiles);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [imageData]);
 
     function handleImageUpload(imageFiles) {
         let PromiseArray = [];
@@ -78,7 +103,23 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                         delete_hash: response.data.data.deletehash
                     }
                 });
-                setUploadedImages([...uploadedImages, ...images]);
+
+                let i = 0;
+                const uploadedImages = imageData.images.map((image) => {
+                    if (image.url) {
+                        return image;
+                    } else {
+                        return {
+                            ...image,
+                            ...images[i++]
+                        }
+                    }
+                });
+
+                dispatch(setImageData({
+                    uploaded: true,
+                    images: uploadedImages
+                }));
             })
             .catch(err => {
                 console.log(err);
@@ -203,9 +244,13 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                         >
                             <div>
                                 {
-                                    imageFiles.map((imageFile, i) => {
-                                        if (i < uploadedImages.length) {
-                                            return <img key={uploadedImages[i].id} src={uploadedImages[i].url} alt='ok'/>
+                                    imageData.images.map((image, i) => {
+                                        if (image.url) {
+                                            return (
+                                                <div key={image.id}>
+                                                    <ImagePreview image={image} />
+                                                </div>
+                                            )
                                         } else {
                                             return <CircularProgress key={i} />
                                         }
@@ -240,7 +285,7 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                                 variant='contained'
                                 className='nav-buttons'
                                 onClick={handleNextStep}
-                                disabled={imageFiles.length !== uploadedImages.length}
+                                disabled={!imageData.uploaded || imageDeleteInProgress}
                             >
                                 Next
                             </Button>

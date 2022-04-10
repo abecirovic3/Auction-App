@@ -9,7 +9,12 @@ export const addItemSlice = createSlice({
         subCategory: '',
         startPrice: '',
         startDate: null,
-        endDate: null
+        endDate: null,
+        imageData: {
+            uploaded: true,
+            images: []
+        },
+        imageDeleteInProgress: false
     },
     reducers: {
         setName: (state, action) => {
@@ -33,6 +38,15 @@ export const addItemSlice = createSlice({
         setEndDate: (state, action) => {
             state.endDate = action.payload;
         },
+        setImageData: (state, action) => {
+            state.imageData = action.payload;
+        },
+        setImages: (state, action) => {
+            state.imageData.images = action.payload;
+        },
+        setImageDeleteInProgress: (state, action) => {
+            state.imageDeleteInProgress = action.payload;
+        },
     }
 });
 
@@ -44,6 +58,9 @@ export const {
     setStartPrice,
     setStartDate,
     setEndDate,
+    setImageData,
+    setImages,
+    setImageDeleteInProgress
 } = addItemSlice.actions;
 
 export default addItemSlice.reducer;
