@@ -45,7 +45,6 @@ const Product = ({ product, layoutStyle, imageStyle }) => {
                             <Button
                                 disabled={true}
                                 variant='outlined'
-                                // endIcon={<img src={wishlistIcon} alt='wishlist'/>}
                                 endIcon={<HeartIcon />}
                             >
                                 Wishlist
