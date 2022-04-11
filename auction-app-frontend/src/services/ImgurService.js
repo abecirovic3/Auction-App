@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-const apiKey = '0a7043a1018e5b3';
-
 const instance = axios.create({
     baseURL: 'https://api.imgur.com/3/image',
     headers: {
-        'Authorization': 'Client-ID ' + apiKey,
+        'Authorization': 'Client-ID ' + process.env.REACT_APP_IMGUR_API_KEY,
     },
 });
 
