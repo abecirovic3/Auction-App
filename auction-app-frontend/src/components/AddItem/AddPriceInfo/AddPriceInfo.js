@@ -1,7 +1,8 @@
 import { Box, Button, Container, Grid, InputAdornment, Stack, TextField, ThemeProvider } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { DatePicker, LocalizationProvider } from '@mui/lab';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { useState } from 'react';
+import set from 'date-fns/set'
 
 import CalendarIcon from '@mui/icons-material/CalendarTodayOutlined';
 
@@ -12,6 +13,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setStartPrice, setStartDate, setEndDate } from 'features/addItem/addItemSlice';
 
 const AddPriceInfo = ({ cancel, back, nextStep }) => {
+    const startTime = {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0
+    };
+
+    const endTime = {
+        hours: 23,
+        minutes: 59,
+        seconds: 59
+    }
+
     const CustomCalendarIcon = () => {
         return (
             <CalendarIcon color='dark' />
@@ -30,21 +44,22 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
         if (isNaN(parseFloat(startPrice))) {
             err.startPrice = 'Please enter valid start price';
         }
-
-        const today = new Date();
         const sd = new Date(startDate);
         const ed = new Date(endDate);
+        const ref = set(new Date(), startTime);
 
         if (!startDate) {
             err.startDate = 'Please choose a start date for the auction';
-        } else if (sd < today) {
+        } else if (sd < ref) {
             err.startDate = 'Auction start cannot be in the past';
         }
 
         if (!endDate) {
             err.endDate = 'Please choose an end date for the auction';
-        } else if (ed < today) {
+        } else if (ed < ref) {
             err.endDate = 'Auction end cannot be in the past'
+        } else if (ed < sd) {
+            err.endDate = 'Auction end must be after auction start';
         }
 
         setErrors(err);
@@ -94,7 +109,8 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
                                         <DatePicker
                                             value={startDate ? new Date(startDate) : null}
                                             onChange={(newValue) => {
-                                                dispatch(setStartDate(newValue?.toString() || null));
+                                                const newDate = set(newValue, startTime);
+                                                dispatch(setStartDate(newDate?.toString() || null));
                                             }}
                                             renderInput={(params) =>
                                                 <TextField
@@ -115,7 +131,8 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
                                         <DatePicker
                                             value={endDate ? new Date(endDate) : null}
                                             onChange={(newValue) => {
-                                                dispatch(setEndDate(newValue?.toString() || null))
+                                                const newDate = set(newValue, endTime);
+                                                dispatch(setEndDate(newDate?.toString() || null))
                                             }}
                                             renderInput={(params) =>
                                                 <TextField

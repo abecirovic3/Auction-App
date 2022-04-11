@@ -14,7 +14,11 @@ export const addItemSlice = createSlice({
             uploaded: true,
             images: []
         },
-        imageDeleteInProgress: false
+        imageDeleteInProgress: false,
+        address: '',
+        city: '',
+        zipCode: '',
+        country: ''
     },
     reducers: {
         setName: (state, action) => {
@@ -47,6 +51,18 @@ export const addItemSlice = createSlice({
         setImageDeleteInProgress: (state, action) => {
             state.imageDeleteInProgress = action.payload;
         },
+        setAddress: (state, action) => {
+            state.address = action.payload;
+        },
+        setCity: (state, action) => {
+            state.city = action.payload;
+        },
+        setZipCode: (state, action) => {
+            state.zipCode = action.payload;
+        },
+        setCountry: (state, action) => {
+            state.country = action.payload;
+        },
     }
 });
 
@@ -60,7 +76,11 @@ export const {
     setEndDate,
     setImageData,
     setImages,
-    setImageDeleteInProgress
+    setImageDeleteInProgress,
+    setAddress,
+    setCity,
+    setZipCode,
+    setCountry
 } = addItemSlice.actions;
 
 export default addItemSlice.reducer;

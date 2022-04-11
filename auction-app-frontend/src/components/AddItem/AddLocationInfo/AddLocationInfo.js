@@ -1,13 +1,57 @@
+import { useState } from 'react';
 import { Box, Button, Container, Grid, Stack, TextField, ThemeProvider } from '@mui/material';
-import MainTheme from 'themes/MainTheme';
 import { Autocomplete } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+
+import MainTheme from 'themes/MainTheme';
+import { setAddress, setCity, setZipCode, setCountry } from 'features/addItem/addItemSlice';
+
+// TODO should be fetched from be
+const countries = [
+    'Bosina & Herzegowina',
+    'Germany',
+    'France'
+];
 
 const AddLocationInfo = ({ cancel, back, submit }) => {
-    const countries = [
-        'Bosina & Herzegowina',
-        'Germany',
-        'France'
-    ];
+    const address = useSelector(state => state.addItem.address);
+    const city = useSelector(state => state.addItem.city);
+    const zipCode = useSelector(state => state.addItem.zipCode);
+    const country = useSelector(state => state.addItem.country);
+    const [countrySelect, setCountrySelect] = useState(null);
+    const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
+
+    function handleSubmit() {
+        if (validate()) {
+            submit();
+        }
+    }
+
+    function validate() {
+        let err = {};
+
+        if (!address) {
+            err.address = 'Please enter address';
+        }
+
+        if (!city) {
+            err.city = 'Please enter city';
+        }
+
+        if (!zipCode) {
+            err.zipCode = 'Please enter zipcode';
+        }
+
+        if (!country) {
+            err.country = 'Please enter country name or select existing';
+        }
+
+        setErrors(err);
+
+        return Object.keys(err).length === 0;
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='form-style add-item-price-info'>
@@ -21,15 +65,11 @@ const AddLocationInfo = ({ cancel, back, submit }) => {
                                 <TextField
                                     id='address'
                                     variant='outlined'
-                                />
-                            </Stack>
-
-                            <Stack spacing={2}>
-                                <label htmlFor='email'>Enter Email</label>
-                                <TextField
-                                    id='email'
-                                    type='email'
-                                    variant='outlined'
+                                    placeholder='eg. 123 Main Street'
+                                    value={address}
+                                    onChange={event => {dispatch(setAddress(event.target.value))}}
+                                    error={!!errors.address}
+                                    helperText={errors.address}
                                 />
                             </Stack>
 
@@ -39,6 +79,11 @@ const AddLocationInfo = ({ cancel, back, submit }) => {
                                     <TextField
                                         id='city'
                                         variant='outlined'
+                                        placeholder='eg. Madrid'
+                                        value={city}
+                                        onChange={event => {dispatch(setCity(event.target.value))}}
+                                        error={!!errors.city}
+                                        helperText={errors.city}
                                     />
                                 </Stack>
 
@@ -47,6 +92,11 @@ const AddLocationInfo = ({ cancel, back, submit }) => {
                                     <TextField
                                         id='zipCode'
                                         variant='outlined'
+                                        placeholder='XXXXXXX'
+                                        value={zipCode}
+                                        onChange={event => {dispatch(setZipCode(event.target.value))}}
+                                        error={!!errors.zipCode}
+                                        helperText={errors.zipCode}
                                     />
                                 </Stack>
                             </Stack>
@@ -55,19 +105,24 @@ const AddLocationInfo = ({ cancel, back, submit }) => {
                                 <label htmlFor='country'>Country</label>
                                 <Autocomplete
                                     id="country"
-                                    // disablePortal
                                     freeSolo
                                     options={countries}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            {...params}
+                                            placeholder='eg. Spain'
+                                            error={!!errors.country}
+                                            helperText={errors.country}
+                                        />}
                                     forcePopupIcon
-                                />
-                            </Stack>
-
-                            <Stack spacing={2}>
-                                <label htmlFor='phoneNumber'>Phone Number</label>
-                                <TextField
-                                    id='phoneNumber'
-                                    variant='outlined'
+                                    value={countrySelect}
+                                    onChange={(event, newValue) => {
+                                        setCountrySelect(newValue)
+                                    }}
+                                    inputValue={country}
+                                    onInputChange={(event, newInputValue) => {
+                                        dispatch(setCountry(newInputValue ? newInputValue : ''));
+                                    }}
                                 />
                             </Stack>
                         </Stack>
@@ -99,7 +154,7 @@ const AddLocationInfo = ({ cancel, back, submit }) => {
                                     <Button
                                         variant='contained'
                                         className='nav-buttons'
-                                        onClick={() => {submit()}}
+                                        onClick={handleSubmit}
                                     >
                                         Done
                                     </Button>
