@@ -19,10 +19,22 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import java.util.List;
 
 @Entity(name = "Category")
-@Table(name = "category")
+@Table(
+        name = "category",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "category_name_unique",
+                        columnNames = {
+                                "name",
+                                "super_category_id"
+                        }
+                )
+        }
+)
 @SqlResultSetMapping(
         name = "categoryProductCountMapping",
         classes = @ConstructorResult(

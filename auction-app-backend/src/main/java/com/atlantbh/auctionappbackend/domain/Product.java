@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -73,6 +74,15 @@ public class Product {
     )
     @JsonIgnore
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "street_id",
+            foreignKey = @ForeignKey(name = "street_id"),
+            nullable = false
+    )
+    @JsonBackReference
+    private Street street;
 
     private Integer size;
     private String color;
@@ -269,5 +279,13 @@ public class Product {
 
     public void setNumberOfBids(Integer numberOfBids) {
         this.numberOfBids = numberOfBids;
+    }
+
+    public Street getStreet() {
+        return street;
+    }
+
+    public void setStreet(Street street) {
+        this.street = street;
     }
 }
