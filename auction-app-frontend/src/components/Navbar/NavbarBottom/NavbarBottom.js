@@ -35,6 +35,7 @@ const NavbarBottom = () => {
         if (!location.pathname.includes('/shop')) {
             shopService.setInitialShopProductsState();
             shopService.setInitialProductFilters();
+            shopService.setSortInitial();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);

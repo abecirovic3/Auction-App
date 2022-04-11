@@ -9,7 +9,7 @@ import {
 import { setCategories } from 'features/category/categorySlice';
 import {
     setFilters, setMaxPrice,
-    setMinPrice,
+    setMinPrice, setSort,
     setSubCategories,
     setTopLevelCategories
 } from 'features/productFilters/productFiltersSlice';
@@ -130,6 +130,13 @@ function useShopService() {
         ]));
     }
 
+    function setSortInitial() {
+        dispatch(setSort({
+            sortKey: null,
+            sortDirection: null
+        }))
+    }
+
     return {
         setInitialShopProductsState,
         setInitialProductFilters,
@@ -139,7 +146,8 @@ function useShopService() {
         setMaxPriceFilter,
         setSubCategoryFilter,
         flipTopLevelCategoryFilterValue,
-        handleError
+        handleError,
+        setSortInitial
     }
 }
 
