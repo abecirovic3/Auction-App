@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, CircularProgress, Container, Grid, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Button, CircularProgress, Container, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import { setName, setDescription, setCategory, setSubCategory, setImageData } from 'features/addItem/addItemSlice';
 
@@ -42,27 +42,20 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
 
     function handleFileDrop(ev) {
         ev.preventDefault();
-        console.log(ev);
         if (ev.dataTransfer.items) {
-            // Use DataTransferItemList interface to access the file(s)
+            const files = [];
             for (let i = 0; i < ev.dataTransfer.items.length; i++) {
-                // If dropped items aren't files, reject them
                 if (ev.dataTransfer.items[i].kind === 'file') {
-                    var file = ev.dataTransfer.items[i].getAsFile();
-                    console.log('... file[' + i + '].name = ' + file.name);
+                    files.push(ev.dataTransfer.items[i].getAsFile());
                 }
             }
+            setSelectedFiles(files);
         } else {
-            // Use DataTransfer interface to access the file(s)
-            for (let i = 0; i < ev.dataTransfer.files.length; i++) {
-                console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
-            }
+            setSelectedFiles([...ev.dataTransfer.files]);
         }
     }
 
     function handleFileSelect(event) {
-        console.log("Handle file select event");
-        console.log(event.target.files);
         setSelectedFiles([...event.target.files]);
     }
 
@@ -242,26 +235,24 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                             onDrop={(event) => {handleFileDrop(event)}}
                             onDragOver={(event) => {event.preventDefault()}}
                         >
-                            <div>
-                                <Grid container spacing={2}>
-                                    {
-                                        imageData.images.map((image, i) => {
-                                            if (image.url) {
-                                                return (
-                                                    <Grid item xs={3} key={image.id}>
-                                                        <ImagePreview image={image} />
-                                                    </Grid>
-                                                )
-                                            } else {
-                                                return (
-                                                    <Grid item xs={3} key={i} justifyItems='center'>
-                                                        <CircularProgress />
-                                                    </Grid>
-                                                )
-                                            }
-                                        })
-                                    }
-                                </Grid>
+                            <div className={'image-grid'}>
+                                {
+                                    imageData.images.map((image, i) => {
+                                        if (image.url) {
+                                            return (
+                                                <div key={image.id}>
+                                                    <ImagePreview image={image} />
+                                                </div>
+                                            )
+                                        } else {
+                                            return (
+                                                <div key={i}>
+                                                    <CircularProgress />
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                }
                             </div>
                             <div>
                                 <Button className='label-btn' component='label'>
