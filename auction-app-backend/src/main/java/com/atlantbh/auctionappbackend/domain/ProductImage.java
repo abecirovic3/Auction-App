@@ -29,7 +29,7 @@ public class ProductImage {
             foreignKey = @ForeignKey(name = "product_id"),
             nullable = false
     )
-    @JsonBackReference
+    @JsonBackReference(value = "product-image-reference")
     private Product product;
 
     public ProductImage() {

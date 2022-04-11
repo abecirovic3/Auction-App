@@ -1,6 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +32,7 @@ public class Country {
     private String name;
 
     @OneToMany(mappedBy = "country")
-    @JsonManagedReference
+    @JsonIgnore
     private List<City> cities;
 
     public Country() {

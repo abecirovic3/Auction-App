@@ -1,8 +1,8 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,7 +51,7 @@ public class Product {
     private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "product")
-    @JsonManagedReference
+    @JsonManagedReference(value = "product-image-reference")
     private List<ProductImage> images;
     
     @OneToMany(mappedBy = "product")
@@ -81,7 +81,6 @@ public class Product {
             foreignKey = @ForeignKey(name = "street_id"),
             nullable = false
     )
-    @JsonBackReference
     private Street street;
 
     private Integer size;
@@ -261,6 +260,7 @@ public class Product {
         return category;
     }
 
+    @JsonProperty
     public void setCategory(Category category) {
         this.category = category;
     }

@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -72,11 +73,11 @@ public class Category {
             name = "super_category_id",
             foreignKey = @ForeignKey(name = "super_category_id")
     )
-    @JsonIgnore
+    @JsonBackReference(value = "category-category-reference")
     private Category superCategory;
 
     @OneToMany(mappedBy = "superCategory")
-    @JsonManagedReference
+    @JsonManagedReference(value = "category-category-reference")
     private List<Category> subCategories;
 
     @Column(nullable = false)

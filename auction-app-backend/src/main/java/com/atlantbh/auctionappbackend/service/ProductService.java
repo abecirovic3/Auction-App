@@ -144,4 +144,8 @@ public class ProductService {
     public PriceRange getProductPriceRange() {
         return priceRangeRepositoryImplementation.getProductPriceRange();
     }
+
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
+    }
 }

@@ -1,7 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,11 +40,10 @@ public class City {
             foreignKey = @ForeignKey(name = "country_id"),
             nullable = false
     )
-    @JsonBackReference
     private Country country;
 
     @OneToMany(mappedBy = "city")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Street> streets;
 
     public City() {

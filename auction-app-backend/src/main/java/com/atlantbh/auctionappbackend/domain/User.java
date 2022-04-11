@@ -1,7 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
 import com.atlantbh.auctionappbackend.constraint.EmailPreference;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
@@ -88,7 +87,6 @@ public class User {
             name = "street_id",
             foreignKey = @ForeignKey(name = "street_id")
     )
-    @JsonBackReference
     private Street street;
 
 
