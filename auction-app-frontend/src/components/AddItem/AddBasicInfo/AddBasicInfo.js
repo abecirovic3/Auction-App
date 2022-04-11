@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, CircularProgress, Container, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Button, CircularProgress, Container, Grid, MenuItem, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import { setName, setDescription, setCategory, setSubCategory, setImageData } from 'features/addItem/addItemSlice';
 
@@ -243,22 +243,28 @@ const AddBasicInfo = ({ cancel, nextStep }) => {
                             onDragOver={(event) => {event.preventDefault()}}
                         >
                             <div>
-                                {
-                                    imageData.images.map((image, i) => {
-                                        if (image.url) {
-                                            return (
-                                                <div key={image.id}>
-                                                    <ImagePreview image={image} />
-                                                </div>
-                                            )
-                                        } else {
-                                            return <CircularProgress key={i} />
-                                        }
-                                    })
-                                }
+                                <Grid container spacing={2}>
+                                    {
+                                        imageData.images.map((image, i) => {
+                                            if (image.url) {
+                                                return (
+                                                    <Grid item xs={3} key={image.id}>
+                                                        <ImagePreview image={image} />
+                                                    </Grid>
+                                                )
+                                            } else {
+                                                return (
+                                                    <Grid item xs={3} key={i} justifyItems='center'>
+                                                        <CircularProgress />
+                                                    </Grid>
+                                                )
+                                            }
+                                        })
+                                    }
+                                </Grid>
                             </div>
                             <div>
-                                <Button component='label'>
+                                <Button className='label-btn' component='label'>
                                     Upload Photos
                                     <input
                                         type='file'

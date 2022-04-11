@@ -28,7 +28,7 @@
         border-radius: 0;
     }
 
-    .MuiButton-root {
+    .MuiButton-standard-height {
         height: 3.5em;
     }
 
@@ -75,6 +75,7 @@
     }
 
     .nav-buttons {
+        height: 3.5em;
         font-weight: 700;
         width: 100%;
     }

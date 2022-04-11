@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import ImgurService from 'services/ImgurService';
 import { setImageDeleteInProgress, setImages } from 'features/addItem/addItemSlice';
 
+import DeleteIcon from '@mui/icons-material/Clear';
+
+import 'assets/style/image-preview.scss';
+
 const ImagePreview = ({ image }) => {
     const imageData = useSelector(state => state.addItem.imageData);
     const dispatch = useDispatch();
@@ -22,9 +26,15 @@ const ImagePreview = ({ image }) => {
     }
 
     return (
-        <div>
+        <div className='image-preview-container'>
             <img src={image.url} alt={image.name}/>
-            <Button onClick={handleRemoveImage}>remove</Button>
+            <Button
+                className='remove-btn'
+                endIcon={<DeleteIcon />}
+                onClick={handleRemoveImage}
+            >
+                remove
+            </Button>
         </div>
     );
 };
