@@ -8,6 +8,6 @@ public class AuctionStartDatePreferenceValidator implements ConstraintValidator<
 
     @Override
     public boolean isValid(LocalDateTime startDate, ConstraintValidatorContext constraintValidatorContext) {
-        return startDate.isAfter(LocalDateTime.now().minusDays((long) 1));
+        return startDate != null && startDate.isAfter(LocalDateTime.now().minusDays((long) 1));
     }
 }

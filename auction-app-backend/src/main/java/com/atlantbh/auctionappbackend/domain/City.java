@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -56,6 +57,7 @@ public class City {
             nullable = false
     )
     @NotNull(message = "Country is required for city")
+    @Valid
     private Country country;
 
     @OneToMany(mappedBy = "city")

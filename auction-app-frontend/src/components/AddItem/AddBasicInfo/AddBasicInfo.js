@@ -4,13 +4,14 @@ import { Button, CircularProgress, Container, MenuItem, Stack, TextField, ThemeP
 
 import { setName, setDescription, setCategory, setSubCategory, setImageData } from 'features/addItem/addItemSlice';
 
-import ImagePreview from 'components/AddItem/AddBasicInfo/ImagePreview/ImagePreview';
-
 import ImgurService from 'services/ImgurService';
+
+import ImagePreview from 'components/AddItem/AddBasicInfo/ImagePreview/ImagePreview';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-basic-info.scss';
+import useAddItemService from 'hooks/useAddItemService';
 
 
 const AddBasicInfo = ({ categories, cancel, nextStep }) => {
@@ -19,12 +20,15 @@ const AddBasicInfo = ({ categories, cancel, nextStep }) => {
     const [subCategoriesForCategory, setSubCategoriesForCategory] = useState([]);
     const name = useSelector(state => state.addItem.name);
     const description = useSelector(state => state.addItem.description);
-    const [errors, setErrors] = useState({});
-    const dispatch = useDispatch();
-
     const [selectedFiles, setSelectedFiles] = useState([]);
     const imageData = useSelector(state => state.addItem.imageData);
     const imageDeleteInProgress = useSelector(state => state.addItem.imageDeleteInProgress);
+
+    const dispatch = useDispatch();
+
+    const [errors, setErrors] = useState({});
+
+    const addItemService = useAddItemService();
 
     useEffect(() => {
         if (category !== '') {
@@ -85,7 +89,6 @@ const AddBasicInfo = ({ categories, cancel, nextStep }) => {
         }
         Promise.all(PromiseArray)
             .then(responseArray => {
-                console.log(responseArray);
                 const images = responseArray.map(response => {
                     return {
                         id: response.data.data.id,
@@ -112,7 +115,7 @@ const AddBasicInfo = ({ categories, cancel, nextStep }) => {
                 }));
             })
             .catch(err => {
-                console.log(err);
+                addItemService.handleError(err);
             });
     }
 

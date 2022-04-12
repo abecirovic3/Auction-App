@@ -176,27 +176,22 @@ public class ProductService {
         if (streetOptional.isPresent()) {
             product.setStreet(streetOptional.get());
         } else {
-            System.out.println("Nema street");
             City productCity = productStreet.getCity();
             Country productCountry = productCity.getCountry();
 
             Optional<Country> countryOptional = countryRepository.findFirstByName(productCountry.getName());
 
             if (countryOptional.isPresent()) {
-                System.out.println("Nema street ima country");
                 Optional<City> cityOptional
                         = cityRepository.findFirstByNameAndCountry(productCity.getName(), countryOptional.get());
                 if (cityOptional.isPresent()) {
-                    System.out.println("Nema street ima country ima city");
                     productStreet.setCity(cityOptional.get());
                 } else {
-                    System.out.println("Nema street ima country nema city");
                     productCity.setCountry(countryOptional.get());
                     City newCity = cityRepository.save(productCity);
                     productStreet.setCity(newCity);
                 }
             } else {
-                System.out.println("Nema street nema country");
                 Country newCountry = countryRepository.save(productCountry);
                 productCity.setCountry(newCountry);
                 City newCity = cityRepository.save(productCity);

@@ -18,7 +18,8 @@ export const addItemSlice = createSlice({
         address: '',
         city: '',
         zipCode: '',
-        country: ''
+        country: '',
+        errorAlerts: []
     },
     reducers: {
         setName: (state, action) => {
@@ -63,6 +64,9 @@ export const addItemSlice = createSlice({
         setCountry: (state, action) => {
             state.country = action.payload;
         },
+        setErrorAlerts: (state, action) => {
+            state.errorAlerts = action.payload;
+        },
         setAddItemInitial: (state) => {
             state.name = '';
             state.description = '';
@@ -80,7 +84,8 @@ export const addItemSlice = createSlice({
             state.city = '';
             state.zipCode = '';
             state.country = '';
-        }
+            state.errorAlerts = [];
+        },
     }
 });
 
@@ -99,7 +104,8 @@ export const {
     setCity,
     setZipCode,
     setCountry,
-    setAddItemInitial
+    setAddItemInitial,
+    setErrorAlerts
 } = addItemSlice.actions;
 
 export default addItemSlice.reducer;

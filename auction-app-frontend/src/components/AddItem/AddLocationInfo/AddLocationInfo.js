@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Box, Button, Container, Grid, Stack, TextField, ThemeProvider } from '@mui/material';
-import { Autocomplete } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
+import { Box, Button, Container, Grid, Stack, TextField, ThemeProvider, Autocomplete } from '@mui/material';
+
+import { setAddress, setCity, setZipCode, setCountry } from 'features/addItem/addItemSlice';
 
 import MainTheme from 'themes/MainTheme';
-import { setAddress, setCity, setZipCode, setCountry } from 'features/addItem/addItemSlice';
 
 const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const address = useSelector(state => state.addItem.address);
@@ -12,8 +12,10 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const zipCode = useSelector(state => state.addItem.zipCode);
     const country = useSelector(state => state.addItem.country);
     const [countrySelect, setCountrySelect] = useState(null);
-    const [errors, setErrors] = useState({});
+
     const dispatch = useDispatch();
+
+    const [errors, setErrors] = useState({});
 
     function handleSubmit() {
         if (validate()) {

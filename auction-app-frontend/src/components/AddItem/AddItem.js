@@ -1,29 +1,38 @@
 import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+
+import add from 'date-fns/add';
+
+import CategoryService from 'services/CategoryService';
+import ProductService from 'services/ProductService';
+import TokenService from 'services/TokenService';
+import ImgurService from 'services/ImgurService';
+import CountryService from 'services/CountryService';
+import useAddItemService from 'hooks/useAddItemService';
+
+import { setAddItemInitial, setImageDeleteInProgress } from 'features/addItem/addItemSlice';
 
 import Stepper from 'components/Stepper/Stepper';
-
 import AddBasicInfo from 'components/AddItem/AddBasicInfo/AddBasicInfo';
 import AddPriceInfo from 'components/AddItem/AddPriceInfo/AddPriceInfo';
 import AddLocationInfo from 'components/AddItem/AddLocationInfo/AddLocationInfo';
+import CustomAlert from 'components/Alert/CustomAlert';
 
 import MainTheme from 'themes/MainTheme';
-import CategoryService from 'services/CategoryService';
-import ProductService from 'services/ProductService';
-import { useDispatch, useSelector } from 'react-redux';
-import TokenService from 'services/TokenService';
-import { setAddItemInitial, setImageDeleteInProgress } from 'features/addItem/addItemSlice';
-import ImgurService from 'services/ImgurService';
-import CountryService from 'services/CountryService';
+import 'assets/style/add-item.scss';
 
 const AddItem = () => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
+
     const [activeStep, setActiveStep] = useState(0);
     const [categories, setCategories] = useState([]);
     const [countries, setCountries] = useState([]);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const addItemService = useAddItemService();
 
     const name = useSelector(state => state.addItem.name);
     const description = useSelector(state => state.addItem.description);
@@ -36,6 +45,7 @@ const AddItem = () => {
     const zipCode = useSelector(state => state.addItem.zipCode);
     const city = useSelector(state => state.addItem.city);
     const country = useSelector(state => state.addItem.country);
+    const errorAlerts = useSelector(state => state.addItem.errorAlerts);
 
     useEffect(() => {
         if (userLoggedIn) {
@@ -44,7 +54,7 @@ const AddItem = () => {
                     setCategories(response.data);
                 })
                 .catch(err => {
-                    console.log(err);
+                    addItemService.handleError(err);
                 });
 
             CountryService.getAllCountries()
@@ -52,9 +62,10 @@ const AddItem = () => {
                     setCountries(response.data.map(country => country.name));
                 })
                 .catch(err => {
-                    console.log(err);
+                    addItemService.handleError(err);
                 })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[userLoggedIn]);
 
     useEffect(() => {
@@ -74,11 +85,10 @@ const AddItem = () => {
 
         Promise.all(PromiseArray)
             .then(response => {
-                console.log(response);
                 navigate('/account');
             })
             .catch(err => {
-                console.log(err);
+                addItemService.handleError(err);
             })
     }
 
@@ -93,12 +103,11 @@ const AddItem = () => {
     function submit() {
         ProductService.postProduct(getProductData())
             .then(response => {
-                console.log(response);
                 navigate('/account/seller');
             })
             .catch(err => {
-                console.log(err);
-            })
+                addItemService.handleError(err);
+            });
     }
 
     function getProductData() {
@@ -106,8 +115,8 @@ const AddItem = () => {
             name: name,
             description: description,
             startPrice: Math.round(parseFloat(startPrice) * 100) / 100,
-            startDate: (new Date(startDate)).toJSON(),
-            endDate: (new Date(endDate)).toJSON(),
+            startDate: (add(new Date(startDate), { hours: 2})).toJSON(),
+            endDate: (add(new Date(endDate), { hours: 2})).toJSON(),
             category: getProductCategory(subCategory),
             images: imageData.images.map(image => {
                 return {
@@ -146,10 +155,20 @@ const AddItem = () => {
 
     return (
         <ThemeProvider theme={MainTheme}>
-            <div style={{
-                width: '60%',
-                margin: 'auto'
-            }}>
+            <div className='add-item-container'>
+                {
+                    errorAlerts.map((alert, i) => (
+                        <CustomAlert
+                            key={i}
+                            color='error'
+                            title={alert.error}
+                            message={alert.message}
+                            showAlertDuration={60000}
+                            marginBottom='10px'
+                        />
+                    ))
+                }
+
                 <Stepper step={activeStep} />
 
                 {activeStep === 0 &&

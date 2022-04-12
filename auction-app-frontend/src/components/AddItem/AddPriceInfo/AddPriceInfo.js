@@ -1,16 +1,18 @@
-import { Box, Button, Container, Grid, InputAdornment, Stack, TextField, ThemeProvider } from '@mui/material';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, Container, Grid, InputAdornment, Stack, TextField, ThemeProvider } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import set from 'date-fns/set'
+
+import { setStartPrice, setStartDate, setEndDate } from 'features/addItem/addItemSlice';
 
 import CalendarIcon from '@mui/icons-material/CalendarTodayOutlined';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/form.scss';
 import 'assets/style/add-item-price-info.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { setStartPrice, setStartDate, setEndDate } from 'features/addItem/addItemSlice';
 
 const AddPriceInfo = ({ cancel, back, nextStep }) => {
     const startTime = {
@@ -35,8 +37,10 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
     const startPrice = useSelector(state => state.addItem.startPrice);
     const startDate = useSelector(state => state.addItem.startDate);
     const endDate = useSelector(state => state.addItem.endDate);
-    const [errors, setErrors] = useState({});
+
     const dispatch = useDispatch();
+
+    const [errors, setErrors] = useState({});
 
     function validate() {
         let err = {};
@@ -69,7 +73,6 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
 
     function handleNextStep() {
         if (validate()) {
-            // dispatch state set
             nextStep();
         }
     }
