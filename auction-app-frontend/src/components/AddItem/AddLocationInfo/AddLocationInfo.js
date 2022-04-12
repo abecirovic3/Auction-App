@@ -6,14 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import MainTheme from 'themes/MainTheme';
 import { setAddress, setCity, setZipCode, setCountry } from 'features/addItem/addItemSlice';
 
-// TODO should be fetched from be
-const countries = [
-    'Bosina & Herzegowina',
-    'Germany',
-    'France'
-];
-
-const AddLocationInfo = ({ cancel, back, submit }) => {
+const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const address = useSelector(state => state.addItem.address);
     const city = useSelector(state => state.addItem.city);
     const zipCode = useSelector(state => state.addItem.zipCode);

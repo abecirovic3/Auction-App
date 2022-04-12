@@ -63,6 +63,24 @@ export const addItemSlice = createSlice({
         setCountry: (state, action) => {
             state.country = action.payload;
         },
+        setAddItemInitial: (state) => {
+            state.name = '';
+            state.description = '';
+            state.category = '';
+            state.subCategory = '';
+            state.startPrice = '';
+            state.startDate = null;
+            state.endDate = null;
+            state.imageData = {
+                uploaded: true,
+                images: []
+            };
+            state.imageDeleteInProgress = false;
+            state.address = '';
+            state.city = '';
+            state.zipCode = '';
+            state.country = '';
+        }
     }
 });
 
@@ -80,7 +98,8 @@ export const {
     setAddress,
     setCity,
     setZipCode,
-    setCountry
+    setCountry,
+    setAddItemInitial
 } = addItemSlice.actions;
 
 export default addItemSlice.reducer;

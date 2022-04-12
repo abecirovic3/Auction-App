@@ -51,9 +51,14 @@ function getProductById(id) {
     return api.get(`/products/${id}`);
 }
 
+function postProduct(product) {
+    return api.post('/product/add', product);
+}
+
 const ProductService = {
     getProducts,
-    getProductById
+    getProductById,
+    postProduct
 };
 
 export default ProductService;

@@ -10,10 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity(name = "Country")
-@Table(name = "country")
+@Table(
+        name = "country",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "country_name_unique", columnNames = "name")
+        }
+)
 public class Country {
     @Id
     @SequenceGenerator(
@@ -29,6 +36,7 @@ public class Country {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Country name is required")
     private String name;
 
     @OneToMany(mappedBy = "country")

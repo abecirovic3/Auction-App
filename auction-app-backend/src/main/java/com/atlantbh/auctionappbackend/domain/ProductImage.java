@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity(name = "ProductImage")
 @Table(name = "product_image")
@@ -21,7 +22,11 @@ public class ProductImage {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Image URL is required")
     private String imageUrl;
+
+    @NotBlank(message = "Image delete hash is required")
+    private String deleteHash;
 
     @ManyToOne
     @JoinColumn(
@@ -69,5 +74,13 @@ public class ProductImage {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getDeleteHash() {
+        return deleteHash;
+    }
+
+    public void setDeleteHash(String deleteHash) {
+        this.deleteHash = deleteHash;
     }
 }

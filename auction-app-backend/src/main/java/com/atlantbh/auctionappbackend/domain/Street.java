@@ -13,10 +13,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity(name = "Street")
-@Table(name = "street")
+@Table(
+        name = "street",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "street_name_zipcode_unique",
+                        columnNames = {
+                                "name",
+                                "zipcode"
+                        }
+                )
+        }
+)
 public class Street {
     @Id
     @SequenceGenerator(
@@ -32,9 +46,11 @@ public class Street {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Street name/address is required")
     private String name;
 
     @Column(nullable = false)
+    @NotBlank(message = "Zipcode is required")
     private String zipcode;
 
     @ManyToOne
@@ -43,6 +59,7 @@ public class Street {
             foreignKey = @ForeignKey(name = "city_id"),
             nullable = false
     )
+    @NotNull(message = "City is required")
     private City city;
 
     @OneToMany(mappedBy = "street")

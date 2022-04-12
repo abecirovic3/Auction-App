@@ -272,6 +272,7 @@ const AddBasicInfo = ({ categories, cancel, nextStep }) => {
                                 variant='outlined'
                                 className='nav-buttons cancel-btn'
                                 onClick={() => {cancel()}}
+                                disabled={!imageData.uploaded || imageDeleteInProgress}
                             >
                                 Cancel
                             </Button>

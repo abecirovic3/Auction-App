@@ -41,7 +41,7 @@ const AddPriceInfo = ({ cancel, back, nextStep }) => {
     function validate() {
         let err = {};
 
-        if (isNaN(parseFloat(startPrice))) {
+        if (isNaN(parseFloat(startPrice)) || parseFloat(startPrice) < 0) {
             err.startPrice = 'Please enter valid start price';
         }
         const sd = new Date(startDate);

@@ -13,8 +13,8 @@ function uploadImage(imageFile) {
     return instance.post('', bodyFormData);
 }
 
-function deleteImage(imageHash) {
-    return instance.delete(`/${imageHash}`);
+function deleteImage(deleteHash) {
+    return instance.delete(`/${deleteHash}`);
 }
 
 const ImgurService = {

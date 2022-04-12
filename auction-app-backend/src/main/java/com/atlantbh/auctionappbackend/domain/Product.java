@@ -1,9 +1,11 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.atlantbh.auctionappbackend.constraint.AuctionStartDatePreference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -16,6 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,21 +44,29 @@ public class Product {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Product name is required")
     private String name;
 
     @Column(nullable = false, columnDefinition="TEXT")
+    @NotBlank(message = "Product description is required")
     private String description;
 
     @Column(nullable = false)
+    @NotNull(message = "Start price is required")
+    @Positive(message = "Start price must be positive")
     private Double startPrice;
 
     @Column(nullable = false)
+    @NotNull(message = "Start date is required")
+    @AuctionStartDatePreference(message = "Auction start cannot be in the past")
     private LocalDateTime startDate;
 
     @Column(nullable = false)
+    @NotNull(message = "End date is required")
+    @FutureOrPresent(message = "Auction end cannot be in the past")
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "product-image-reference")
     private List<ProductImage> images;
     
@@ -64,6 +80,7 @@ public class Product {
             foreignKey = @ForeignKey(name = "seller_id"),
             nullable = false
     )
+    @NotNull(message = "Seller is required")
     private User seller;
 
     @ManyToOne
@@ -73,6 +90,7 @@ public class Product {
             nullable = false
     )
     @JsonIgnore
+    @NotNull(message = "Category is required")
     private Category category;
 
     @ManyToOne
@@ -81,6 +99,7 @@ public class Product {
             foreignKey = @ForeignKey(name = "street_id"),
             nullable = false
     )
+    @NotNull(message = "Street is required")
     private Street street;
 
     private Integer size;

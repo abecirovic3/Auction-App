@@ -13,7 +13,10 @@ import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/user-account.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import TokenService from 'services/TokenService';
+import { setLoggedIn } from 'features/login/loginSlice';
+import AuthService from 'services/AuthService';
 
 const UserAccount = () => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
@@ -26,6 +29,7 @@ const UserAccount = () => {
     });
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setActiveTab({
@@ -40,6 +44,24 @@ const UserAccount = () => {
     function getBreadcrumbsBarTitle() {
         const title = location.pathname.split('/')[2];
         return title?.charAt(0).toUpperCase() + title?.substring(1) || 'Profile';
+    }
+
+    function handleAddItem() {
+        if (!TokenService.getUserCredentials()) {
+            dispatch(setLoggedIn(false));
+            navigate('/account/add-item');
+        } else {
+            AuthService.validateToken()
+                .then(response => {
+                    dispatch(setLoggedIn(true));
+                    navigate('/account/add-item');
+                })
+                .catch(err => {
+                    TokenService.removeUser();
+                    dispatch(setLoggedIn(false));
+                    navigate('/account/add-item');
+                })
+        }
     }
 
     if (!userLoggedIn) {
@@ -104,7 +126,7 @@ const UserAccount = () => {
                             color='primary'
                             startIcon={<AddItemIcon />}
                             variant={'contained'}
-                            onClick={() => {navigate('/account/add-item')}}
+                            onClick={handleAddItem}
                         >
                             ADD ITEM
                         </Button>
