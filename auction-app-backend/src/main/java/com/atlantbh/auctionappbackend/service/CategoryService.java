@@ -29,4 +29,8 @@ public class CategoryService {
         }
         return categories;
     }
+
+    public List<Category> getAllCategoriesPure() {
+        return categoryRepository.findAllBySuperCategoryIsNull();
+    }
 }

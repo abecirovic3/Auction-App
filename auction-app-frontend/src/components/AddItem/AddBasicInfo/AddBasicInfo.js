@@ -13,13 +13,10 @@ import 'assets/style/form.scss';
 import 'assets/style/add-item-basic-info.scss';
 
 
-const AddBasicInfo = ({ cancel, nextStep }) => {
+const AddBasicInfo = ({ categories, cancel, nextStep }) => {
     const category = useSelector(state => state.addItem.category);
     const subCategory = useSelector(state => state.addItem.subCategory);
     const [subCategoriesForCategory, setSubCategoriesForCategory] = useState([]);
-    // TODO should use local state in AddItem for categories and pass in here
-    // because global categories array contains only categories which have products in them
-    const categories = useSelector(state => state.category.categories);
     const name = useSelector(state => state.addItem.name);
     const description = useSelector(state => state.addItem.description);
     const [errors, setErrors] = useState({});

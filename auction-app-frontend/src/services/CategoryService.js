@@ -4,8 +4,13 @@ function getAllCategories() {
     return api.get('/categories');
 }
 
+function getAllCategoriesPure() {
+    return api.get('/categories/all');
+}
+
 const CategoryService = {
-    getAllCategories
+    getAllCategories,
+    getAllCategoriesPure
 };
 
 export default CategoryService;
