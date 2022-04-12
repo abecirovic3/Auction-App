@@ -41,6 +41,8 @@ const Login = () => {
                     dispatch(setLoggedIn(true));
                     if (state?.loginAfterRegister) {
                         navigate('/');
+                    } else if (state?.beforeMyAccount) {
+                        navigate('/account');
                     } else {
                         navigate(-1);
                     }
@@ -70,6 +72,14 @@ const Login = () => {
                         color='warning'
                         title='You have been logged out!'
                         message='Please login again to proceed'
+                        showAlertDuration={7000}
+                    />
+                }
+                {state?.beforeMyAccount &&
+                    <CustomAlert
+                        color='info'
+                        title='Login required'
+                        message='Please login to proceed'
                         showAlertDuration={7000}
                     />
                 }

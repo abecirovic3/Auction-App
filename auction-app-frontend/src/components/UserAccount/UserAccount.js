@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { Button, ThemeProvider } from '@mui/material';
 
 import PersonIcon from '@mui/icons-material/Person';
@@ -13,8 +13,10 @@ import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/user-account.scss';
+import { useSelector } from 'react-redux';
 
 const UserAccount = () => {
+    const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
     const [activeTab, setActiveTab] = useState({
         profile: true,
         seller: false,
@@ -38,6 +40,10 @@ const UserAccount = () => {
     function getBreadcrumbsBarTitle() {
         const title = location.pathname.split('/')[2];
         return title?.charAt(0).toUpperCase() + title?.substring(1) || 'Profile';
+    }
+
+    if (!userLoggedIn) {
+        return <Navigate to={'/login'} state={ { beforeMyAccount: true } } />
     }
 
     return (
