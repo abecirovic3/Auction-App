@@ -39,6 +39,8 @@
 
   .horizontal-container {
     flex-direction: row;
+    border-bottom: 2px solid base.$primary-color;
+    padding: 5px 0 20px 0;
 
     .product-details {
       display: flex;
