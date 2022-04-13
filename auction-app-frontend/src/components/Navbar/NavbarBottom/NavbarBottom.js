@@ -112,22 +112,70 @@ const NavbarBottom = () => {
                                         />
                                         <NavLink
                                             to='/'
-                                            className={isActive('/') ? 'nav-link-active' : 'nav-link'}
+                                            className={isActive('/') ? 'nav-link link-active' : 'nav-link'}
                                         >
                                             HOME
                                         </NavLink>
                                         <NavLink
                                             to={state?.fromShopPage ? - 1 : '/shop'}
-                                            className={isActive('/shop') ? 'nav-link-active' : 'nav-link'}
+                                            className={isActive('/shop') ? 'nav-link link-active' : 'nav-link'}
                                         >
                                             SHOP
                                         </NavLink>
-                                        <NavLink
-                                            to='/account/profile'
-                                            className={isActive('/account') ? 'nav-link-active' : 'nav-link'}
-                                        >
-                                            MY ACCOUNT
-                                        </NavLink>
+                                        <div className='my-acc-dropdown-container'>
+                                            <NavLink
+                                                to='/account/profile'
+                                                className={
+                                                    isActive('/account') ? 'nav-link link-active' : 'nav-link'
+                                                }
+                                            >
+                                                MY ACCOUNT
+                                            </NavLink>
+                                            <div className='my-acc-sub-links-container'>
+                                                <div className='my-acc-sub-links-content-container'>
+                                                    <NavLink
+                                                        to='/account'
+                                                        className={
+                                                            location.pathname === '/account' ? 'nav-link link-active' : 'nav-link'
+                                                        }
+                                                    >
+                                                        Profile
+                                                    </NavLink>
+                                                    <NavLink
+                                                        to='/account/seller'
+                                                        className={
+                                                            location.pathname === '/account/seller' ? 'nav-link link-active' : 'nav-link'
+                                                        }
+                                                    >
+                                                        Become Seller
+                                                    </NavLink>
+                                                    <NavLink
+                                                        to='/account/bids'
+                                                        className={
+                                                            location.pathname === '/account/bids' ? 'nav-link link-active' : 'nav-link'
+                                                        }
+                                                    >
+                                                        Your Bids
+                                                    </NavLink>
+                                                    <NavLink
+                                                        to='/account/wishlist'
+                                                        className={
+                                                            location.pathname === '/account/wishlist' ? 'nav-link link-active' : 'nav-link'
+                                                        }
+                                                    >
+                                                        Wishlist
+                                                    </NavLink>
+                                                    <NavLink
+                                                        to='/account/settings'
+                                                        className={
+                                                            location.pathname === '/account/settings' ? 'nav-link link-active' : 'nav-link'
+                                                        }
+                                                    >
+                                                        Settings
+                                                    </NavLink>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </Grid>
                             }
