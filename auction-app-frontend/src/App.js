@@ -22,6 +22,7 @@ import Shop from 'components/Shop/Shop';
 import UserAccount from 'components/UserAccount/UserAccount';
 import AddItem from 'components/AddItem/AddItem';
 import RouteHistory from 'components/RouteHistory/RouteHistory';
+import AccountSeller from 'components/UserAccount/AccountSeller/AccountSeller';
 
 function App() {
     const dispatch = useDispatch();
@@ -60,7 +61,7 @@ function App() {
                         <Route path='/shop/search/:search' element={<Shop />}/>
                         <Route path='/account' element={<UserAccount />}>
                             <Route path='profile' element={<h1>Profile</h1>} />
-                            <Route path='seller' element={<h1>Seller</h1>} />
+                            <Route path='seller' element={<AccountSeller />} />
                             <Route path='bids' element={<h1>Bids</h1>} />
                             <Route path='wishlist' element={<h1>Wishlist</h1>} />
                             <Route path='settings' element={<h1>Settings</h1>} />

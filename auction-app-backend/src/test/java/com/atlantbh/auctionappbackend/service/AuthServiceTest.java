@@ -18,24 +18,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class AuthServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    private UserService userService;
+    private AuthService authService;
 
     private final User testUser = new User("Foo", "Bar", "foo@bar.org.com", "password", "ROLE_USER");;
 
     @BeforeEach
     void initUseCase() {
-        userService = new UserService(userRepository, new BCryptPasswordEncoder());
+        authService = new AuthService(userRepository, new BCryptPasswordEncoder());
     }
 
     @Test
     public void testRegisterUserSuccess() {
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
-        User registeredUser = userService.registerUser(testUser);
+        User registeredUser = authService.registerUser(testUser);
 
         assertThat(registeredUser.getEmail()).isEqualTo(testUser.getEmail());
     }
@@ -45,7 +45,7 @@ public class UserServiceTest {
         when(userRepository.findByEmail(any(String.class))).thenReturn(testUser);
 
         try {
-            userService.registerUser(testUser);
+            authService.registerUser(testUser);
         } catch (ResponseStatusException e) {
             assertThat(e.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
             assertThat(e.getReason()).isEqualTo("User with email " + testUser.getEmail() + " already exists");
@@ -56,7 +56,7 @@ public class UserServiceTest {
     public void testGetUserByEmailSuccess() {
         when(userRepository.findByEmail(any(String.class))).thenReturn(testUser);
 
-        User fetchedUser = userService.getUserByEmail("foo@bar.org.com");
+        User fetchedUser = authService.getUserByEmail("foo@bar.org.com");
 
         assertThat(fetchedUser.getPassword()).isEqualTo(testUser.getPassword());
     }
@@ -65,7 +65,7 @@ public class UserServiceTest {
     public void testLoadUserByUsernameSuccess() {
         when(userRepository.findByEmail(any(String.class))).thenReturn(testUser);
 
-        UserDetails loadedUser = userService.loadUserByUsername(testUser.getEmail());
+        UserDetails loadedUser = authService.loadUserByUsername(testUser.getEmail());
 
         assertThat(loadedUser.getUsername()).isEqualTo(testUser.getEmail());
     }

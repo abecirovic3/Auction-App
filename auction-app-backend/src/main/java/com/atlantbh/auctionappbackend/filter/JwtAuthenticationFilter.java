@@ -2,7 +2,7 @@ package com.atlantbh.auctionappbackend.filter;
 
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
-import com.atlantbh.auctionappbackend.service.UserService;
+import com.atlantbh.auctionappbackend.service.AuthService;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,13 +41,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final Algorithm signAlgorithm;
     private final JwtConfig jwtConfig;
-    private final UserService userService;
+    private final AuthService authService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, Algorithm signAlgorithm, JwtConfig jwtConfig, UserService userService) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, Algorithm signAlgorithm, JwtConfig jwtConfig, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.signAlgorithm = signAlgorithm;
         this.jwtConfig = jwtConfig;
-        this.userService = userService;
+        this.authService = authService;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
-        User responseUser = userService.getUserByEmail(user.getUsername());
+        User responseUser = authService.getUserByEmail(user.getUsername());
 
         String accessToken = JwtUtil.createToken(
                 signAlgorithm,

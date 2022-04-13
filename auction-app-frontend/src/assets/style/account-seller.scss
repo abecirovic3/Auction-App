@@ -1,0 +1,73 @@
+@use "base";
+
+.account-seller-container {
+  .table-container {
+    border: 1px solid base.$border-color;
+  }
+
+  th {
+    color: #252525;
+    font-size: 18px;
+    border-bottom: none;
+    background-color: #FCFCFC;
+  }
+
+  td {
+    height: 120px;
+    border: none;
+    font-size: 18px;
+    color: #252525;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .product-hash {
+    font-size: 16px;
+    color: base.$primary-color;
+    font-weight: 400;
+  }
+
+  .btn-view {
+    border-radius: 0;
+    border: 2px solid base.$border-color;
+    color: #252525;
+    font-weight: 700;
+    padding: 10px 25px;
+  }
+
+  .btn-tab {
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 0;
+    box-sizing: border-box;
+    box-shadow: none;
+    text-transform: none;
+  }
+
+  .btn-inactive {
+    border: 1px solid base.$border-color;
+  }
+
+  .no-products-info-container {
+    width: 50%;
+    margin: 30px auto 30px auto;
+    text-align: center;
+
+    .message {
+      color: #252525;
+      font-size: 16px;
+      font-weight: 400;
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
+    .start-selling-btn {
+      border-radius: 0;
+      border: 3px solid base.$primary-color;
+      color: #252525;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 10px 40px 10px 40px;
+    }
+  }
+}
