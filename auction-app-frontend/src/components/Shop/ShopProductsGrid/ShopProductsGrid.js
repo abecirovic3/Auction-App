@@ -14,10 +14,8 @@ import useShopService from 'hooks/useShopService';
 import Product from 'components/Product/Product';
 import ActiveFiltersBar from 'components/Shop/ShopFilters/ActiveFiltersBar';
 
-import gridGrayIcon from 'assets/img/grid-gray.png';
-import gridPurpleIcon from 'assets/img/grid-purple.png';
-import listGrayIcon from 'assets/img/list-gray.png';
-import listPurpleIcon from 'assets/img/list-purple.png';
+import GridIcon from '@mui/icons-material/GridOn';
+import ListIcon from '@mui/icons-material/Dehaze';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/shop-product-grid.scss';
@@ -119,9 +117,18 @@ const ShopProductsGrid = () => {
     }
 
     function handleSelectChange(e) {
-        setSortSelect(e.target.value);
         dispatch(setSort(extractSortObject(e.target.value)));
     }
+
+    useEffect(() => {
+        const sortKey = sort.sortKey;
+        const sortDirection = sort.sortDirection;
+        if (sortKey != null && sortDirection != null) {
+            setSortSelect(sortKey + '-' + sortDirection);
+        } else {
+            setSortSelect('name-asc');
+        }
+    }, [sort]);
 
     function extractSortObject(sortString) {
         const fields = sortString.split('-');
@@ -157,32 +164,26 @@ const ShopProductsGrid = () => {
                             },
                         }}
                     >
-                        <MenuItem
-                            value='name-asc'
-                        >
+                        <MenuItem value='name-asc'>
                             Default Sorting
                         </MenuItem>
-                        <MenuItem value='startDate-desc'
-                        >
+                        <MenuItem value='startDate-desc'>
                             Added: New to Old
                         </MenuItem>
-                        <MenuItem value='endDate-asc'
-                        >
+                        <MenuItem value='endDate-asc'>
                             Time left
                         </MenuItem>
-                        <MenuItem value='price-asc'
-                        >
+                        <MenuItem value='price-asc'>
                             Price: Low to High
                         </MenuItem>
-                        <MenuItem value='price-desc'
-                        >
+                        <MenuItem value='price-desc'>
                             Price: High to Low
                         </MenuItem>
                     </Select>
                     <div>
                         <Button
                             id='grid-layout-btn'
-                            startIcon={<img src={itemWidth === 4 ? gridPurpleIcon : gridGrayIcon} alt='grid' />}
+                            startIcon={<GridIcon />}
                             color={itemWidth === 4 ? 'primary' : 'secondary'}
                             onClick={() => {dispatch(setGridItemWidth(4))}}
                         >
@@ -190,7 +191,7 @@ const ShopProductsGrid = () => {
                         </Button>
                         <Button
                             id='list-layout-btn'
-                            startIcon={<img src={itemWidth === 12 ? listPurpleIcon : listGrayIcon} alt='list' />}
+                            startIcon={<ListIcon />}
                             color={itemWidth === 12 ? 'primary' : 'secondary'}
                             onClick={() => {dispatch(setGridItemWidth(12))}}
                         >

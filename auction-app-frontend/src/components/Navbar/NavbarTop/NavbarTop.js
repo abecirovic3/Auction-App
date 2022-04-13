@@ -39,7 +39,11 @@ const NavbarTop = () => {
                             </Link>
                         </div>
                         :
-                        <p className='gray'> <Link to='/login'>Login</Link> or <Link to='/register'>Create an account</Link></p>
+                        <div>
+                            <Link to='/login'> Login </Link>
+                            <p className='gray'> or </p>
+                            <Link to='/register'> Create an account </Link>
+                        </div>
                     }
                 </div>
             </div>

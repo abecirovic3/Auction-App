@@ -5,7 +5,7 @@ import { Button, Stack, TextField, ThemeProvider } from '@mui/material';
 import TokenService from 'services/TokenService';
 import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 
-import bidNowIcon from 'assets/img/bid-now.svg';
+import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
@@ -78,7 +78,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                                 disabled={!userLoggedIn}
                                 className='place-bid-btn'
                                 variant='outlined'
-                                endIcon={<img src={bidNowIcon} alt='Bid Now' />}
+                                endIcon={<RightArrow />}
                                 onClick={() => {handlePlaceBid()}}
                             >
                                 Place Bid
