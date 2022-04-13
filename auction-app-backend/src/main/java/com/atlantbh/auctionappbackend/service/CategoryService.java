@@ -28,6 +28,6 @@ public class CategoryService {
         for (Category c : categories) {
             c.setSubCategories(categoryRepository.findAllSubCategoriesWithProductCountBySuperCategory(c.getId()));
         }
-        return categories.stream().filter(category -> category.getSubCategories().size() > 0).collect(Collectors.toList());
+        return categories.stream().filter(category -> !category.getSubCategories().isEmpty()).collect(Collectors.toList());
     }
 }
