@@ -19,6 +19,7 @@ import About from 'components/About/About';
 import NotFound from 'components/NotFound/NotFound';
 import ProductOverview from 'components/ProductOverview/ProductOverview';
 import Shop from 'components/Shop/Shop';
+import RouteHistory from 'components/RouteHistory/RouteHistory';
 
 function App() {
     const dispatch = useDispatch();
@@ -40,6 +41,7 @@ function App() {
 
     return (
         <BrowserRouter>
+            <RouteHistory />
             <Navbar/>
             <div className='main-page-container'>
                 <div className='main-page-content-container'>

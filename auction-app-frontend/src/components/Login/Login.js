@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoggedIn } from 'features/login/loginSlice';
 import AuthService from 'services/AuthService';
@@ -22,6 +22,7 @@ import 'assets/style/form.scss'
 const Login = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
+    const routeHistory = useSelector(state => state.routeHistory.routes);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -39,7 +40,7 @@ const Login = () => {
                 response => {
                     setLoading(false);
                     dispatch(setLoggedIn(true));
-                    if (state?.loginAfterRegister) {
+                    if (routeHistory[0] === '/register') {
                         navigate('/');
                     } else {
                         navigate(-1);
