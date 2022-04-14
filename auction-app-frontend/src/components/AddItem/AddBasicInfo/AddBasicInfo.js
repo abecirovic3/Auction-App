@@ -50,14 +50,14 @@ const AddBasicInfo = ({ categories, cancel, nextStep }) => {
                     files.push(ev.dataTransfer.items[i].getAsFile());
                 }
             }
-            setSelectedFiles(files);
+            setSelectedFiles(files.filter(file => file.type.startsWith('image')));
         } else {
-            setSelectedFiles([...ev.dataTransfer.files]);
+            setSelectedFiles([...ev.dataTransfer.files].filter(file => file.type.startsWith('image')));
         }
     }
 
     function handleFileSelect(event) {
-        setSelectedFiles([...event.target.files]);
+        setSelectedFiles([...event.target.files].filter(file => file.type.startsWith('image')));
     }
 
     useEffect(() => {
