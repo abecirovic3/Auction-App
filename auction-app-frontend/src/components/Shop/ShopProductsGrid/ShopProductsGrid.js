@@ -34,12 +34,13 @@ const ShopProductsGrid = () => {
     const [loading, setLoading] = useState(false);
     const shopService = useShopService();
     const location = useLocation();
+    const { state } = useLocation();
     const [sortSelect, setSortSelect] = useState('name-asc');
 
     useEffect(() => {
         if (Object.keys(filters.subCategories).length === 0) {
             shopService.setInitialCategoryFilters(null);
-        } else if (!isInitialMount.current || (isInitialMount.current && products.length === 0)) {
+        } else if (!isInitialMount.current || state?.localSearch || (isInitialMount.current && products.length === 0)) {
             dispatch(setDisableFilters(true));
             fetchProducts(
                 page,

@@ -60,7 +60,11 @@ const NavbarBottom = () => {
 
     function handleSearchSubmit() {
         if (searchValue) {
-            navigate(`/shop/search/${encodeURI(searchValue)}`);
+            if (location.pathname.includes('/shop')) {
+                navigate(`/shop/search/${encodeURI(searchValue)}`, { state: {localSearch: true} });
+            } else {
+                navigate(`/shop/search/${encodeURI(searchValue)}`);
+            }
         } else if (searchValue === '') {
             navigate(`/shop`);
         }
