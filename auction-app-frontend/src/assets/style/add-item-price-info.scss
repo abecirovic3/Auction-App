@@ -1,0 +1,28 @@
+@use "base";
+
+.add-item-price-info {
+
+  .button-nav-container {
+    display: flex;
+    flex-direction: row;
+
+  }
+  
+  .dollar-adornment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid base.$border-color;
+    height: 56px;
+    padding-right: 14px;
+
+    h3 {
+      color: #252525;
+      font-weight: 400;
+    }
+  }
+
+  .info-label {
+    color: #9B9B9B;
+  }
+}

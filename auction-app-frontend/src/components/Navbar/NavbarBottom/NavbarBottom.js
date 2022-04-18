@@ -123,7 +123,7 @@ const NavbarBottom = () => {
                                             SHOP
                                         </NavLink>
                                         <NavLink
-                                            to='/account'
+                                            to='/account/profile'
                                             className={isActive('/account') ? 'nav-link-active' : 'nav-link'}
                                         >
                                             MY ACCOUNT

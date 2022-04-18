@@ -7,6 +7,7 @@ import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class BiddingService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public ProductUserBid processBid(ProductUserBid bid) {
         Optional<Product> productOptional = productRepository.findById(bid.getProduct().getId());
 
@@ -54,7 +56,7 @@ public class BiddingService {
             );
         }
 
-        product.setHighestBid(bid.getAmount());
+        productRepository.updateHighestBid(product.getId(), bid.getAmount());
 
         bid.setDate(LocalDateTime.now());
         return productUserBidRepository.save(bid);

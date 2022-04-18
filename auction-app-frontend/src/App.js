@@ -19,6 +19,8 @@ import About from 'components/About/About';
 import NotFound from 'components/NotFound/NotFound';
 import ProductOverview from 'components/ProductOverview/ProductOverview';
 import Shop from 'components/Shop/Shop';
+import UserAccount from 'components/UserAccount/UserAccount';
+import AddItem from 'components/AddItem/AddItem';
 import RouteHistory from 'components/RouteHistory/RouteHistory';
 
 function App() {
@@ -56,6 +58,14 @@ function App() {
                         <Route path='/shop' element={<Shop />} />
                         <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
                         <Route path='/shop/search/:search' element={<Shop />}/>
+                        <Route path='/account' element={<UserAccount />}>
+                            <Route path='profile' element={<h1>Profile</h1>} />
+                            <Route path='seller' element={<h1>Seller</h1>} />
+                            <Route path='bids' element={<h1>Bids</h1>} />
+                            <Route path='wishlist' element={<h1>Wishlist</h1>} />
+                            <Route path='settings' element={<h1>Settings</h1>} />
+                        </Route>
+                        <Route path='/account/add-item' element={<AddItem />} />
                         <Route path='*' element={<NotFound/>}/>
                     </Routes>
                 </div>

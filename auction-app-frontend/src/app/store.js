@@ -5,6 +5,7 @@ import notFoundHandlerReducer from 'features/notFounHandler/notFoundSlice'
 import productFiltersReducer from 'features/productFilters/productFiltersSlice';
 import shopReducer from 'features/shop/shopSlice';
 import categoryReducer from 'features/category/categorySlice';
+import addItemReducer from 'features/addItem/addItemSlice';
 import routeHistoryReducer from 'features/routeHistory/routeHistorySlice';
 
 export default configureStore({
@@ -15,6 +16,7 @@ export default configureStore({
         productFilters: productFiltersReducer,
         shop: shopReducer,
         category: categoryReducer,
+        addItem: addItemReducer,
         routeHistory: routeHistoryReducer,
     },
 });

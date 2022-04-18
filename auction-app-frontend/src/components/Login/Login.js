@@ -42,6 +42,8 @@ const Login = () => {
                     dispatch(setLoggedIn(true));
                     if (routeHistory[0] === '/register') {
                         navigate('/');
+                    } else if (state?.beforeMyAccount) {
+                        navigate('/account');
                     } else {
                         navigate(-1);
                     }
@@ -71,6 +73,14 @@ const Login = () => {
                         color='warning'
                         title='You have been logged out!'
                         message='Please login again to proceed'
+                        showAlertDuration={7000}
+                    />
+                }
+                {state?.beforeMyAccount &&
+                    <CustomAlert
+                        color='info'
+                        title='Login required'
+                        message='Please login to proceed'
                         showAlertDuration={7000}
                     />
                 }
@@ -121,6 +131,7 @@ const Login = () => {
 
                             <Stack spacing={2}>
                                 <LoadingButton
+                                    className='MuiButton-standard-height'
                                     loading={loading}
                                     loadingPosition='end'
                                     endIcon={<div/>}

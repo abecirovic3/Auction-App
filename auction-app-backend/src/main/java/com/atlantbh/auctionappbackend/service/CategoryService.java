@@ -30,4 +30,8 @@ public class CategoryService {
         }
         return categories.stream().filter(category -> !category.getSubCategories().isEmpty()).collect(Collectors.toList());
     }
+
+    public List<Category> getAllCategoriesPure() {
+        return categoryRepository.findAllBySuperCategoryIsNull();
+    }
 }

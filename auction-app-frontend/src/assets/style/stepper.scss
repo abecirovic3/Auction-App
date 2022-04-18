@@ -1,0 +1,25 @@
+@use "base";
+
+.stepper-container {
+  width: 25%;
+  margin: auto auto 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  
+  .connector-line,
+  .connector-line-completed {
+    height: 0;
+    width: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .connector-line {
+    border: 1px solid base.$border-color;
+  }
+
+  .connector-line-completed {
+    border: 1px solid base.$primary-color;
+  }
+}

@@ -1,11 +1,17 @@
 package com.atlantbh.auctionappbackend.service;
 
+import com.atlantbh.auctionappbackend.domain.City;
+import com.atlantbh.auctionappbackend.domain.Country;
 import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
+import com.atlantbh.auctionappbackend.domain.Street;
+import com.atlantbh.auctionappbackend.repository.CityRepository;
+import com.atlantbh.auctionappbackend.repository.CountryRepository;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
+import com.atlantbh.auctionappbackend.repository.StreetRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,12 +33,18 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductUserBidRepository productUserBidRepository;
     private final PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
+    private final StreetRepository streetRepository;
+    private final CityRepository cityRepository;
+    private final CountryRepository countryRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation, StreetRepository streetRepository, CityRepository cityRepository, CountryRepository countryRepository) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
         this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
+        this.streetRepository = streetRepository;
+        this.cityRepository = cityRepository;
+        this.countryRepository = countryRepository;
     }
 
     public Product getProductOverview(Long id) {
@@ -143,5 +155,53 @@ public class ProductService {
 
     public PriceRange getProductPriceRange() {
         return priceRangeRepositoryImplementation.getProductPriceRange();
+    }
+
+    public Product createProduct(Product product) {
+        if (product.getEndDate().isBefore(product.getStartDate())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Auction end must be after auction start"
+            );
+        }
+
+        product.setStreet(getProductStreet(product.getStreet()));
+
+        return productRepository.save(product);
+    }
+
+    private Street getProductStreet(Street street) {
+        Optional<Street> streetOptional
+                = streetRepository.findFirstByNameAndZipcode(
+                street.getName(),
+                street.getZipcode()
+        );
+
+        if (streetOptional.isPresent()) {
+            return streetOptional.get();
+        } else {
+            City productCity = street.getCity();
+            Country productCountry = productCity.getCountry();
+
+            Optional<Country> countryOptional = countryRepository.findFirstByName(productCountry.getName());
+
+            if (countryOptional.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Country with name " + productCountry.getName() + " doesn't exist"
+                );
+            }
+
+            Optional<City> cityOptional
+                    = cityRepository.findFirstByNameAndCountry(productCity.getName(), countryOptional.get());
+            if (cityOptional.isPresent()) {
+                street.setCity(cityOptional.get());
+            } else {
+                productCity.setCountry(countryOptional.get());
+                street.setCity(cityRepository.save(productCity));
+            }
+
+            return streetRepository.save(street);
+        }
     }
 }

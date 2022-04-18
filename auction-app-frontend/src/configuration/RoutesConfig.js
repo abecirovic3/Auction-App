@@ -12,4 +12,5 @@ export const routes = [
     { path: '/shop/product-overview/:id', breadcrumb: 'Single product' },
     { path: '/shop/search', breadcrumb: null },
     { path: 'shop/search/:search', breadcrumb: DynamicSearchBreadcrumb },
+    { path: '/account', breadcrumb: 'My Account' },
 ];

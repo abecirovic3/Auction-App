@@ -19,7 +19,7 @@ public class PriceRangeRepositoryImplementation implements PriceRangeRepository 
     public PriceRange getProductPriceRange() {
         Query query = entityManager.createNativeQuery(
                 "SELECT min(p.start_price) AS min_start_price, max(p.start_price) AS max_start_price, " +
-                        "max(p.highest_bid) AS max_highest_bid FROM product p"
+                        "max(p.highest_bid) AS max_highest_bid FROM product p WHERE p.end_date > current_timestamp"
         );
         List<Object[]> resultList = query.getResultList();
         Double min = (Double) resultList.get(0)[0];
