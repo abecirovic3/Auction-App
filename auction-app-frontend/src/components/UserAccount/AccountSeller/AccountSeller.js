@@ -5,12 +5,13 @@ import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/m
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
 
 import UserService from 'services/UserService';
+import useLoginService from 'hooks/useLoginService';
 
 import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 import cartIcon from 'assets/img/cart.png';
 
 import 'assets/style/account-seller.scss';
-import useLoginService from 'hooks/useLoginService';
+import 'assets/style/account-table.scss';
 
 const AccountSeller = () => {
     const [products, setProducts] = useState([]);
@@ -31,7 +32,7 @@ const AccountSeller = () => {
     }, []);
 
     return (
-      <div className='account-seller-container'>
+      <div className='account-seller-container account-table-container'>
           <div>
               <Button
                   className='btn-tab'
@@ -83,7 +84,7 @@ const AccountSeller = () => {
                                   <TableCell>{product.highestBid ? `$ ${product.highestBid}` : '/'}</TableCell>
                                   <TableCell>
                                       <Button
-                                          className='btn-view'
+                                          className='table-btn'
                                           variant='outlined'
                                           onClick={() => {navigate(`/shop/product-overview/${product.id}`)}}
                                       >
@@ -96,11 +97,11 @@ const AccountSeller = () => {
                   </TableBody>
               </Table>
               {products.length === 0 &&
-                  <div className='no-products-info-container'>
+                  <div className='no-data-info-container'>
                       <img src={cartIcon} alt='cart '/>
                       <h3 className='message'>You do not have any scheduled items for sale.</h3>
                       <Button
-                          className='start-selling-btn'
+                          className='start-btn'
                           variant='outlined'
                           onClick={() => {navigate('/account/add-item')}}
                       >

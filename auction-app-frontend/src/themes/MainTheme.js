@@ -10,6 +10,9 @@ const theme = createTheme({
         },
         dark: {
             main: '#252525'
+        },
+        gray: {
+            main: '#D8D8D8'
         }
     }
 });

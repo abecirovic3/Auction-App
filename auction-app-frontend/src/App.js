@@ -23,6 +23,10 @@ import UserAccount from 'components/UserAccount/UserAccount';
 import AddItem from 'components/AddItem/AddItem';
 import RouteHistory from 'components/RouteHistory/RouteHistory';
 import AccountSeller from 'components/UserAccount/AccountSeller/AccountSeller';
+import AccountBids from 'components/UserAccount/AccountBids/AccountBids';
+import AccountSettings from 'components/UserAccount/AccountSettings/AccountSettings';
+import AccountWishlist from 'components/UserAccount/AccountWishlist/AccountWishlist';
+import AccountProfile from 'components/UserAccount/AccountProfile/AccountProfile';
 
 function App() {
     const dispatch = useDispatch();
@@ -60,11 +64,11 @@ function App() {
                         <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
                         <Route path='/shop/search/:search' element={<Shop />}/>
                         <Route path='/account' element={<UserAccount />}>
-                            <Route path='profile' element={<h1>Profile</h1>} />
+                            <Route path='profile' element={<AccountProfile />} />
                             <Route path='seller' element={<AccountSeller />} />
-                            <Route path='bids' element={<h1>Bids</h1>} />
-                            <Route path='wishlist' element={<h1>Wishlist</h1>} />
-                            <Route path='settings' element={<h1>Settings</h1>} />
+                            <Route path='bids' element={<AccountBids />} />
+                            <Route path='wishlist' element={<AccountWishlist />} />
+                            <Route path='settings' element={<AccountSettings />} />
                         </Route>
                         <Route path='/account/add-item' element={<AddItem />} />
                         <Route path='*' element={<NotFound/>}/>

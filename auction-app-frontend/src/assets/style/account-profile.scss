@@ -1,0 +1,17 @@
+.account-profile-container {
+  .container-heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #252525;
+    font-size: 18px;
+    font-weight: 400;
+    background-color: #FCFCFC;
+    border-bottom: 1px solid #E3E3E3;
+
+    h3 {
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+  }
+}
