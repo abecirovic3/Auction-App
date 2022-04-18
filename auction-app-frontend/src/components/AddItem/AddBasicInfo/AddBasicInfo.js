@@ -76,18 +76,18 @@ const AddBasicInfo = ({ categories, cancel, nextStep }) => {
     }, [selectedFiles]);
 
     useEffect(() => {
-        if (imageData.uploaded === false && imageData.images.length !== 0) {
+        if (!imageData.uploaded && imageData.images.length) {
             handleImageUpload(selectedFiles);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imageData]);
 
     function handleImageUpload(imageFiles) {
-        let PromiseArray = [];
+        let uploadedImagePromises = [];
         for (let imageFile of imageFiles) {
-            PromiseArray.push(ImgurService.uploadImage(imageFile));
+            uploadedImagePromises.push(ImgurService.uploadImage(imageFile));
         }
-        Promise.all(PromiseArray)
+        Promise.all(uploadedImagePromises)
             .then(responseArray => {
                 const images = responseArray.map(response => {
                     return {

@@ -165,42 +165,43 @@ public class ProductService {
             );
         }
 
-        Street productStreet = product.getStreet();
+        product.setStreet(getProductStreet(product.getStreet()));
 
+        return productRepository.save(product);
+    }
+
+    private Street getProductStreet(Street street) {
         Optional<Street> streetOptional
                 = streetRepository.findFirstByNameAndZipcode(
-                        productStreet.getName(),
-                        productStreet.getZipcode()
-                );
+                street.getName(),
+                street.getZipcode()
+        );
 
         if (streetOptional.isPresent()) {
-            product.setStreet(streetOptional.get());
+            return streetOptional.get();
         } else {
-            City productCity = productStreet.getCity();
+            City productCity = street.getCity();
             Country productCountry = productCity.getCountry();
 
             Optional<Country> countryOptional = countryRepository.findFirstByName(productCountry.getName());
 
-            if (countryOptional.isPresent()) {
-                Optional<City> cityOptional
-                        = cityRepository.findFirstByNameAndCountry(productCity.getName(), countryOptional.get());
-                if (cityOptional.isPresent()) {
-                    productStreet.setCity(cityOptional.get());
-                } else {
-                    productCity.setCountry(countryOptional.get());
-                    City newCity = cityRepository.save(productCity);
-                    productStreet.setCity(newCity);
-                }
-            } else {
-                Country newCountry = countryRepository.save(productCountry);
-                productCity.setCountry(newCountry);
-                City newCity = cityRepository.save(productCity);
-                productStreet.setCity(newCity);
+            if (countryOptional.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Country with name " + productCountry.getName() + " doesn't exist"
+                );
             }
 
-            streetRepository.save(productStreet);
-        }
+            Optional<City> cityOptional
+                    = cityRepository.findFirstByNameAndCountry(productCity.getName(), countryOptional.get());
+            if (cityOptional.isPresent()) {
+                street.setCity(cityOptional.get());
+            } else {
+                productCity.setCountry(countryOptional.get());
+                street.setCity(cityRepository.save(productCity));
+            }
 
-        return productRepository.save(product);
+            return streetRepository.save(street);
+        }
     }
 }

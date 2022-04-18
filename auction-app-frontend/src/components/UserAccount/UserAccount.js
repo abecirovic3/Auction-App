@@ -33,7 +33,7 @@ const UserAccount = () => {
 
     useEffect(() => {
         setActiveTab({
-            profile: location.pathname === '/account',
+            profile: location.pathname === '/account/profile',
             seller: location.pathname === '/account/seller',
             bids: location.pathname === '/account/bids',
             wishlist: location.pathname === '/account/wishlist',
@@ -65,7 +65,11 @@ const UserAccount = () => {
     }
 
     if (!userLoggedIn) {
-        return <Navigate to={'/login'} state={ { beforeMyAccount: true } } />
+        return <Navigate to='/login' state={ { beforeMyAccount: true } } />
+    }
+
+    if (location.pathname === '/account') {
+        return <Navigate to='/account/profile' />
     }
 
     return (
@@ -80,7 +84,7 @@ const UserAccount = () => {
                                 color={activeTab.profile ? 'primary' : 'dark'}
                                 startIcon={<PersonIcon />}
                                 variant={activeTab.profile ? 'contained' : 'text'}
-                                onClick={() => {navigate('/account')}}
+                                onClick={() => {navigate('/account/profile')}}
                             >
                                 Profile
                             </Button>

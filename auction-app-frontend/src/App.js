@@ -59,7 +59,7 @@ function App() {
                         <Route path='/shop/product-overview/:id' element={<ProductOverview />}/>
                         <Route path='/shop/search/:search' element={<Shop />}/>
                         <Route path='/account' element={<UserAccount />}>
-                            <Route index element={<h1>Profile</h1>} />
+                            <Route path='profile' element={<h1>Profile</h1>} />
                             <Route path='seller' element={<h1>Seller</h1>} />
                             <Route path='bids' element={<h1>Bids</h1>} />
                             <Route path='wishlist' element={<h1>Wishlist</h1>} />

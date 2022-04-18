@@ -115,8 +115,13 @@ const AddItem = () => {
             name: name,
             description: description,
             startPrice: Math.round(parseFloat(startPrice) * 100) / 100,
-            startDate: (add(new Date(startDate), { hours: 2})).toJSON(),
-            endDate: (add(new Date(endDate), { hours: 2})).toJSON(),
+            // use add to offset the UTC time value by 2 hours for correct timezone
+            startDate: (add(new Date(startDate), {
+                hours: 2
+            })).toJSON(),
+            endDate: (add(new Date(endDate), {
+                hours: 2
+            })).toJSON(),
             category: getProductCategory(subCategory),
             images: imageData.images.map(image => {
                 return {
