@@ -11,7 +11,7 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const city = useSelector(state => state.addItem.city);
     const zipCode = useSelector(state => state.addItem.zipCode);
     const country = useSelector(state => state.addItem.country);
-    const [countrySelect, setCountrySelect] = useState(null);
+    const [countryInput, setCountryInput] = useState('');
 
     const dispatch = useDispatch();
 
@@ -39,7 +39,7 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
         }
 
         if (!country) {
-            err.country = 'Please enter country name or select existing';
+            err.country = 'Please select country';
         }
 
         setErrors(err);
@@ -100,7 +100,6 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
                                 <label htmlFor='country'>Country</label>
                                 <Autocomplete
                                     id="country"
-                                    freeSolo
                                     options={countries}
                                     renderInput={(params) =>
                                         <TextField
@@ -109,14 +108,13 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
                                             error={!!errors.country}
                                             helperText={errors.country}
                                         />}
-                                    forcePopupIcon
-                                    value={countrySelect}
+                                    value={country ? country : null}
                                     onChange={(event, newValue) => {
-                                        setCountrySelect(newValue)
+                                        dispatch(setCountry(newValue ? newValue : ''));
                                     }}
-                                    inputValue={country}
+                                    inputValue={countryInput}
                                     onInputChange={(event, newInputValue) => {
-                                        dispatch(setCountry(newInputValue ? newInputValue : ''));
+                                        setCountryInput(newInputValue ? newInputValue : '');
                                     }}
                                 />
                             </Stack>

@@ -1,17 +1,60 @@
+@use "base";
+
 .account-profile-container {
   .container-heading {
     display: flex;
     flex-direction: row;
     align-items: center;
-    color: #252525;
-    font-size: 18px;
-    font-weight: 400;
     background-color: #FCFCFC;
     border-bottom: 1px solid #E3E3E3;
 
     h3 {
-      padding-top: 16px;
-      padding-bottom: 16px;
+      padding: 16px 32px 16px 32px;
+      font-weight: 400;
+      font-size: 18px;
+      color: #252525;
     }
+  }
+
+  .personal-info-container {
+    border: 1px solid #E3E3E3;
+  }
+
+  .content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .change-photo-container {
+    flex-basis: 30%;
+
+    .photo {
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      overflow: hidden;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .change-photo-btn {
+      border: 2px solid base.$primary-color;
+      border-radius: 0;
+      width: 360px;
+      color: #252525;
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+
+  .data-container {
+    flex-basis: 60%;
+  }
+
+  .spacer {
+    flex-basis: 30%;
   }
 }
