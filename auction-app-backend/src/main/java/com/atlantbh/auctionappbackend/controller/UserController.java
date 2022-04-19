@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,14 @@ public class UserController {
     public ResponseEntity<List<Product>> getAllProducts(@PathVariable Long id) {
         return new ResponseEntity<>(
                 userService.getAllProducts(id),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<User> getUserInfo(@PathVariable Long id) {
+        return new ResponseEntity<>(
+                userService.getUserInfo(id),
                 HttpStatus.OK
         );
     }

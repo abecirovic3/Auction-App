@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.domain;
 import com.atlantbh.auctionappbackend.constraint.EmailPreference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -88,6 +90,10 @@ public class User {
             foreignKey = @ForeignKey(name = "street_id")
     )
     private Street street;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "card_id")
+    private Card card;
 
 
     public User() {
@@ -251,5 +257,13 @@ public class User {
 
     public void setStreet(Street street) {
         this.street = street;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

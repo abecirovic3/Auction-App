@@ -1,16 +1,133 @@
-import { useState } from 'react';
-import { Autocomplete, Button, Collapse, IconButton, MenuItem, Stack, TextField } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Autocomplete, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import getYear from 'date-fns/getYear';
+import getDate from 'date-fns/getDate';
+import getMonth from 'date-fns/getMonth';
+
 import profilePlaceholder from 'assets/img/profile-placeholder.png';
 
 import 'assets/style/account-profile.scss';
+import useDateSelect from 'hooks/useDateSelect';
+import UserService from 'services/UserService';
 
 const AccountProfile = () => {
+    const dateSelect = useDateSelect();
+
     const [cardInfoExpand, setCardInfoExpand] = useState(false);
     const [locationInfoExpand, setLocationInfoExpand] = useState(false);
+
+    const [personalInfo, setPersonalInfo] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        day: '',
+        month: '',
+        year: '',
+        phoneNumber: '',
+        photoUrl: ''
+    });
+
+    const [cardInfo, setCardInfo] = useState({
+        name: '',
+        number: '',
+        expirationMonth: '',
+        expirationYear: '',
+        cvc: ''
+    });
+
+    const [locationInfo, setLocationInfo] = useState({
+        street: '',
+        city: '',
+        zipcode: '',
+        state: '',
+        country: ''
+    });
+
+    const [countryInput, setCountryInput] = useState('');
+    const [daysSelectItems, setDaysSelectItems] = useState([]);
+
+    useEffect(() => {
+        UserService.getUserInfo()
+            .then(response => {
+                const data = response.data;
+
+                const dob = data.dateOfBirth ? new Date(data.dateOfBirth) : null;
+
+                setPersonalInfo({
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    day: dob ? getDate(dob) : '',
+                    month: dob ? getMonth(dob) + 1 : '',
+                    year: dob ? getYear(dob) : '',
+                    phoneNumber: data.phoneNumber || '',
+                    photoUrl: data.photoUrl
+                });
+
+                const ced = data.card ? new Date(data.card.expirationDate) : null;
+
+                setCardInfo({
+                    name: data.card?.name || '',
+                    number: data.card?.number || '',
+                    expirationMonth: ced ? getMonth(ced) + 1 : '',
+                    expirationYear: ced ? getYear(ced) : '',
+                    cvc: data.card?.cvc || ''
+                });
+
+                setLocationInfo({
+                    street: data.street?.name || '',
+                    city: data.street?.city.name || '',
+                    zipcode: data.street?.zipcode || '',
+                    state: data.street?.city?.state?.name || '',
+                    country: data.street?.city.country.name || ''
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, []);
+
+    useEffect(() => {
+        const daysInMonth
+            = dateSelect.getDaysInMonth(personalInfo.month ? personalInfo.month : 1, personalInfo.year);
+        if (daysInMonth !== daysSelectItems.length) {
+            setDaysSelectItems(
+                dateSelect.getDaysInMonthMenuItems(personalInfo.month ? personalInfo.month : 1, personalInfo.year)
+            );
+            if (daysInMonth < personalInfo.day) {
+                setPersonalInfo({
+                    ...personalInfo,
+                    day: ''
+                });
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [personalInfo.month, personalInfo.year]);
+
+    function updatePersonalInfoState(key, value) {
+        setPersonalInfo({
+            ...personalInfo,
+            [key]: value
+        });
+    }
+
+    function updateCardInfoState(key, value) {
+        setCardInfo({
+            ...cardInfo,
+            [key]: value
+        });
+    }
+
+    function updateLocationInfoState(key, value) {
+        setLocationInfo({
+            ...locationInfo,
+            [key]: value
+        });
+    }
 
     return (
         <div className='account-profile-container'>
@@ -21,10 +138,15 @@ const AccountProfile = () => {
                 <div className='content-container'>
                     <div className='change-photo-container'>
                         <div className='photo'>
-                            <img width='100%' height='100%' src={profilePlaceholder} alt='Profile'/>
+                            <img
+                                width='100%'
+                                height='100%'
+                                src={personalInfo.photoUrl || profilePlaceholder}
+                                alt='Profile'
+                            />
                         </div>
                         <Button
-                            className='change-photo-btn'
+                            className='change-photo-btn profile-btn'
                             variant='outlined'
                         >
                             Change photo
@@ -38,6 +160,8 @@ const AccountProfile = () => {
                                 <TextField
                                     id='firstName'
                                     variant='outlined'
+                                    value={personalInfo.firstName}
+                                    onChange={event => {updatePersonalInfoState('firstName', event.target.value)}}
                                 />
                             </Stack>
 
@@ -46,6 +170,8 @@ const AccountProfile = () => {
                                 <TextField
                                     id='lastName'
                                     variant='outlined'
+                                    value={personalInfo.lastName}
+                                    onChange={event => {updatePersonalInfoState('lastName', event.target.value)}}
                                 />
                             </Stack>
 
@@ -54,6 +180,9 @@ const AccountProfile = () => {
                                 <TextField
                                     id='email'
                                     variant='outlined'
+                                    disabled={true}
+                                    value={personalInfo.email}
+                                    onChange={event => {updatePersonalInfoState('email', event.target.value)}}
                                 />
                             </Stack>
 
@@ -64,28 +193,33 @@ const AccountProfile = () => {
                                         id='daySelect'
                                         select
                                         fullWidth
+                                        label='DD'
+                                        value={personalInfo.day}
+                                        onChange={event => {updatePersonalInfoState('day', event.target.value)}}
                                     >
-                                        <MenuItem value={1}>
-                                            1
-                                        </MenuItem>
+                                        {daysSelectItems}
                                     </TextField>
+
                                     <TextField
                                         id='monthSelect'
                                         select
                                         fullWidth
+                                        label='MM'
+                                        value={personalInfo.month}
+                                        onChange={event => {updatePersonalInfoState('month', event.target.value)}}
                                     >
-                                        <MenuItem value={1}>
-                                            1
-                                        </MenuItem>
+                                        {dateSelect.getMonthsMenuItems()}
                                     </TextField>
+
                                     <TextField
                                         id='yearSelect'
                                         select
                                         fullWidth
+                                        label='YYYY'
+                                        value={personalInfo.year}
+                                        onChange={event => {updatePersonalInfoState('year', event.target.value)}}
                                     >
-                                        <MenuItem value={1}>
-                                            1
-                                        </MenuItem>
+                                        {dateSelect.getYearsMenuItems(1900, getYear(new Date()) - 1900 - 18)}
                                     </TextField>
                                 </Stack>
                             </Stack>
@@ -95,6 +229,8 @@ const AccountProfile = () => {
                                 <TextField
                                     id='phoneNumber'
                                     variant='outlined'
+                                    value={personalInfo.phoneNumber}
+                                    onChange={event => {updatePersonalInfoState('phoneNumber', event.target.value)}}
                                 />
                             </Stack>
                         </Stack>
@@ -123,6 +259,8 @@ const AccountProfile = () => {
                                     <TextField
                                         id='nameOnCard'
                                         variant='outlined'
+                                        value={cardInfo.name}
+                                        onChange={event => {updateCardInfoState('name', event.target.value)}}
                                     />
                                 </Stack>
 
@@ -131,31 +269,35 @@ const AccountProfile = () => {
                                     <TextField
                                         id='cardNumber'
                                         variant='outlined'
+                                        value={cardInfo.number}
+                                        onChange={event => {updateCardInfoState('number', event.target.value)}}
                                     />
                                 </Stack>
 
                                 <Stack spacing={2} direction='row'>
                                     <Stack spacing={2} width='66%'>
-                                        <label htmlFor='expirationDay'>Expiration Date</label>
+                                        <label htmlFor='expirationMonth'>Expiration Date</label>
                                         <Stack spacing={2} direction='row'>
-                                            <TextField
-                                                id='expirationDay'
-                                                select
-                                                fullWidth
-                                            >
-                                                <MenuItem value={1}>
-                                                    1
-                                                </MenuItem>
-                                            </TextField>
-
                                             <TextField
                                                 id='expirationMonth'
                                                 select
                                                 fullWidth
+                                                value={cardInfo.expirationMonth}
+                                                onChange={event => {updateCardInfoState('expirationMonth', event.target.value)}}
+                                                label='MM'
                                             >
-                                                <MenuItem value={1}>
-                                                    1
-                                                </MenuItem>
+                                                {dateSelect.getMonthsMenuItems()}
+                                            </TextField>
+
+                                            <TextField
+                                                id='expirationYear'
+                                                select
+                                                fullWidth
+                                                value={cardInfo.expirationYear}
+                                                onChange={event => {updateCardInfoState('expirationYear', event.target.value)}}
+                                                label='YY'
+                                            >
+                                                {dateSelect.getYearsMenuItems(getYear(new Date()), 10)}
                                             </TextField>
                                         </Stack>
                                     </Stack>
@@ -166,6 +308,8 @@ const AccountProfile = () => {
                                             id='cvv'
                                             variant='outlined'
                                             fullWidth
+                                            value={cardInfo.cvc}
+                                            onChange={event => {updateCardInfoState('cvc', event.target.value)}}
                                         />
                                     </Stack>
                                 </Stack>
@@ -196,6 +340,8 @@ const AccountProfile = () => {
                                     <TextField
                                         id='street'
                                         variant='outlined'
+                                        value={locationInfo.street}
+                                        onChange={event => {updateLocationInfoState('street', event.target.value)}}
                                     />
                                 </Stack>
 
@@ -205,6 +351,8 @@ const AccountProfile = () => {
                                         <TextField
                                             id='city'
                                             variant='outlined'
+                                            value={locationInfo.city}
+                                            onChange={event => {updateLocationInfoState('city', event.target.value)}}
                                         />
                                     </Stack>
 
@@ -213,6 +361,8 @@ const AccountProfile = () => {
                                         <TextField
                                             id='zipCode'
                                             variant='outlined'
+                                            value={locationInfo.zipcode}
+                                            onChange={event => {updateLocationInfoState('zipcode', event.target.value)}}
                                         />
                                     </Stack>
                                 </Stack>
@@ -222,6 +372,8 @@ const AccountProfile = () => {
                                     <TextField
                                         id='state'
                                         variant='outlined'
+                                        value={locationInfo.state}
+                                        onChange={event => {updateLocationInfoState('state', event.target.value)}}
                                     />
                                 </Stack>
 
@@ -235,6 +387,14 @@ const AccountProfile = () => {
                                                 {...params}
                                                 placeholder='eg. Spain'
                                             />}
+                                        value={locationInfo.country || null}
+                                        onChange={(event, newValue) => {
+                                            updateLocationInfoState('country', newValue || '');
+                                        }}
+                                        inputValue={countryInput}
+                                        onInputChange={(event, newInputValue) => {
+                                            setCountryInput(newInputValue || '');
+                                        }}
                                     />
                                 </Stack>
                             </Stack>
@@ -242,12 +402,18 @@ const AccountProfile = () => {
                     </div>
                 </Collapse>
             </div>
+            <Button
+                className='save-btn profile-btn'
+                variant='outlined'
+            >
+                Save Info
+            </Button>
         </div>
     );
 };
 
 const countries = [
-    'Bosnia & Herzegovina',
+    'Bosina & Herzegovina',
     'Germany',
     'Spain'
 ];

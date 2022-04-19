@@ -1,6 +1,30 @@
 @use "base";
 
 .account-profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .save-btn {
+    align-self: flex-end;
+  }
+
+  .profile-btn {
+    border: 2px solid base.$primary-color;
+    border-radius: 0;
+    color: #252525;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .profile-btn:hover {
+    border: 2px solid base.$primary-color;
+  }
+
+  .change-photo-btn {
+    width: 360px;
+  }
+
   .container-heading {
     display: flex;
     flex-direction: row;
@@ -16,8 +40,14 @@
     }
   }
 
-  .personal-info-container {
+  .personal-info-container,
+  .card-info-container,
+  .location-info-container {
     border: 1px solid #E3E3E3;
+  }
+
+  .personal-info-container {
+    margin-top: 10px;
   }
 
   .content-container {
@@ -38,15 +68,6 @@
       overflow: hidden;
       text-align: center;
       margin-bottom: 20px;
-    }
-
-    .change-photo-btn {
-      border: 2px solid base.$primary-color;
-      border-radius: 0;
-      width: 360px;
-      color: #252525;
-      font-size: 18px;
-      font-weight: 700;
     }
   }
 
