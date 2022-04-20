@@ -4,6 +4,7 @@ import { MenuItem } from '@mui/material';
 function useDateSelect() {
     const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const months = [
+        <MenuItem value={''}>None</MenuItem>,
         <MenuItem value={1}>1</MenuItem>,
         <MenuItem value={2}>2</MenuItem>,
         <MenuItem value={3}>3</MenuItem>,
@@ -31,8 +32,8 @@ function useDateSelect() {
     }
 
     function getDaysInMonthMenuItems(month, year) {
-        return [...Array(getDaysInMonth(month, year)).keys()].map((el, i) => (
-            <MenuItem key={i} value={i+1}>{i+1}</MenuItem>
+        return [...Array(getDaysInMonth(month, year) + 1).keys()].map((el, i) => (
+            <MenuItem key={i} value={i === 0 ? '' : i}>{i === 0 ? 'None' : i}</MenuItem>
         ))
     }
 
@@ -41,8 +42,8 @@ function useDateSelect() {
     }
 
     function getYearsMenuItems(startYear, interval) {
-        return [...Array(interval + 1).keys()].map((el, i) => (
-            <MenuItem key={i} value={i + startYear}>{i + startYear}</MenuItem>
+        return [...Array(interval + 2).keys()].map((el, i) => (
+            <MenuItem key={i} value={i === 0 ? '' : i - 1 + startYear}>{i === 0 ? 'None' : i - 1 + startYear}</MenuItem>
         ))
     }
 

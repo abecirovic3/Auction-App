@@ -9,9 +9,14 @@ function getUserInfo() {
     return api.get(`/user/${TokenService.getUserCredentials().id}`);
 }
 
+function updateUserInfo(data) {
+    return api.put(`/user/${TokenService.getUserCredentials().id}`, data)
+}
+
 const UserService = {
     getAllProducts,
-    getUserInfo
+    getUserInfo,
+    updateUserInfo
 };
 
 export default UserService;

@@ -56,6 +56,16 @@ function removeUser() {
     sessionStorage.removeItem('user');
 }
 
+function updateUserCredentials(credentials) {
+    let {user, rememberUser} = getUser();
+    user.credentials = credentials;
+    if (rememberUser) {
+        localStorage.setItem('user', JSON.stringify(user));
+    } else {
+        sessionStorage.setItem('user', JSON.stringify(user));
+    }
+}
+
 const TokenService = {
     getLocalRefreshToken,
     getLocalAccessToken,
@@ -65,6 +75,7 @@ const TokenService = {
     getUser,
     setUser,
     removeUser,
+    updateUserCredentials,
 };
 
 export default TokenService;

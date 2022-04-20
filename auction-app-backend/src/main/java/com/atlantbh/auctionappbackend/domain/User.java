@@ -62,6 +62,7 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must contain at least 8 characters")
     private String password;
 
     @Column(nullable = false)
@@ -70,8 +71,7 @@ public class User {
     @Past(message = "Date of birth is not valid")
     private LocalDate dateOfBirth;
 
-    // TODO: implement better phone number validation
-    @Size(min = 10, message = "Phone number is not valid")
+    @Pattern(regexp = "^(\\+\\d+\\s)?(\\(\\d+\\))?[\\s\\d.-]*$")
     private String phoneNumber;
 
     private String photoUrl;
