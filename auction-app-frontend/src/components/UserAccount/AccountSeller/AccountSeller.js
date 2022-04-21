@@ -65,7 +65,7 @@ const AccountSeller = () => {
                   <TableBody>
                       {
                           products.map(product => (
-                              <TableRow>
+                              <TableRow key={product.id}>
                                   <TableCell>
                                       <img
                                           height='80px'

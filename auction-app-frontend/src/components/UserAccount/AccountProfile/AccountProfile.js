@@ -1,27 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
 import { Autocomplete, Button, CircularProgress, Collapse, IconButton, Stack, TextField } from '@mui/material';
 
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
 import getYear from 'date-fns/getYear';
 import getDate from 'date-fns/getDate';
 import getMonth from 'date-fns/getMonth';
 import endOfMonth from 'date-fns/endOfMonth';
 import add from 'date-fns/add';
 
-import profilePlaceholder from 'assets/img/profile-placeholder.png';
+import CustomAlert from 'components/Alert/CustomAlert';
 
-import 'assets/style/account-profile.scss';
-import useDateSelect from 'hooks/useDateSelect';
 import UserService from 'services/UserService';
 import CountryService from 'services/CountryService';
 import TokenService from 'services/TokenService';
 import ImgurService from 'services/ImgurService';
+import useDateSelect from 'hooks/useDateSelect';
+import useLoginService from 'hooks/useLoginService';
+
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import profilePlaceholder from 'assets/img/profile-placeholder.png';
+
+import 'assets/style/account-profile.scss';
 
 const AccountProfile = () => {
     const isInitialMount = useRef(true);
     const dateSelect = useDateSelect();
+    const loginService = useLoginService();
 
     const [cardInfoExpand, setCardInfoExpand] = useState(false);
     const [locationInfoExpand, setLocationInfoExpand] = useState(false);
@@ -68,14 +73,17 @@ const AccountProfile = () => {
 
     const [processingRequest, setProcessingRequest] = useState(false);
 
+    const [errorAlerts, setErrorAlerts] = useState([]);
+
     useEffect(() => {
         CountryService.getAllCountries()
             .then(response => {
                 setCountries(response.data.map(c => c.name));
             })
             .catch(err => {
-                console.log(err);
+                setErrorAlerts([...errorAlerts, err.response.data]);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -124,10 +132,15 @@ const AccountProfile = () => {
                     setProcessingRequest(false);
                 })
                 .catch(err => {
-                    console.log(err);
+                    if (err.response.status === 403) {
+                        loginService.reinitiateLogin();
+                    } else {
+                        setErrorAlerts([...errorAlerts, err.response.data]);
+                    }
                     setProcessingRequest(false);
                 });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [countries]);
 
     useEffect(() => {
@@ -178,7 +191,11 @@ const AccountProfile = () => {
                     setProcessingRequest(false);
                 })
                 .catch(err => {
-                    console.log(err);
+                    if (err.response.status === 403) {
+                        loginService.reinitiateLogin();
+                    } else {
+                        setErrorAlerts([...errorAlerts, err.response.data]);
+                    }
                     setProcessingRequest(false);
                 });
         }
@@ -368,7 +385,7 @@ const AccountProfile = () => {
                     setProcessingRequest(false);
                 })
                 .catch(err => {
-                    console.log(err);
+                    setErrorAlerts([...errorAlerts, err.response.data.data]);
                     setProcessingRequest(false);
                 });
         }
@@ -376,6 +393,9 @@ const AccountProfile = () => {
 
     return (
         <div className='account-profile-container'>
+            {
+                errorAlerts.map(err => <CustomAlert color='error' error={err} showAlertDuration={60000} /> )
+            }
             <div className='personal-info-container'>
                 <div className='container-heading'>
                     <h3>Personal Information</h3>
