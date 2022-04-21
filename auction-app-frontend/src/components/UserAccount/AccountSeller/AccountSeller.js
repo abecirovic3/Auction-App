@@ -12,27 +12,47 @@ import cartIcon from 'assets/img/cart.png';
 
 import 'assets/style/account-seller.scss';
 import 'assets/style/account-table.scss';
+import CustomAlert from 'components/Alert/CustomAlert';
 
 const AccountSeller = () => {
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
     const loginService = useLoginService();
+    const [errorAlerts, setErrorAlerts] = useState([]);
 
     useEffect(() => {
-        UserService.getAllProducts()
-            .then(response => {
-                setProducts(response.data);
+        loginService.isUserLoggedIn()
+            .then(() => {
+                UserService.getAllProducts()
+                    .then(response => {
+                        setProducts(response.data);
+                    })
+                    .catch(err => {
+                        if (err.response.status === 403) {
+                            loginService.setUserLoggedOut();
+                        } else {
+                            setErrorAlerts([...errorAlerts, err.response.data]);
+                        }
+                    });
             })
-            .catch(err => {
-                if (err.response.status === 403) {
-                    loginService.reinitiateLogin();
-                }
+            .catch(() => {
+                loginService.setUserLoggedOut();
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
       <div className='account-seller-container account-table-container'>
+          {
+              errorAlerts.map((err, i) =>
+                  <CustomAlert
+                      key={i} color='error'
+                      error={err}
+                      showAlertDuration={60000}
+                      marginBottom='10px'
+                  />
+              )
+          }
           <div>
               <Button
                   className='btn-tab'

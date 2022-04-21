@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { Button, ThemeProvider } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
@@ -11,12 +12,11 @@ import AddItemIcon from '@mui/icons-material/AddOutlined';
 
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
 
+import { setLoggedIn } from 'features/login/loginSlice';
+import useLoginService from 'hooks/useLoginService';
+
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/user-account.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import TokenService from 'services/TokenService';
-import { setLoggedIn } from 'features/login/loginSlice';
-import AuthService from 'services/AuthService';
 
 const UserAccount = () => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
@@ -30,6 +30,7 @@ const UserAccount = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const loginService = useLoginService();
 
     useEffect(() => {
         setActiveTab({
@@ -47,21 +48,14 @@ const UserAccount = () => {
     }
 
     function handleAddItem() {
-        if (!TokenService.getUserCredentials()) {
-            dispatch(setLoggedIn(false));
-            navigate('/account/add-item');
-        } else {
-            AuthService.validateToken()
-                .then(response => {
-                    dispatch(setLoggedIn(true));
-                    navigate('/account/add-item');
-                })
-                .catch(err => {
-                    TokenService.removeUser();
-                    dispatch(setLoggedIn(false));
-                    navigate('/account/add-item');
-                })
-        }
+        loginService.isUserLoggedIn()
+            .then(() => {
+                dispatch(setLoggedIn(true));
+                navigate('/account/add-item');
+            })
+            .catch(() => {
+                loginService.setUserLoggedOut();
+            });
     }
 
     if (!userLoggedIn) {

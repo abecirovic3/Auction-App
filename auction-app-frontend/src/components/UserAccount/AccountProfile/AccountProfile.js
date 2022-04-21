@@ -16,6 +16,7 @@ import ImgurService from 'services/ImgurService';
 import useDateSelect from 'hooks/useDateSelect';
 import useLoginService from 'hooks/useLoginService';
 
+
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -76,12 +77,18 @@ const AccountProfile = () => {
     const [errorAlerts, setErrorAlerts] = useState([]);
 
     useEffect(() => {
-        CountryService.getAllCountries()
-            .then(response => {
-                setCountries(response.data.map(c => c.name));
+        loginService.isUserLoggedIn()
+            .then(() => {
+                CountryService.getAllCountries()
+                    .then(response => {
+                        setCountries(response.data.map(c => c.name));
+                    })
+                    .catch(err => {
+                        setErrorAlerts([...errorAlerts, err.response.data]);
+                    });
             })
-            .catch(err => {
-                setErrorAlerts([...errorAlerts, err.response.data]);
+            .catch(() => {
+                loginService.setUserLoggedOut();
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -133,7 +140,7 @@ const AccountProfile = () => {
                 })
                 .catch(err => {
                     if (err.response.status === 403) {
-                        loginService.reinitiateLogin();
+                        loginService.setUserLoggedOut();
                     } else {
                         setErrorAlerts([...errorAlerts, err.response.data]);
                     }
@@ -186,13 +193,12 @@ const AccountProfile = () => {
             setProcessingRequest(true);
             UserService.updateUserInfo(getUserData())
                 .then(response => {
-                    console.log(response);
                     TokenService.updateUserCredentials(response.data);
                     setProcessingRequest(false);
                 })
                 .catch(err => {
                     if (err.response.status === 403) {
-                        loginService.reinitiateLogin();
+                        loginService.setUserLoggedOut();
                     } else {
                         setErrorAlerts([...errorAlerts, err.response.data]);
                     }
@@ -380,7 +386,6 @@ const AccountProfile = () => {
             setProcessingRequest(true);
             ImgurService.uploadImage(event.target.files[0])
                 .then(response => {
-                    console.log(response);
                     updatePersonalInfoState('photoUrl', response.data.data.link);
                     setProcessingRequest(false);
                 })
@@ -394,7 +399,14 @@ const AccountProfile = () => {
     return (
         <div className='account-profile-container'>
             {
-                errorAlerts.map(err => <CustomAlert color='error' error={err} showAlertDuration={60000} /> )
+                errorAlerts.map((err, i) =>
+                    <CustomAlert
+                        key={i} color='error'
+                        error={err}
+                        showAlertDuration={60000}
+                        marginBottom='10px'
+                    />
+                )
             }
             <div className='personal-info-container'>
                 <div className='container-heading'>
