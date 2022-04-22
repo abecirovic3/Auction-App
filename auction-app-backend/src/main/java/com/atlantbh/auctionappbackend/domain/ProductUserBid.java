@@ -41,7 +41,7 @@ import java.util.Collections;
         resultSetMapping = "productUserBidMapping",
         query = "select max(pub.amount) as user_highest_bid, p.id, p.name, p.start_date, p.end_date, p.highest_bid," +
                 " (select count(pub1.id) from product_user_bid pub1 where pub1.product_id=p.id) as number_of_bids," +
-                " (select pi.image_url from product_image pi where pi.product_id=p.id) as image_url" +
+                " (select pi.image_url from product_image pi where pi.product_id=p.id limit 1) as image_url" +
                 " from product_user_bid pub, product p where pub.product_id = p.id and bidder_id=?1 group by p.id"
 )
 public class ProductUserBid {
