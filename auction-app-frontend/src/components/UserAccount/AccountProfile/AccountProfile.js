@@ -213,6 +213,7 @@ const AccountProfile = () => {
             lastName: personalInfo.lastName,
             dateOfBirth: getUserDoB(),
             phoneNumber: personalInfo.phoneNumber || null,
+            photoUrl: personalInfo.photoUrl || null,
             card: getUserCard(),
             street: getUserStreet()
         }

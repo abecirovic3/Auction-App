@@ -73,6 +73,7 @@ public class UserService {
         currentUser.setLastName(user.getLastName());
         currentUser.setDateOfBirth(user.getDateOfBirth());
         currentUser.setPhoneNumber(user.getPhoneNumber());
+        currentUser.setPhotoUrl(user.getPhotoUrl());
         currentUser.setCard(getUserCard(user.getCard()));
         currentUser.setStreet(getUserStreet(user.getStreet()));
 
