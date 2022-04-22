@@ -69,7 +69,7 @@ public class Product {
     @JsonManagedReference(value = "product-image-reference")
     private List<ProductImage> images;
     
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<ProductUserBid> productBids;
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,14 @@ public class UserController {
     public ResponseEntity<User> updateUserInfo(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest user) {
         return new ResponseEntity<>(
                 userService.updateUserInfo(id, user),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteUserAccount(@PathVariable Long id) {
+        return new ResponseEntity<>(
+                userService.deleteUser(id),
                 HttpStatus.OK
         );
     }

@@ -2,7 +2,7 @@ import api from 'services/Api';
 import TokenService from 'services/TokenService';
 
 function getAllProducts() {
-    return api.get(`/user/${TokenService.getUserCredentials().id}/products`)
+    return api.get(`/user/${TokenService.getUserCredentials().id}/products`);
 }
 
 function getUserInfo() {
@@ -10,13 +10,18 @@ function getUserInfo() {
 }
 
 function updateUserInfo(data) {
-    return api.put(`/user/${TokenService.getUserCredentials().id}`, data)
+    return api.put(`/user/${TokenService.getUserCredentials().id}`, data);
+}
+
+function deleteAccount() {
+    return api.delete(`/user/${TokenService.getUserCredentials().id}`);
 }
 
 const UserService = {
     getAllProducts,
     getUserInfo,
-    updateUserInfo
+    updateUserInfo,
+    deleteAccount
 };
 
 export default UserService;

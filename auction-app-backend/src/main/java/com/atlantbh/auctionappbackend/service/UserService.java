@@ -102,4 +102,9 @@ public class UserService {
             return cardRepository.save(card);
         }
     }
+
+    public String deleteUser(Long id) {
+        userRepository.deleteById(id);
+        return "Account deactivated successfully";
+    }
 }

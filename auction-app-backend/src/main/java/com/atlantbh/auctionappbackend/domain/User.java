@@ -76,11 +76,11 @@ public class User {
 
     private String photoUrl;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<ProductUserBid> userBids;
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Product> products;
 
