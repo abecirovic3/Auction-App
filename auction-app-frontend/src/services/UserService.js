@@ -17,11 +17,16 @@ function deleteAccount() {
     return api.delete(`/user/${TokenService.getUserCredentials().id}`);
 }
 
+function getAllBids() {
+    return api.get(`/user/${TokenService.getUserCredentials().id}/bids`);
+}
+
 const UserService = {
     getAllProducts,
     getUserInfo,
     updateUserInfo,
-    deleteAccount
+    deleteAccount,
+    getAllBids
 };
 
 export default UserService;

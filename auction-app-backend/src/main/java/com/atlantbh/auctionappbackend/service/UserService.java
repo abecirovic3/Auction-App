@@ -2,6 +2,7 @@ package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.Card;
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.domain.Street;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.CardRepository;
@@ -9,8 +10,12 @@ import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
 import com.atlantbh.auctionappbackend.request.UserUpdateRequest;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -107,5 +112,9 @@ public class UserService {
     public String deleteUser(Long id) {
         userRepository.deleteById(id);
         return "Account deactivated successfully";
+    }
+
+    public List<ProductUserBid> getAllBids(Long id) {
+        return productUserBidRepository.findMaxProductBidsByUser(id);
     }
 }

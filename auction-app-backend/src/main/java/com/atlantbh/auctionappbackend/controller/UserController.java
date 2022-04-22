@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.Product;
+import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.request.UserUpdateRequest;
 import com.atlantbh.auctionappbackend.service.UserService;
@@ -61,6 +62,14 @@ public class UserController {
     public ResponseEntity<String> deleteUserAccount(@PathVariable Long id) {
         return new ResponseEntity<>(
                 userService.deleteUser(id),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping(path = "/{id}/bids")
+    public ResponseEntity<List<ProductUserBid>> getAllBids(@PathVariable Long id) {
+        return new ResponseEntity<>(
+                userService.getAllBids(id),
                 HttpStatus.OK
         );
     }
