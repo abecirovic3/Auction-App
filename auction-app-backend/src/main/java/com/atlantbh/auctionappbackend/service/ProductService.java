@@ -1,17 +1,11 @@
 package com.atlantbh.auctionappbackend.service;
 
-import com.atlantbh.auctionappbackend.domain.City;
-import com.atlantbh.auctionappbackend.domain.Country;
 import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
-import com.atlantbh.auctionappbackend.domain.Street;
-import com.atlantbh.auctionappbackend.repository.CityRepository;
-import com.atlantbh.auctionappbackend.repository.CountryRepository;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
-import com.atlantbh.auctionappbackend.repository.StreetRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,13 +28,15 @@ public class ProductService {
     private final ProductUserBidRepository productUserBidRepository;
     private final PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
     private final StreetService streetService;
+    private final UserService userService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation,  StreetService streetService) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation, StreetService streetService, UserService userService) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
         this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
         this.streetService = streetService;
+        this.userService = userService;
     }
 
     public Product getProductOverview(Long id) {
@@ -162,6 +158,8 @@ public class ProductService {
         }
 
         product.setStreet(streetService.findOrCreateLocation(product.getStreet()));
+
+        userService.updateUserCardInfo(product.getSeller().getId(), product.getSeller().getCard());
 
         return productRepository.save(product);
     }

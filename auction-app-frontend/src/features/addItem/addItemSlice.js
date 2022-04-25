@@ -19,6 +19,13 @@ export const addItemSlice = createSlice({
         city: '',
         zipCode: '',
         country: '',
+        userCard: {
+            name: '',
+            number: '',
+            expirationMonth: '',
+            expirationYear: '',
+            cvc: ''
+        },
         errorAlerts: []
     },
     reducers: {
@@ -85,6 +92,31 @@ export const addItemSlice = createSlice({
             state.zipCode = '';
             state.country = '';
             state.errorAlerts = [];
+            state.userCard = {
+                name: '',
+                number: '',
+                expirationMonth: '',
+                expirationYear: '',
+                cvc: ''
+            };
+        },
+        setUserCard: (state, action) => {
+            state.userCard = action.payload;
+        },
+        setUserCardName: (state, action) => {
+            state.userCard.name = action.payload;
+        },
+        setUserCardNumber: (state, action) => {
+            state.userCard.number = action.payload;
+        },
+        setUserCardExpirationMonth: (state, action) => {
+            state.userCard.expirationMonth = action.payload;
+        },
+        setUserCardExpirationYear: (state, action) => {
+            state.userCard.expirationYear = action.payload;
+        },
+        setUserCardCvc: (state, action) => {
+            state.userCard.cvc = action.payload;
         },
     }
 });
@@ -105,7 +137,13 @@ export const {
     setZipCode,
     setCountry,
     setAddItemInitial,
-    setErrorAlerts
+    setErrorAlerts,
+    setUserCard,
+    setUserCardName,
+    setUserCardNumber,
+    setUserCardExpirationMonth,
+    setUserCardExpirationYear,
+    setUserCardCvc
 } = addItemSlice.actions;
 
 export default addItemSlice.reducer;

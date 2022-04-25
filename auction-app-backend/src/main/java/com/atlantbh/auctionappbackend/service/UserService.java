@@ -10,12 +10,8 @@ import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
 import com.atlantbh.auctionappbackend.request.UserUpdateRequest;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -116,5 +112,21 @@ public class UserService {
 
     public List<ProductUserBid> getAllBids(Long id) {
         return productUserBidRepository.findMaxProductBidsByUser(id);
+    }
+
+    public User updateUserCardInfo(Long id, Card card) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User with id " + id + " doesn't exist"
+            );
+        }
+
+        User user = userOptional.get();
+        user.setCard(getUserCard(card));
+
+        return userRepository.save(user);
     }
 }

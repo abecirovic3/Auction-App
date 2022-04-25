@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import add from 'date-fns/add';
+import endOfMonth from 'date-fns/endOfMonth';
 
 import CategoryService from 'services/CategoryService';
 import ProductService from 'services/ProductService';
@@ -46,6 +47,7 @@ const AddItem = () => {
     const city = useSelector(state => state.addItem.city);
     const country = useSelector(state => state.addItem.country);
     const errorAlerts = useSelector(state => state.addItem.errorAlerts);
+    const userCard = useSelector(state => state.addItem.userCard);
 
     useEffect(() => {
         if (userLoggedIn) {
@@ -103,6 +105,7 @@ const AddItem = () => {
     function submit() {
         ProductService.postProduct(getProductData())
             .then(response => {
+                TokenService.updateUserCardInfo(response.data?.seller?.card);
                 navigate('/account/seller');
             })
             .catch(err => {
@@ -129,7 +132,15 @@ const AddItem = () => {
                     deleteHash: image.delete_hash
                 }
             }),
-            seller: TokenService.getUserCredentials(),
+            seller: {
+              id: TokenService.getUserCredentials().id,
+              card: {
+                  name: userCard.name,
+                  number: userCard.number,
+                  expirationDate: endOfMonth(new Date(userCard.expirationYear, (userCard.expirationMonth - 1))),
+                  cvc: userCard.cvc
+              }
+            },
             street: {
                 name: address,
                 zipcode: zipCode,
