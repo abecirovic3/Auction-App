@@ -91,7 +91,12 @@
 			<artifactId>flyway-maven-plugin</artifactId>
 			<version>8.5.3</version>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>20.116.0</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
