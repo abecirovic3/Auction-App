@@ -159,8 +159,6 @@ public class ProductService {
 
         product.setStreet(streetService.findOrCreateLocation(product.getStreet()));
 
-        userService.updateUserCardInfo(product.getSeller().getId(), product.getSeller().getCard());
-
         return productRepository.save(product);
     }
 }

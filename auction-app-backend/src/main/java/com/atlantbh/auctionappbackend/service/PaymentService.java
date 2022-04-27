@@ -83,4 +83,36 @@ public class PaymentService {
 
         return res;
     }
+
+    public Map<String, Boolean> isOnboardingProcessComplete(Long id) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User with id " + id + " doesn't exist"
+            );
+        }
+
+        User user = userOptional.get();
+
+        if (user.getStripeAccId() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User with id " + id + " doesn't have Stripe account"
+            );
+        }
+
+        Account account = Account.retrieve(user.getStripeAccId());
+
+        account.getDetailsSubmitted();
+
+        Map<String, Boolean> res = new HashMap<>();
+        res.put("charges-enabled", account.getChargesEnabled());
+        res.put("details-submitted", account.getDetailsSubmitted());
+
+        return res;
+    }
 }

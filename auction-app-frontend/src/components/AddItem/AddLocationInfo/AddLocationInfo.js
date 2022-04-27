@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, Container, Grid, Stack, TextField, ThemeProvider, Autocomplete } from '@mui/material';
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Stack,
+    TextField,
+    ThemeProvider,
+    Autocomplete,
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
 import {
     setAddress,
     setCity,
     setZipCode,
     setCountry,
-    setUserCardName,
-    setUserCardNumber,
-    setUserCardExpirationMonth,
-    setUserCardExpirationYear,
-    setUserCardCvc, setUserCard
 } from 'features/addItem/addItemSlice';
 
-import getMonth from 'date-fns/getMonth'
-import getYear from 'date-fns/getYear'
-import endOfMonth from 'date-fns/endOfMonth';
-
-import useDateSelect from 'hooks/useDateSelect';
 import TokenService from 'services/TokenService';
 import PaymentService from 'services/PaymentService';
+import StripeService from 'services/StripeService';
 
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 
@@ -32,31 +33,20 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const zipCode = useSelector(state => state.addItem.zipCode);
     const country = useSelector(state => state.addItem.country);
     const [countryInput, setCountryInput] = useState('');
-    const userCard = useSelector(state => state.addItem.userCard);
+
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
     const [errors, setErrors] = useState({});
 
-    const dateSelect = useDateSelect();
-
     useEffect(() => {
         const streetData = TokenService.getUserCredentials().street;
-        const cardData = TokenService.getUserCredentials().card;
         if (streetData) {
             dispatch(setAddress(streetData.name || ''));
             dispatch(setZipCode(streetData.zipcode || ''));
             dispatch(setCity(streetData.city?.name || ''));
             dispatch(setCountry(streetData.city?.country?.name || ''));
-        }
-        if (cardData) {
-            dispatch(setUserCard({
-                name: cardData.name || '',
-                number: cardData.number || '',
-                expirationMonth: getMonth(new Date(cardData.expirationDate)) + 1,
-                expirationYear: getYear(new Date(cardData.expirationDate)),
-                cvc: cardData.cvc
-            }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -86,31 +76,8 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
             err.country = 'Please select country';
         }
 
-        if (!userCard.name) {
-            err.userCardName = 'Please enter the name found on your card';
-        }
-
-        if (!userCard.number) {
-            err.userCardNumber = 'Please enter your card number';
-        }
-
-        if (!userCard.expirationMonth) {
-            err.userCardExpirationMonth = 'Please select card expiration month';
-        }
-
-        if (!userCard.expirationYear) {
-            err.userCardExpirationYear = 'Please select card expiration year';
-        } else if (userCard.expirationMonth) {
-            const lastDayOfCurrentMonthDate = endOfMonth(new Date());
-            const lastDayOfSelectedMonthDate = endOfMonth(new Date(userCard.expirationYear, (userCard.expirationMonth - 1)));
-
-            if (lastDayOfSelectedMonthDate < lastDayOfCurrentMonthDate) {
-                err.userCardExpirationMonth = 'Expiration month must not be in past';
-            }
-        }
-
-        if (!userCard.cvc) {
-            err.userCardCvc = 'Please enter card cvc/cvv';
+        if (!StripeService.getStripeOnboardingFlag().onboardingComplete) {
+            err.payment = 'Please add payment info';
         }
 
         setErrors(err);
@@ -119,14 +86,16 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     }
 
     function handleAddPaymentInfo() {
+        setLoading(true);
         PaymentService.addPaymentInfo()
             .then(response => {
-                console.log(response.data);
                 window.open(response.data.url, '_blank');
+                setLoading(false);
             })
             .catch(err => {
                 console.log(err);
-            })
+                setLoading(false);
+            });
     }
 
     return (
@@ -203,87 +172,27 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
                         </Stack>
 
                         <Stack spacing={2}>
-                            <p style={{borderBottom: '1px solid #D8D8D8', paddingBottom: '5px'}}>Payment</p>
-                            <Button
+                            <p
+                                style={{
+                                    borderBottom: `1px solid ${errors.payment ? 'red' : '#D8D8D8'}`,
+                                    paddingBottom: '5px',
+                                    color: errors.payment ? 'red' : 'black'
+                            }}
+                            >
+                                Payment
+                                {errors.payment && ' (Please add payment info)'}
+                            </p>
+                            <LoadingButton
                                 variant='contained'
                                 className='nav-buttons'
                                 startIcon={<CreditCardIcon />}
                                 onClick={handleAddPaymentInfo}
+                                loading={loading}
+                                loadingPosition='start'
                             >
                                 Add Payment Info
-                            </Button>
-                            {/*<Stack spacing={2}>*/}
-                            {/*    <label htmlFor='nameOnCard'>Name on Card</label>*/}
-                            {/*    <TextField*/}
-                            {/*        id='nameOnCard'*/}
-                            {/*        variant='outlined'*/}
-                            {/*        placeholder='JOHN DOE'*/}
-                            {/*        value={userCard.name}*/}
-                            {/*        onChange={event => {dispatch(setUserCardName(event.target.value))}}*/}
-                            {/*        error={!!errors.userCardName}*/}
-                            {/*        helperText={errors.userCardName}*/}
-                            {/*    />*/}
-                            {/*</Stack>*/}
+                            </LoadingButton>
 
-                            {/*<Stack spacing={2}>*/}
-                            {/*    <label htmlFor='cardNumber'>Card Number</label>*/}
-                            {/*    <TextField*/}
-                            {/*        id='cardNumber'*/}
-                            {/*        variant='outlined'*/}
-                            {/*        placeholder='XXXX-XXXX-XXXX-XXXX'*/}
-                            {/*        value={userCard.number}*/}
-                            {/*        onChange={event => {dispatch(setUserCardNumber(event.target.value))}}*/}
-                            {/*        error={!!errors.userCardNumber}*/}
-                            {/*        helperText={errors.userCardNumber}*/}
-                            {/*    />*/}
-                            {/*</Stack>*/}
-
-                            {/*<Stack spacing={2} direction='row'>*/}
-                            {/*    <Stack spacing={2} width='66%'>*/}
-                            {/*        <label htmlFor='expirationMonth'>Expiration Date</label>*/}
-                            {/*        <Stack spacing={2} direction='row'>*/}
-                            {/*            <TextField*/}
-                            {/*                id='expirationMonth'*/}
-                            {/*                select*/}
-                            {/*                fullWidth*/}
-                            {/*                label='MM'*/}
-                            {/*                value={userCard.expirationMonth}*/}
-                            {/*                onChange={event => {dispatch(setUserCardExpirationMonth(event.target.value))}}*/}
-                            {/*                error={!!errors.userCardExpirationMonth}*/}
-                            {/*                helperText={errors.userCardExpirationMonth}*/}
-                            {/*            >*/}
-                            {/*                {dateSelect.getMonthsMenuItems()}*/}
-                            {/*            </TextField>*/}
-
-                            {/*            <TextField*/}
-                            {/*                id='expirationYear'*/}
-                            {/*                select*/}
-                            {/*                fullWidth*/}
-                            {/*                label='YY'*/}
-                            {/*                value={userCard.expirationYear}*/}
-                            {/*                onChange={event => {dispatch(setUserCardExpirationYear(event.target.value))}}*/}
-                            {/*                error={!!errors.userCardExpirationYear}*/}
-                            {/*                helperText={errors.userCardExpirationYear}*/}
-                            {/*            >*/}
-                            {/*                {dateSelect.getYearsMenuItems(getYear(new Date()), 10)}*/}
-                            {/*            </TextField>*/}
-                            {/*        </Stack>*/}
-                            {/*    </Stack>*/}
-
-                            {/*    <Stack spacing={2} width='33%'>*/}
-                            {/*        <label htmlFor='cvv'>CVC/CVV</label>*/}
-                            {/*        <TextField*/}
-                            {/*            id='cvv'*/}
-                            {/*            variant='outlined'*/}
-                            {/*            fullWidth*/}
-                            {/*            placeholder='***'*/}
-                            {/*            value={userCard.cvc}*/}
-                            {/*            onChange={event => {dispatch(setUserCardCvc(event.target.value))}}*/}
-                            {/*            error={!!errors.userCardCvc}*/}
-                            {/*            helperText={errors.userCardCvc}*/}
-                            {/*        />*/}
-                            {/*    </Stack>*/}
-                            {/*</Stack>*/}
                         </Stack>
 
                         <Box>

@@ -4,13 +4,13 @@ import { ThemeProvider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import add from 'date-fns/add';
-import endOfMonth from 'date-fns/endOfMonth';
 
 import CategoryService from 'services/CategoryService';
 import ProductService from 'services/ProductService';
 import TokenService from 'services/TokenService';
 import ImgurService from 'services/ImgurService';
 import CountryService from 'services/CountryService';
+import StripeService from 'services/StripeService';
 import useAddItemService from 'hooks/useAddItemService';
 
 import { setAddItemInitial, setImageDeleteInProgress } from 'features/addItem/addItemSlice';
@@ -47,7 +47,6 @@ const AddItem = () => {
     const city = useSelector(state => state.addItem.city);
     const country = useSelector(state => state.addItem.country);
     const errorAlerts = useSelector(state => state.addItem.errorAlerts);
-    const userCard = useSelector(state => state.addItem.userCard);
 
     useEffect(() => {
         if (userLoggedIn) {
@@ -71,6 +70,8 @@ const AddItem = () => {
     },[userLoggedIn]);
 
     useEffect(() => {
+        StripeService.setStripeOnboardingFlag(false);
+
         return () => {
             dispatch(setAddItemInitial());
         }
@@ -133,13 +134,7 @@ const AddItem = () => {
                 }
             }),
             seller: {
-              id: TokenService.getUserCredentials().id,
-              card: {
-                  name: userCard.name,
-                  number: userCard.number,
-                  expirationDate: endOfMonth(new Date(userCard.expirationYear, (userCard.expirationMonth - 1))),
-                  cvc: userCard.cvc
-              }
+              id: TokenService.getUserCredentials().id
             },
             street: {
                 name: address,

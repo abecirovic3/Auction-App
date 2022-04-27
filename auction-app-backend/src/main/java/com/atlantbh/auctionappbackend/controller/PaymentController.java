@@ -3,17 +3,16 @@ package com.atlantbh.auctionappbackend.controller;
 import com.atlantbh.auctionappbackend.service.PaymentService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Account;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -72,27 +71,8 @@ public class PaymentController {
         return paymentService.createAccountLink(id);
     }
 
-    @PostMapping(path = "/create-account")
-    public String createAccount() throws StripeException {
-        Stripe.apiKey = stripeApiKey;
-
-        Map<String, Object> cardPayments =
-                new HashMap<>();
-        cardPayments.put("requested", true);
-        Map<String, Object> transfers = new HashMap<>();
-        transfers.put("requested", true);
-        Map<String, Object> capabilities =
-                new HashMap<>();
-        capabilities.put("card_payments", cardPayments);
-        capabilities.put("transfers", transfers);
-        Map<String, Object> params = new HashMap<>();
-        params.put("type", "custom");
-        params.put("country", "US");
-        params.put("email", "jenny.rosen@example.com");
-        params.put("capabilities", capabilities);
-
-        Account account = Account.create(params);
-
-        return account.getId();
+    @GetMapping(path = "/onboarding-process-complete/{id}")
+    public Map<String, Boolean> isOnboardingProcessComplete(@PathVariable Long id) throws StripeException {
+        return paymentService.isOnboardingProcessComplete(id);
     }
 }

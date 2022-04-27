@@ -1,0 +1,22 @@
+@use "base";
+
+.stripe-page-container {
+  width: base.$main-width;
+  margin: 50px auto auto auto;
+  text-align: center;
+
+  h2 {
+    color: #252525;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    font-weight: 400;
+    color: base.$primary-color;
+    margin-bottom: 10px;
+  }
+
+  .MuiButton-root {
+    border-radius: 0;
+  }
+}
