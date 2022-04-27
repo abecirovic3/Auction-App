@@ -1,14 +1,14 @@
 package com.atlantbh.auctionappbackend.controller;
 
+import com.atlantbh.auctionappbackend.service.PaymentService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
-import com.stripe.model.AccountLink;
-import com.stripe.model.BankAccount;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.AccountLinkCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +19,15 @@ import java.util.Map;
 @RestController
 @RequestMapping(path = "${application.api.prefix}/payment")
 public class PaymentController {
+    private final PaymentService paymentService;
 
-    @Value("${stripe.api.key}")
+    @Value("${stripeApiKey}")
     String stripeApiKey;
+
+    @Autowired
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
     @PostMapping(path = "/create-checkout-session")
     public String createCheckoutSession() throws StripeException {
@@ -61,23 +67,9 @@ public class PaymentController {
         return session.getUrl();
     }
 
-    @PostMapping(path = "/create-account-link")
-    public String createAccountLink() throws StripeException {
-        Stripe.apiKey = stripeApiKey;
-
-        AccountLinkCreateParams params =
-                AccountLinkCreateParams
-                        .builder()
-                        .setAccount("acct_1KsksI4IR8JOdRnp")
-                        .setRefreshUrl("http://localhost:3000/")
-                        .setReturnUrl("http://localhost:3000/")
-                        .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
-                        .setCollect(AccountLinkCreateParams.Collect.EVENTUALLY_DUE)
-                        .build();
-
-        AccountLink accountLink = AccountLink.create(params);
-
-        return accountLink.getUrl();
+    @PostMapping(path = "/create-account-link/{id}")
+    public Map<String, String> createAccountLink(@PathVariable Long id) throws StripeException {
+        return paymentService.createAccountLink(id);
     }
 
     @PostMapping(path = "/create-account")

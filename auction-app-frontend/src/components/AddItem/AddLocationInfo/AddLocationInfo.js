@@ -20,6 +20,9 @@ import endOfMonth from 'date-fns/endOfMonth';
 
 import useDateSelect from 'hooks/useDateSelect';
 import TokenService from 'services/TokenService';
+import PaymentService from 'services/PaymentService';
+
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 import MainTheme from 'themes/MainTheme';
 
@@ -115,6 +118,17 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
         return Object.keys(err).length === 0;
     }
 
+    function handleAddPaymentInfo() {
+        PaymentService.addPaymentInfo()
+            .then(response => {
+                console.log(response.data);
+                window.open(response.data.url, '_blank');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='form-style add-item-price-info'>
@@ -188,81 +202,88 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
                             </Stack>
                         </Stack>
 
-                        <Stack spacing={4}>
+                        <Stack spacing={2}>
                             <p style={{borderBottom: '1px solid #D8D8D8', paddingBottom: '5px'}}>Payment</p>
+                            <Button
+                                variant='contained'
+                                className='nav-buttons'
+                                startIcon={<CreditCardIcon />}
+                                onClick={handleAddPaymentInfo}
+                            >
+                                Add Payment Info
+                            </Button>
+                            {/*<Stack spacing={2}>*/}
+                            {/*    <label htmlFor='nameOnCard'>Name on Card</label>*/}
+                            {/*    <TextField*/}
+                            {/*        id='nameOnCard'*/}
+                            {/*        variant='outlined'*/}
+                            {/*        placeholder='JOHN DOE'*/}
+                            {/*        value={userCard.name}*/}
+                            {/*        onChange={event => {dispatch(setUserCardName(event.target.value))}}*/}
+                            {/*        error={!!errors.userCardName}*/}
+                            {/*        helperText={errors.userCardName}*/}
+                            {/*    />*/}
+                            {/*</Stack>*/}
 
-                            <Stack spacing={2}>
-                                <label htmlFor='nameOnCard'>Name on Card</label>
-                                <TextField
-                                    id='nameOnCard'
-                                    variant='outlined'
-                                    placeholder='JOHN DOE'
-                                    value={userCard.name}
-                                    onChange={event => {dispatch(setUserCardName(event.target.value))}}
-                                    error={!!errors.userCardName}
-                                    helperText={errors.userCardName}
-                                />
-                            </Stack>
+                            {/*<Stack spacing={2}>*/}
+                            {/*    <label htmlFor='cardNumber'>Card Number</label>*/}
+                            {/*    <TextField*/}
+                            {/*        id='cardNumber'*/}
+                            {/*        variant='outlined'*/}
+                            {/*        placeholder='XXXX-XXXX-XXXX-XXXX'*/}
+                            {/*        value={userCard.number}*/}
+                            {/*        onChange={event => {dispatch(setUserCardNumber(event.target.value))}}*/}
+                            {/*        error={!!errors.userCardNumber}*/}
+                            {/*        helperText={errors.userCardNumber}*/}
+                            {/*    />*/}
+                            {/*</Stack>*/}
 
-                            <Stack spacing={2}>
-                                <label htmlFor='cardNumber'>Card Number</label>
-                                <TextField
-                                    id='cardNumber'
-                                    variant='outlined'
-                                    placeholder='XXXX-XXXX-XXXX-XXXX'
-                                    value={userCard.number}
-                                    onChange={event => {dispatch(setUserCardNumber(event.target.value))}}
-                                    error={!!errors.userCardNumber}
-                                    helperText={errors.userCardNumber}
-                                />
-                            </Stack>
+                            {/*<Stack spacing={2} direction='row'>*/}
+                            {/*    <Stack spacing={2} width='66%'>*/}
+                            {/*        <label htmlFor='expirationMonth'>Expiration Date</label>*/}
+                            {/*        <Stack spacing={2} direction='row'>*/}
+                            {/*            <TextField*/}
+                            {/*                id='expirationMonth'*/}
+                            {/*                select*/}
+                            {/*                fullWidth*/}
+                            {/*                label='MM'*/}
+                            {/*                value={userCard.expirationMonth}*/}
+                            {/*                onChange={event => {dispatch(setUserCardExpirationMonth(event.target.value))}}*/}
+                            {/*                error={!!errors.userCardExpirationMonth}*/}
+                            {/*                helperText={errors.userCardExpirationMonth}*/}
+                            {/*            >*/}
+                            {/*                {dateSelect.getMonthsMenuItems()}*/}
+                            {/*            </TextField>*/}
 
-                            <Stack spacing={2} direction='row'>
-                                <Stack spacing={2} width='66%'>
-                                    <label htmlFor='expirationMonth'>Expiration Date</label>
-                                    <Stack spacing={2} direction='row'>
-                                        <TextField
-                                            id='expirationMonth'
-                                            select
-                                            fullWidth
-                                            label='MM'
-                                            value={userCard.expirationMonth}
-                                            onChange={event => {dispatch(setUserCardExpirationMonth(event.target.value))}}
-                                            error={!!errors.userCardExpirationMonth}
-                                            helperText={errors.userCardExpirationMonth}
-                                        >
-                                            {dateSelect.getMonthsMenuItems()}
-                                        </TextField>
+                            {/*            <TextField*/}
+                            {/*                id='expirationYear'*/}
+                            {/*                select*/}
+                            {/*                fullWidth*/}
+                            {/*                label='YY'*/}
+                            {/*                value={userCard.expirationYear}*/}
+                            {/*                onChange={event => {dispatch(setUserCardExpirationYear(event.target.value))}}*/}
+                            {/*                error={!!errors.userCardExpirationYear}*/}
+                            {/*                helperText={errors.userCardExpirationYear}*/}
+                            {/*            >*/}
+                            {/*                {dateSelect.getYearsMenuItems(getYear(new Date()), 10)}*/}
+                            {/*            </TextField>*/}
+                            {/*        </Stack>*/}
+                            {/*    </Stack>*/}
 
-                                        <TextField
-                                            id='expirationYear'
-                                            select
-                                            fullWidth
-                                            label='YY'
-                                            value={userCard.expirationYear}
-                                            onChange={event => {dispatch(setUserCardExpirationYear(event.target.value))}}
-                                            error={!!errors.userCardExpirationYear}
-                                            helperText={errors.userCardExpirationYear}
-                                        >
-                                            {dateSelect.getYearsMenuItems(getYear(new Date()), 10)}
-                                        </TextField>
-                                    </Stack>
-                                </Stack>
-
-                                <Stack spacing={2} width='33%'>
-                                    <label htmlFor='cvv'>CVC/CVV</label>
-                                    <TextField
-                                        id='cvv'
-                                        variant='outlined'
-                                        fullWidth
-                                        placeholder='***'
-                                        value={userCard.cvc}
-                                        onChange={event => {dispatch(setUserCardCvc(event.target.value))}}
-                                        error={!!errors.userCardCvc}
-                                        helperText={errors.userCardCvc}
-                                    />
-                                </Stack>
-                            </Stack>
+                            {/*    <Stack spacing={2} width='33%'>*/}
+                            {/*        <label htmlFor='cvv'>CVC/CVV</label>*/}
+                            {/*        <TextField*/}
+                            {/*            id='cvv'*/}
+                            {/*            variant='outlined'*/}
+                            {/*            fullWidth*/}
+                            {/*            placeholder='***'*/}
+                            {/*            value={userCard.cvc}*/}
+                            {/*            onChange={event => {dispatch(setUserCardCvc(event.target.value))}}*/}
+                            {/*            error={!!errors.userCardCvc}*/}
+                            {/*            helperText={errors.userCardCvc}*/}
+                            {/*        />*/}
+                            {/*    </Stack>*/}
+                            {/*</Stack>*/}
                         </Stack>
 
                         <Box>

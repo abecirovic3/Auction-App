@@ -95,6 +95,12 @@ public class User {
     @JoinColumn(name = "card_id")
     private Card card;
 
+    @JsonIgnore
+    private String stripeAccId;
+
+    @JsonIgnore
+    private String stripeCusId;
+
 
     public User() {
         // No args constructor needed by **framework**
@@ -265,5 +271,21 @@ public class User {
 
     public void setCard(Card card) {
         this.card = card;
+    }
+
+    public String getStripeAccId() {
+        return stripeAccId;
+    }
+
+    public void setStripeAccId(String stripeAccId) {
+        this.stripeAccId = stripeAccId;
+    }
+
+    public String getStripeCusId() {
+        return stripeCusId;
+    }
+
+    public void setStripeCusId(String stripeCusId) {
+        this.stripeCusId = stripeCusId;
     }
 }
