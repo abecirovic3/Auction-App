@@ -51,14 +51,6 @@ const AccountBids = () => {
         return formatDistanceToNowStrict(new Date(endDate));
     }
 
-    function handleTableButtonClick(productId, auctionEndDate, userBid, highestBid) {
-        if (!isPast(auctionEndDate) || userBid !== highestBid) {
-            navigate(`/shop/product-overview/${productId}`)
-        } else {
-            console.log('Redirect to payment form');
-        }
-    }
-
     return (
         <div className='account-bids-container account-table-container'>
             {
@@ -109,12 +101,7 @@ const AccountBids = () => {
                                             className='table-btn'
                                             variant='outlined'
                                             onClick={() => {
-                                                handleTableButtonClick(
-                                                    bid.product?.id,
-                                                    new Date(bid.product?.endDate),
-                                                    bid.amount,
-                                                    bid.product?.highestBid
-                                                )
+                                                navigate(`/shop/product-overview/${bid.product?.id}`)
                                             }}
                                         >
                                             {isPast(new Date(bid.product?.endDate)) ?

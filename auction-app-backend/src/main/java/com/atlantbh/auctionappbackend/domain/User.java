@@ -288,4 +288,8 @@ public class User {
     public void setStripeCusId(String stripeCusId) {
         this.stripeCusId = stripeCusId;
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

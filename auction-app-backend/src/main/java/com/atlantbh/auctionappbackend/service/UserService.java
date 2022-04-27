@@ -113,20 +113,4 @@ public class UserService {
     public List<ProductUserBid> getAllBids(Long id) {
         return productUserBidRepository.findMaxProductBidsByUser(id);
     }
-
-    public User updateUserCardInfo(Long id, Card card) {
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "User with id " + id + " doesn't exist"
-            );
-        }
-
-        User user = userOptional.get();
-        user.setCard(getUserCard(card));
-
-        return userRepository.save(user);
-    }
 }

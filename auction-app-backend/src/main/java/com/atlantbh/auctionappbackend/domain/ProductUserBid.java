@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Entity(name = "ProductUserBid")
@@ -107,6 +108,8 @@ public class ProductUserBid {
             ProductImage productImage = new ProductImage();
             productImage.setImageUrl(imageUrl);
             this.product.setImages(Collections.singletonList(productImage));
+        } else {
+            this.product.setImages(new ArrayList<>());
         }
     }
 

@@ -1,19 +1,25 @@
 package com.atlantbh.auctionappbackend.service;
 
+import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
+import com.atlantbh.auctionappbackend.request.PayIntentRequest;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
 import com.stripe.model.AccountLink;
+import com.stripe.model.Customer;
+import com.stripe.model.checkout.Session;
 import com.stripe.param.AccountCreateParams;
 import com.stripe.param.AccountLinkCreateParams;
+import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +27,7 @@ import java.util.Optional;
 @Service
 public class PaymentService {
     private final UserRepository userRepository;
+    private final ProductService productService;
 
     @Value("${stripeApiKey}")
     String stripeApiKey;
@@ -29,8 +36,9 @@ public class PaymentService {
     String clientBaseUrl;
 
     @Autowired
-    public PaymentService(UserRepository userRepository) {
+    public PaymentService(UserRepository userRepository, ProductService productService) {
         this.userRepository = userRepository;
+        this.productService = productService;
     }
 
     public Map<String, String> createAccountLink(Long id) throws StripeException {
@@ -113,6 +121,95 @@ public class PaymentService {
         res.put("charges-enabled", account.getChargesEnabled());
         res.put("details-submitted", account.getDetailsSubmitted());
 
+        return res;
+    }
+
+    public Map<String, String> createCheckoutSession(PayIntentRequest payIntentRequest) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+
+        Product product = productService.getProductOverview(payIntentRequest.getProduct().getId());
+
+        if (!product.getHighestBidder().getId().equals(payIntentRequest.getBuyer().getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Buyer must be highest bidder"
+            );
+        }
+
+        if (product.getEndDate().isAfter(LocalDateTime.now())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Auction is still active"
+            );
+        }
+
+        if (product.getSeller().getStripeAccId() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Seller didn't provide payment info"
+            );
+        }
+
+        Optional<User> userOptional = userRepository.findById(payIntentRequest.getBuyer().getId());
+
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Buyer doesn't exist"
+            );
+        }
+
+        User buyer = userOptional.get();
+
+        Customer customer;
+
+        if (buyer.getStripeCusId() == null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("email", buyer.getEmail());
+            params.put("name", buyer.getFullName());
+
+            customer = Customer.create(params);
+
+            buyer.setStripeCusId(customer.getId());
+            userRepository.save(buyer);
+        } else {
+            customer = Customer.retrieve(buyer.getStripeCusId());
+        }
+
+        SessionCreateParams params =
+                SessionCreateParams.builder()
+                        .addLineItem(
+                                SessionCreateParams.LineItem.builder()
+                                        .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
+                                                .setCurrency("usd")
+                                                .setUnitAmount((long) (product.getHighestBid() * 100))
+                                                .setProductData(
+                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                .setName(product.getName())
+                                                                .build())
+                                                .build())
+                                        .setQuantity(1L)
+                                        .build())
+                        .setMode(SessionCreateParams.Mode.PAYMENT)
+                        .setSuccessUrl("http://localhost:3000/")
+                        .setCancelUrl("http://localhost:3000/")
+                        .setCustomer(customer.getId())
+                        .setPaymentIntentData(
+                                SessionCreateParams.PaymentIntentData.builder()
+                                        .setSetupFutureUsage(SessionCreateParams.PaymentIntentData.SetupFutureUsage.ON_SESSION)
+                                        .setApplicationFeeAmount(123L)
+                                        .setOnBehalfOf(product.getSeller().getStripeAccId())
+                                        .setTransferData(
+                                                SessionCreateParams.PaymentIntentData.TransferData.builder()
+                                                        .setDestination(product.getSeller().getStripeAccId())
+                                                        .build())
+                                        .build())
+                        .build();
+
+        Session session = Session.create(params);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("url", session.getUrl());
         return res;
     }
 }

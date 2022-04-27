@@ -48,8 +48,7 @@
       opacity: 50%;
     }
 
-    .MuiInputBase-root,
-    .MuiButton-root {
+    .MuiInputBase-root {
       border-radius: 0;
       height: 3em;
     }
@@ -62,14 +61,45 @@
     .bid-input-field {
       width: 60%;
     }
+  }
 
-    .place-bid-btn {
-      gap: 30px;
-      font-size: 18px;
-      font-weight: 700;
-      color: #252525;
-      border: 3px solid base.$primary-color;
-      width: 35%;
+  .form-btn {
+    gap: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #252525;
+    border: 2px solid base.$primary-color;
+    width: 35%;
+    border-radius: 0;
+    height: 3em;
+  }
+
+  .form-btn:hover {
+    border: 3px solid base.$primary-color;
+  }
+
+  .pay-form-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .seller-info-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+
+      img {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+      }
+
+      .label {
+        font-weight: 400;
+        color: #9B9B9B;
+      }
     }
   }
 

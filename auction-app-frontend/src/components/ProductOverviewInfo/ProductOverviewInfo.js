@@ -6,9 +6,11 @@ import TokenService from 'services/TokenService';
 import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
+import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
+import PaymentService from 'services/PaymentService';
 
 const ProductOverviewInfo = ({ product, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
@@ -33,7 +35,30 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     }
 
     function showPlaceBidForm() {
-        return TokenService.getUserCredentials()?.id !== product.seller.id && !AuctionTimeUtil.auctionEnded(product.endDate);
+        return TokenService.getUserCredentials()?.id !== product.seller.id &&
+            !AuctionTimeUtil.auctionEnded(product.endDate);
+    }
+
+    function showPayForm() {
+        return AuctionTimeUtil.auctionEnded(product.endDate) &&
+            TokenService.getUserCredentials()?.id === product.highestBidder?.id
+    }
+
+    function handlePay() {
+        PaymentService.initiatePayment({
+            product: {
+                id: product.id
+            },
+            buyer: {
+                id: TokenService.getUserCredentials()?.id
+            }
+        })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     return (
@@ -76,12 +101,34 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                             />
                             <Button
                                 disabled={!userLoggedIn}
-                                className='place-bid-btn'
+                                className='form-btn'
                                 variant='outlined'
                                 endIcon={<RightArrow />}
                                 onClick={() => {handlePlaceBid()}}
                             >
                                 Place Bid
+                            </Button>
+                        </div>
+                    }
+
+                    {showPayForm() &&
+                        <div className='pay-form-container'>
+                            <div className='seller-info-container'>
+                                <p className='label'>Seller:</p>
+                                <img
+                                    src={product.seller?.photoUrl || imagePlaceholder}
+                                    alt='user'
+                                />
+                                <p>{product.seller?.firstName + ' ' + product.seller?.lastName}</p>
+                            </div>
+                            <Button
+                                disabled={!userLoggedIn}
+                                className='form-btn'
+                                variant='outlined'
+                                endIcon={<RightArrow />}
+                                onClick={handlePay}
+                            >
+                                Pay
                             </Button>
                         </div>
                     }
