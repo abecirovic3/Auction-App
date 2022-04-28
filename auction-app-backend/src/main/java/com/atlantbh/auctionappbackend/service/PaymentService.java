@@ -55,6 +55,27 @@ public class PaymentService {
 
         User user = userOptional.get();
 
+        Account account = findOrCreateStripeAccount(user);
+
+        AccountLinkCreateParams params =
+                AccountLinkCreateParams
+                        .builder()
+                        .setAccount(account.getId())
+                        .setRefreshUrl(clientBaseUrl + "/stripe-onboarding-refresh")
+                        .setReturnUrl(clientBaseUrl + "/stripe-onboarding-return")
+                        .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
+                        .setCollect(AccountLinkCreateParams.Collect.EVENTUALLY_DUE)
+                        .build();
+
+        AccountLink accountLink = AccountLink.create(params);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("url", accountLink.getUrl());
+
+        return res;
+    }
+
+    private Account findOrCreateStripeAccount(User user) throws StripeException {
         Account account;
 
         if (user.getStripeAccId() == null) {
@@ -74,22 +95,7 @@ public class PaymentService {
             account = Account.retrieve(user.getStripeAccId());
         }
 
-        AccountLinkCreateParams params =
-                AccountLinkCreateParams
-                        .builder()
-                        .setAccount(account.getId())
-                        .setRefreshUrl(clientBaseUrl + "/stripe-onboarding-refresh")
-                        .setReturnUrl(clientBaseUrl + "/stripe-onboarding-return")
-                        .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
-                        .setCollect(AccountLinkCreateParams.Collect.EVENTUALLY_DUE)
-                        .build();
-
-        AccountLink accountLink = AccountLink.create(params);
-
-        Map<String, String> res = new HashMap<>();
-        res.put("url", accountLink.getUrl());
-
-        return res;
+        return account;
     }
 
     public Map<String, Boolean> isOnboardingProcessComplete(Long id) throws StripeException {
@@ -129,6 +135,75 @@ public class PaymentService {
 
         Product product = productService.getProductOverview(payIntentRequest.getProduct().getId());
 
+        validateProduct(product, payIntentRequest);
+
+        Optional<User> userOptional = userRepository.findById(payIntentRequest.getBuyer().getId());
+
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Buyer doesn't exist"
+            );
+        }
+
+        User buyer = userOptional.get();
+
+        Customer customer = findOrCreateStripeCustomer(buyer);
+
+        SessionCreateParams params =
+                SessionCreateParams.builder()
+                        .addLineItem(
+                                SessionCreateParams.LineItem.builder()
+                                        .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
+                                                .setCurrency("usd")
+                                                .setUnitAmount((long) (product.getHighestBid() * 100))
+                                                .setProductData(
+                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                .setName(product.getName())
+                                                                .build())
+                                                .build())
+                                        .setQuantity(1L)
+                                        .build())
+                        .setMode(SessionCreateParams.Mode.PAYMENT)
+                        .setSuccessUrl("http://localhost:3000?session_id={CHECKOUT_SESSION_ID}")
+                        .setCancelUrl("http://localhost:3000/")
+                        .setCustomer(customer.getId())
+                        .setPaymentIntentData(
+                                SessionCreateParams.PaymentIntentData.builder()
+                                        .setSetupFutureUsage(SessionCreateParams.PaymentIntentData.SetupFutureUsage.ON_SESSION)
+                                        .setOnBehalfOf(product.getSeller().getStripeAccId())
+                                        .setTransferData(
+                                                SessionCreateParams.PaymentIntentData.TransferData.builder()
+                                                        .setDestination(product.getSeller().getStripeAccId())
+                                                        .build())
+                                        .build())
+                        .build();
+
+        Session session = Session.create(params);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("url", session.getUrl());
+        return res;
+    }
+
+    private Customer findOrCreateStripeCustomer(User buyer) throws StripeException {
+        Customer customer;
+        if (buyer.getStripeCusId() == null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("email", buyer.getEmail());
+            params.put("name", buyer.getFullName());
+
+            customer = Customer.create(params);
+
+            buyer.setStripeCusId(customer.getId());
+            userRepository.save(buyer);
+        } else {
+            customer = Customer.retrieve(buyer.getStripeCusId());
+        }
+        return customer;
+    }
+
+    private void validateProduct(Product product, PayIntentRequest payIntentRequest) {
         if (!product.getHighestBidder().getId().equals(payIntentRequest.getBuyer().getId())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -149,67 +224,5 @@ public class PaymentService {
                     "Seller didn't provide payment info"
             );
         }
-
-        Optional<User> userOptional = userRepository.findById(payIntentRequest.getBuyer().getId());
-
-        if (userOptional.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Buyer doesn't exist"
-            );
-        }
-
-        User buyer = userOptional.get();
-
-        Customer customer;
-
-        if (buyer.getStripeCusId() == null) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("email", buyer.getEmail());
-            params.put("name", buyer.getFullName());
-
-            customer = Customer.create(params);
-
-            buyer.setStripeCusId(customer.getId());
-            userRepository.save(buyer);
-        } else {
-            customer = Customer.retrieve(buyer.getStripeCusId());
-        }
-
-        SessionCreateParams params =
-                SessionCreateParams.builder()
-                        .addLineItem(
-                                SessionCreateParams.LineItem.builder()
-                                        .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
-                                                .setCurrency("usd")
-                                                .setUnitAmount((long) (product.getHighestBid() * 100))
-                                                .setProductData(
-                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                .setName(product.getName())
-                                                                .build())
-                                                .build())
-                                        .setQuantity(1L)
-                                        .build())
-                        .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setSuccessUrl("http://localhost:3000/")
-                        .setCancelUrl("http://localhost:3000/")
-                        .setCustomer(customer.getId())
-                        .setPaymentIntentData(
-                                SessionCreateParams.PaymentIntentData.builder()
-                                        .setSetupFutureUsage(SessionCreateParams.PaymentIntentData.SetupFutureUsage.ON_SESSION)
-                                        .setApplicationFeeAmount(123L)
-                                        .setOnBehalfOf(product.getSeller().getStripeAccId())
-                                        .setTransferData(
-                                                SessionCreateParams.PaymentIntentData.TransferData.builder()
-                                                        .setDestination(product.getSeller().getStripeAccId())
-                                                        .build())
-                                        .build())
-                        .build();
-
-        Session session = Session.create(params);
-
-        Map<String, String> res = new HashMap<>();
-        res.put("url", session.getUrl());
-        return res;
     }
 }
