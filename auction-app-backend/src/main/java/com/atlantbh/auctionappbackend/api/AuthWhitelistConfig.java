@@ -32,6 +32,7 @@ public class AuthWhitelistConfig {
                 apiConfig.getPrefix() + "/categories/**",
                 apiConfig.getPrefix() + "/price-range",
                 apiConfig.getPrefix() + "/countries",
+                apiConfig.getPrefix() + "/stripe/**",
                 apiConfig.getPrefix() + "/health"
         };
     }

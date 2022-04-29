@@ -106,6 +106,8 @@ public class Product {
     private String color;
     private Double highestBid;
 
+    private Boolean sold;
+
     @Transient
     private Integer numberOfBids;
 
@@ -317,5 +319,13 @@ public class Product {
 
     public void setHighestBidder(User highestBidder) {
         this.highestBidder = highestBidder;
+    }
+
+    public Boolean getSold() {
+        return sold;
+    }
+
+    public void setSold(Boolean sold) {
+        this.sold = sold;
     }
 }

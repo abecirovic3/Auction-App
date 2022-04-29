@@ -2,12 +2,8 @@ package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.request.PayIntentRequest;
 import com.atlantbh.auctionappbackend.service.PaymentService;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +17,6 @@ import java.util.Map;
 @RequestMapping(path = "${application.api.prefix}/payment")
 public class PaymentController {
     private final PaymentService paymentService;
-
-    @Value("${stripeApiKey}")
-    String stripeApiKey;
 
     @Autowired
     public PaymentController(PaymentService paymentService) {

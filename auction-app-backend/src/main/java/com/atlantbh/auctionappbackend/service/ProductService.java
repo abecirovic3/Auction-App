@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class ProductService {
     private final ProductUserBidRepository productUserBidRepository;
     private final PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
     private final StreetService streetService;
-    private final UserService userService;
 
     @Autowired
     public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation, StreetService streetService, UserService userService) {
@@ -36,7 +36,6 @@ public class ProductService {
         this.productUserBidRepository = productUserBidRepository;
         this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
         this.streetService = streetService;
-        this.userService = userService;
     }
 
     public Product getProductOverview(Long id) {
@@ -161,5 +160,10 @@ public class ProductService {
         product.setStreet(streetService.findOrCreateLocation(product.getStreet()));
 
         return productRepository.save(product);
+    }
+
+    @Transactional
+    public void setProductToSold(long productId) {
+        productRepository.updateSold(productId, true);
     }
 }

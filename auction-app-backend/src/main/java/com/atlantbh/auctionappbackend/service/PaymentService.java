@@ -31,10 +31,10 @@ public class PaymentService {
     private final UserRepository userRepository;
     private final ProductService productService;
 
-    @Value("${stripeApiKey}")
+    @Value("${STRIPE_API_KEY}")
     String stripeApiKey;
 
-    @Value("${clientBaseUrl}")
+    @Value("${CLIENT_BASE_URL}")
     String clientBaseUrl;
 
     @Autowired

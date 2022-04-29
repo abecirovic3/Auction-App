@@ -51,6 +51,18 @@ const AccountBids = () => {
         return formatDistanceToNowStrict(new Date(endDate));
     }
 
+    function getButtonMessage(endDate, userBid, highestBid, isProductSold) {
+        if (!isPast(endDate)) {
+            return 'Bid';
+        }
+
+        if (userBid === highestBid && !isProductSold) {
+            return 'Pay';
+        }
+
+        return 'View';
+    }
+
     return (
         <div className='account-bids-container account-table-container'>
             {
@@ -104,9 +116,13 @@ const AccountBids = () => {
                                                 navigate(`/shop/product-overview/${bid.product?.id}`)
                                             }}
                                         >
-                                            {isPast(new Date(bid.product?.endDate)) ?
-                                                (bid.amount === bid.product?.highestBid ? 'Pay' : 'View') :
-                                                'Bid'
+                                            {
+                                                getButtonMessage(
+                                                    new Date(bid.product?.endDate),
+                                                    bid.amount,
+                                                    bid.product?.highestBid,
+                                                    bid.product?.sold
+                                                )
                                             }
                                         </Button>
                                     </TableCell>

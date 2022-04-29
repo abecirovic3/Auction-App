@@ -4,14 +4,14 @@ import { Button, CircularProgress, Stack, TextField, ThemeProvider } from '@mui/
 
 import TokenService from 'services/TokenService';
 import AuctionTimeUtil from 'utils/AuctionTimeUtil';
+import PaymentService from 'services/PaymentService';
+import useLoginService from 'hooks/useLoginService';
 
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
-import PaymentService from 'services/PaymentService';
-import useLoginService from 'hooks/useLoginService';
 
 const ProductOverviewInfo = ({ product, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
@@ -26,7 +26,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
         const sessionId = new URLSearchParams(window.location.search).get(
             'session_id'
         );
-        if (showPayForm() && sessionId) {
+        if (sessionId && !product.sold && showPayForm()) {
             loginService.isUserLoggedIn()
                 .then(() => {
                     PaymentService.getPaymentSessionStatus(sessionId)
@@ -42,6 +42,8 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                 .catch(() => {
                     loginService.reinitiateLogin();
                 })
+        } else if (product.sold) {
+            setPaymentStatus('succeeded');
         } else {
             setLoadingProductStatus(false);
         }
