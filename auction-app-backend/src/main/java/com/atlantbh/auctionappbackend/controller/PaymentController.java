@@ -44,4 +44,9 @@ public class PaymentController {
     public Map<String, Boolean> isOnboardingProcessComplete(@PathVariable Long id) throws StripeException {
         return paymentService.isOnboardingProcessComplete(id);
     }
+
+    @GetMapping(path = "/session-status/{id}")
+    public Map<String, String> getSessionStatus(@PathVariable String id) throws StripeException {
+        return paymentService.getPaymentSessionStatus(id);
+    }
 }

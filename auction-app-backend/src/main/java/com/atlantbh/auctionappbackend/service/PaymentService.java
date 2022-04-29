@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -165,11 +167,12 @@ public class PaymentService {
                                         .setQuantity(1L)
                                         .build())
                         .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setSuccessUrl("http://localhost:3000?session_id={CHECKOUT_SESSION_ID}")
-                        .setCancelUrl("http://localhost:3000/")
+                        .setSuccessUrl("http://localhost:3000/shop/product-overview/" + product.getId() + "?session_id={CHECKOUT_SESSION_ID}")
+                        .setCancelUrl("http://localhost:3000/shop/product-overview/" + product.getId())
                         .setCustomer(customer.getId())
                         .setPaymentIntentData(
                                 SessionCreateParams.PaymentIntentData.builder()
+                                        .putMetadata("product_id", product.getId().toString())
                                         .setSetupFutureUsage(SessionCreateParams.PaymentIntentData.SetupFutureUsage.ON_SESSION)
                                         .setOnBehalfOf(product.getSeller().getStripeAccId())
                                         .setTransferData(
@@ -224,5 +227,22 @@ public class PaymentService {
                     "Seller didn't provide payment info"
             );
         }
+    }
+
+    public Map<String, String> getPaymentSessionStatus(String sessionId) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+
+        List<String> expandList = new ArrayList<>();
+        expandList.add("payment_intent");
+
+        Map<String, Object> expandParams = new HashMap<>();
+        expandParams.put("expand", expandList);
+
+        Session session = Session.retrieve(sessionId, expandParams, null);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("payment_status", session.getPaymentIntentObject().getStatus());
+
+        return res;
     }
 }

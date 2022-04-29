@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import TokenService from 'services/TokenService';
 import AuctionTimeUtil from 'utils/AuctionTimeUtil';
@@ -11,11 +11,50 @@ import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
 import PaymentService from 'services/PaymentService';
+import useLoginService from 'hooks/useLoginService';
 
 const ProductOverviewInfo = ({ product, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
+    const loginService = useLoginService();
     const [bidAmount, setBidAmount] = useState('');
     const [bidValueError, setBidValueError] = useState(false);
+    const [paymentStatus, setPaymentStatus] = useState('');
+    const [loadingProductStatus, setLoadingProductStatus] = useState(true);
+    const isInitialMount = useRef(true);
+
+    useEffect(() => {
+        const sessionId = new URLSearchParams(window.location.search).get(
+            'session_id'
+        );
+        if (showPayForm() && sessionId) {
+            loginService.isUserLoggedIn()
+                .then(() => {
+                    PaymentService.getPaymentSessionStatus(sessionId)
+                        .then(response => {
+                            console.log(response);
+                            setPaymentStatus(response.data['payment_status']);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            setLoadingProductStatus(false);
+                        })
+                })
+                .catch(() => {
+                    loginService.reinitiateLogin();
+                })
+        } else {
+            setLoadingProductStatus(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            setLoadingProductStatus(false);
+        }
+    }, [paymentStatus])
 
     function validateBid() {
         if (isNaN(parseFloat(bidAmount))) {
@@ -55,10 +94,24 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
         })
             .then(response => {
                 console.log(response);
+                window.open(response.data.url, '_self');
             })
             .catch(err => {
                 console.log(err);
             })
+    }
+
+    function getPayFormElement() {
+        // TODO maybe implement better messaging
+        if (paymentStatus === 'succeeded') {
+            return <h1 className='sold-message'>SOLD</h1>
+        } else if (paymentStatus === 'processing') {
+            return <h2 className='processing-payment-message'>Processing payment...</h2>
+        } else if (paymentStatus === 'requires_payment_method') {
+            return <h2 className='processing-payment-message'>Payment details needed</h2>
+        } else {
+            return <h2 className='payment-failed'>Payment unsuccessful</h2>
+        }
     }
 
     return (
@@ -121,15 +174,21 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                                 />
                                 <p>{product.seller?.firstName + ' ' + product.seller?.lastName}</p>
                             </div>
-                            <Button
-                                disabled={!userLoggedIn}
-                                className='form-btn'
-                                variant='outlined'
-                                endIcon={<RightArrow />}
-                                onClick={handlePay}
-                            >
-                                Pay
-                            </Button>
+                            {loadingProductStatus ?
+                                <CircularProgress /> :
+                                (!paymentStatus ?
+                                        <Button
+                                            disabled={!userLoggedIn}
+                                            className='form-btn'
+                                            variant='outlined'
+                                            endIcon={<RightArrow />}
+                                            onClick={handlePay}
+                                        >
+                                            Pay
+                                        </Button> :
+                                        getPayFormElement()
+                                )
+                            }
                         </div>
                     }
 

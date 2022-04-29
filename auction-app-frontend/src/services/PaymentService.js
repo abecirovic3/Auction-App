@@ -13,10 +13,15 @@ function initiatePayment(data) {
     return api.post(`/payment/create-checkout-session`, data);
 }
 
+function getPaymentSessionStatus(sessionId) {
+    return api.get(`payment/session-status/${sessionId}`);
+}
+
 const PaymentService = {
     addPaymentInfo,
     isOnboardingComplete,
-    initiatePayment
+    initiatePayment,
+    getPaymentSessionStatus
 };
 
 export default PaymentService;
