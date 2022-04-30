@@ -7,6 +7,8 @@ import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 import PaymentService from 'services/PaymentService';
 import useLoginService from 'hooks/useLoginService';
 
+import CustomAlert from 'components/Alert/CustomAlert';
+
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 
@@ -21,6 +23,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     const [paymentStatus, setPaymentStatus] = useState('');
     const [loadingProductStatus, setLoadingProductStatus] = useState(true);
     const isInitialMount = useRef(true);
+    const [errorAlerts, setErrorAlerts] = useState([]);
 
     useEffect(() => {
         const sessionId = new URLSearchParams(window.location.search).get(
@@ -31,11 +34,14 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                 .then(() => {
                     PaymentService.getPaymentSessionStatus(sessionId)
                         .then(response => {
-                            console.log(response);
                             setPaymentStatus(response.data['payment_status']);
                         })
                         .catch(err => {
-                            console.log(err);
+                            if (err.response.status === 403) {
+                                loginService.reinitiateLogin();
+                            } else {
+                                setErrorAlerts([...errorAlerts, err.response.data]);
+                            }
                             setLoadingProductStatus(false);
                         })
                 })
@@ -95,16 +101,18 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
             }
         })
             .then(response => {
-                console.log(response);
                 window.open(response.data.url, '_self');
             })
             .catch(err => {
-                console.log(err);
-            })
+                if (err.response.status === 403) {
+                    loginService.reinitiateLogin();
+                } else {
+                    setErrorAlerts([...errorAlerts, err.response.data]);
+                }
+            });
     }
 
     function getPayFormElement() {
-        // TODO maybe implement better messaging
         if (paymentStatus === 'succeeded') {
             return <h1 className='sold-message'>SOLD</h1>
         } else if (paymentStatus === 'processing') {
@@ -119,6 +127,16 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     return (
         <ThemeProvider theme={MainTheme}>
             <div className='product-overview-info-container'>
+                {
+                    errorAlerts.map((err, i) =>
+                        <CustomAlert
+                            key={i} color='error'
+                            error={err}
+                            showAlertDuration={60000}
+                            marginBottom='10px'
+                        />
+                    )
+                }
                 <Stack gap={4} >
                     <Stack gap={2} >
                         <h3 className='product-name'>{product.name}</h3>

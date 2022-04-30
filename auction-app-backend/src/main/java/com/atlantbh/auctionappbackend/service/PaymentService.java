@@ -167,7 +167,8 @@ public class PaymentService {
                                         .setQuantity(1L)
                                         .build())
                         .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setSuccessUrl("http://localhost:3000/shop/product-overview/" + product.getId() + "?session_id={CHECKOUT_SESSION_ID}")
+                        .setSuccessUrl("http://localhost:3000/shop/product-overview/"
+                                + product.getId() + "?session_id={CHECKOUT_SESSION_ID}")
                         .setCancelUrl("http://localhost:3000/shop/product-overview/" + product.getId())
                         .setCustomer(customer.getId())
                         .setPaymentIntentData(

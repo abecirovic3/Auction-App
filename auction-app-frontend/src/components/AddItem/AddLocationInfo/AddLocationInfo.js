@@ -22,6 +22,7 @@ import {
 import TokenService from 'services/TokenService';
 import PaymentService from 'services/PaymentService';
 import StripeService from 'services/StripeService';
+import useAddItemService from 'hooks/useAddItemService';
 
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 
@@ -39,6 +40,8 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const dispatch = useDispatch();
 
     const [errors, setErrors] = useState({});
+
+    const addItemService = useAddItemService();
 
     useEffect(() => {
         const streetData = TokenService.getUserCredentials().street;
@@ -93,7 +96,7 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
                 setLoading(false);
             })
             .catch(err => {
-                console.log(err);
+                addItemService.handleError(err);
                 setLoading(false);
             });
     }
