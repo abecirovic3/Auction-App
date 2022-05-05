@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import { setDisableFilters, setSort } from 'features/productFilters/productFiltersSlice';
-import { setProducts, setPage, setIsLastPage, setGridItemWidth } from 'features/shop/shopSlice';
+import { setProducts, setPage, setIsLastPage, setGridItemWidth, setSearchSuggestion } from 'features/shop/shopSlice';
 
 import ProductService from 'services/ProductService';
 import useShopService from 'hooks/useShopService';
@@ -90,12 +90,13 @@ const ShopProductsGrid = () => {
         ProductService.getProducts(page, size, filters, sortKey, sortDirection, search)
             .then(response => {
                 if (initFetch) {
-                    dispatch(setProducts(response.data.data));
+                    dispatch(setProducts(response.data.paginatedData.data));
                 } else {
-                    dispatch(setProducts([...products, ...response.data.data]));
+                    dispatch(setProducts([...products, ...response.data.paginatedData.data]));
                 }
-                dispatch(setIsLastPage(response.data.currentPage + 1 >= response.data.totalPages));
+                dispatch(setIsLastPage(response.data.paginatedData.currentPage + 1 >= response.data.paginatedData.totalPages));
                 dispatch(setDisableFilters(false));
+                dispatch(setSearchSuggestion(response.data.searchSuggestion));
                 setLoading(false);
             })
             .catch(err => {

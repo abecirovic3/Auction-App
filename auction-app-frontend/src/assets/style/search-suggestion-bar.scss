@@ -1,0 +1,26 @@
+@use "base";
+
+.search-suggestion-container {
+  background-color: #FAFAFA;
+
+  .search-suggestion-content-container {
+    width: base.$main-width;
+    margin: auto;
+
+    h3 {
+      color: #9B9B9B;
+      display: inline;
+      font-weight: 400;
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    .suggestion-btn {
+      color: base.$primary-color;
+      font-size: 18px;
+      text-transform: none;
+      font-weight: 400;
+      padding: 0;
+    }
+  }
+}

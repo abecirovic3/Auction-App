@@ -1,7 +1,6 @@
 package com.atlantbh.auctionappbackend.controller;
 
-import com.atlantbh.auctionappbackend.domain.Product;
-import com.atlantbh.auctionappbackend.response.PaginatedResponse;
+import com.atlantbh.auctionappbackend.response.ProductsResponse;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/products/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+    public ResponseEntity<com.atlantbh.auctionappbackend.domain.Product> getProduct(@PathVariable Long id) {
         return new ResponseEntity<>(
                 productService.getProductOverview(id),
                 HttpStatus.OK
@@ -42,7 +41,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/products")
-    public ResponseEntity<PaginatedResponse<Product>> getAllProducts(
+    public ResponseEntity<ProductsResponse> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
             @RequestParam(required = false) List<Long> categories,
@@ -61,7 +60,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/product/add")
-    public ResponseEntity<Product> createProduct(@RequestBody @Valid Product product) {
+    public ResponseEntity<com.atlantbh.auctionappbackend.domain.Product> createProduct(@RequestBody @Valid com.atlantbh.auctionappbackend.domain.Product product) {
         return new ResponseEntity<>(
                 productService.createProduct(product),
                 HttpStatus.OK

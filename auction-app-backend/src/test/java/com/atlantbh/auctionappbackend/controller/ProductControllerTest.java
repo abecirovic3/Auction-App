@@ -2,6 +2,7 @@ package com.atlantbh.auctionappbackend.controller;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
+import com.atlantbh.auctionappbackend.response.ProductsResponse;
 import com.atlantbh.auctionappbackend.security.SecurityConfig;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,8 +71,9 @@ public class ProductControllerTest {
         ));
 
         PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products, 0, 2, 2);
+        ProductsResponse productsResponse = new ProductsResponse(paginatedResponse, null);
 
-        when(productService.getAll(anyInt(), anyInt(), any(), any(), any(), any(), any(), any())).thenReturn(paginatedResponse);
+        when(productService.getAll(anyInt(), anyInt(), any(), any(), any(), any(), any(), any())).thenReturn(productsResponse);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get(apiPrefix + "/products")
@@ -79,9 +81,7 @@ public class ProductControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"data\"")))
-                .andExpect(content().string(containsString("\"currentPage\"")))
-                .andExpect(content().string(containsString("\"totalElements\"")))
-                .andExpect(content().string(containsString("\"totalPages\"")));
+                .andExpect(content().string(containsString("\"searchSuggestion\"")));
     }
 
     private String asJsonString(final Object obj) {
