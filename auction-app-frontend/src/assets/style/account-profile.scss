@@ -40,6 +40,10 @@
     }
   }
 
+  .heading-error {
+    border-bottom: 1px solid red;
+  }
+
   .personal-info-container,
   .card-info-container,
   .location-info-container {
@@ -68,6 +72,10 @@
       overflow: hidden;
       text-align: center;
       margin-bottom: 20px;
+    }
+
+    .circular-progress {
+      margin: 165px;
     }
   }
 

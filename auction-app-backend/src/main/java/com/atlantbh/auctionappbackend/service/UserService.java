@@ -19,6 +19,7 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,9 +110,8 @@ public class UserService {
         }
     }
 
-    public String deleteUser(Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
-        return "Account deactivated successfully";
     }
 
     public List<ProductUserBid> getAllBids(Long id) {
