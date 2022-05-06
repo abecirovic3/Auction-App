@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.PriceRange;
+import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
@@ -42,15 +43,15 @@ public class ProductService {
         this.streetService = streetService;
     }
 
-    public com.atlantbh.auctionappbackend.domain.Product getProductOverview(Long id) {
-        Optional<com.atlantbh.auctionappbackend.domain.Product> optionalProduct = productRepository.findById(id);
+    public Product getProductOverview(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Product with id " + id + " doesn't exist"
             );
         } else {
-            com.atlantbh.auctionappbackend.domain.Product product = optionalProduct.get();
+            Product product = optionalProduct.get();
             List<ProductUserBid> productBids =
                     productUserBidRepository.findByProduct(product, Sort.by("amount").descending());
             product.setHighestBid(productBids.size() > 0 ? productBids.get(0).getAmount() : null);
@@ -94,7 +95,7 @@ public class ProductService {
             sort = Sort.by(sortOrders);
         }
 
-        Page<com.atlantbh.auctionappbackend.domain.Product> pageProducts = productRepository.findAll(
+        Page<Product> pageProducts = productRepository.findAll(
                 categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, sort)
         );
 
@@ -127,11 +128,6 @@ public class ProductService {
 
         while (products.size() != 0) {
             pageable = pageable.next();
-            System.out.println("#####################################");
-            for (ProductNameOnlyProjection p : products) {
-                System.out.println(p.getName());
-            }
-            System.out.println("#####################################");
 
             if (products.get(0).getName().compareToIgnoreCase(searchedValue) > 0) {
                 return null;
@@ -210,7 +206,7 @@ public class ProductService {
         return priceRangeRepositoryImplementation.getProductPriceRange();
     }
 
-    public com.atlantbh.auctionappbackend.domain.Product createProduct(com.atlantbh.auctionappbackend.domain.Product product) {
+    public Product createProduct(Product product) {
         if (product.getEndDate().isBefore(product.getStartDate())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
