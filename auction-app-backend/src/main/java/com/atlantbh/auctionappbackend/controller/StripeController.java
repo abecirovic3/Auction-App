@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.controller;
 
+import com.atlantbh.auctionappbackend.service.EmailJobSchedulerService;
 import com.atlantbh.auctionappbackend.service.ProductService;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
@@ -27,9 +28,11 @@ public class StripeController {
     String stripeWebhookSecret;
 
     private final ProductService productService;
+    private final EmailJobSchedulerService emailJobSchedulerService;
 
-    public StripeController(ProductService productService) {
+    public StripeController(ProductService productService, EmailJobSchedulerService emailJobSchedulerService) {
         this.productService = productService;
+        this.emailJobSchedulerService = emailJobSchedulerService;
     }
 
     @PostMapping(path = "/payment-intent-webhook")
@@ -73,6 +76,11 @@ public class StripeController {
                 PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
                 System.out.println("Payment for product " + paymentIntent.getMetadata().get("product_id") + " succeeded.");
                 productService.setProductToSold(Long.parseLong(paymentIntent.getMetadata().get("product_id")));
+                emailJobSchedulerService.scheduleSellerReviewEmail(
+                        paymentIntent.getMetadata().get("buyer_name"),
+                        paymentIntent.getMetadata().get("buyer_email"),
+                        paymentIntent.getMetadata().get("product_id")
+                );
             } else if ("payment_intent.payment_failed".equals(event.getType())) {
                 // TODO handle payment fail, maybe send email or smt
             }
