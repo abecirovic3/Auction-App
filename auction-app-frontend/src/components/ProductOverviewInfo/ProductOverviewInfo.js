@@ -10,10 +10,11 @@ import useLoginService from 'hooks/useLoginService';
 import CustomAlert from 'components/Alert/CustomAlert';
 
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
-import imagePlaceholder from 'assets/img/imagePlaceholder.png';
+import userImagePlaceholder from 'assets/img/profile-placeholder.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
+import SellerRatingOverview from 'components/ProductOverviewInfo/SellerRatingOverview';
 
 const ProductOverviewInfo = ({ product, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
@@ -24,6 +25,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     const [loadingProductStatus, setLoadingProductStatus] = useState(true);
     const isInitialMount = useRef(true);
     const [errorAlerts, setErrorAlerts] = useState([]);
+    const [activeTab, setActiveTab] = useState({ details: true, reviews: false });
 
     useEffect(() => {
         const sessionId = new URLSearchParams(window.location.search).get(
@@ -189,7 +191,8 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                             <div className='seller-info-container'>
                                 <p className='label'>Seller:</p>
                                 <img
-                                    src={product.seller?.photoUrl || imagePlaceholder}
+                                    className='img-round'
+                                    src={product.seller?.photoUrl || userImagePlaceholder}
                                     alt='user'
                                 />
                                 <p>{product.seller?.firstName + ' ' + product.seller?.lastName}</p>
@@ -215,8 +218,13 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                     <div className='product-details-container'>
                         <div className='tab-selector'>
                             <Button
-                                disabled={true}
-                                className='tab-selector-btn-active'
+                                className={activeTab['details'] ? 'tab-selector-btn-active' : 'tab-selector-btn'}
+                                onClick={() => {
+                                    setActiveTab({
+                                        details: true,
+                                        reviews: false
+                                    })
+                                }}
                             >
                                 Details
                             </Button>
@@ -227,13 +235,31 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                                 Seller information
                             </Button>
                             <Button
-                                disabled={true}
-                                className='tab-selector-btn'
+                                className={activeTab['reviews'] ? 'tab-selector-btn-active' : 'tab-selector-btn'}
+                                onClick={() => {
+                                    setActiveTab({
+                                        details: false,
+                                        reviews: true
+                                    })
+                                }}
                             >
                                 Customer reviews
                             </Button>
                         </div>
-                        <p>{product.description}</p>
+                        {activeTab.details ?
+                            <p>{product.description}</p> :
+                            <div>
+                                <div className='seller-review-heading'>
+                                    <img
+                                        className='img-round'
+                                        src={product.seller?.photoUrl || userImagePlaceholder}
+                                        alt='user'
+                                    />
+                                    <p>{product.seller?.firstName + ' ' + product.seller?.lastName}</p>
+                                </div>
+                                <SellerRatingOverview ratings={product.seller.ratingCounters} />
+                            </div>
+                        }
                     </div>
                 </Stack>
             </div>
