@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
+
+import ReviewService from 'services/ReviewService';
 
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -7,9 +9,20 @@ import userImagePlaceholder from 'assets/img/profile-placeholder.png';
 
 import 'assets/style/user-review-dialog.scss';
 
-const ReviewDialog = ({ skipRating, submitRating, sellerName, sellerImage }) => {
+const ReviewDialog = ({ skipRating, submitRating, sellerName, sellerImage, userId, reviewerId }) => {
     const [starsRating, setStarsRating] = useState(0);
     const [selectedStarsRating, setSelectedStarsRating] = useState(0);
+
+    useEffect(() => {
+        ReviewService.getReviewRating(userId, reviewerId)
+            .then(response => {
+                setSelectedStarsRating(response.data?.rating || 0);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className='review-dialog-container'>
