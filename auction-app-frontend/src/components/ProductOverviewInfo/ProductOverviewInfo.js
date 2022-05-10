@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, CircularProgress, Stack, TextField, ThemeProvider } from '@mui/material';
+import { Button, CircularProgress, Dialog, Stack, TextField, ThemeProvider } from '@mui/material';
 
 import TokenService from 'services/TokenService';
 import AuctionTimeUtil from 'utils/AuctionTimeUtil';
@@ -8,13 +8,14 @@ import PaymentService from 'services/PaymentService';
 import useLoginService from 'hooks/useLoginService';
 
 import CustomAlert from 'components/Alert/CustomAlert';
+import SellerRatingOverview from 'components/ProductOverviewInfo/SellerRatingOverview';
+import ReviewDialog from 'components/ProductOverviewInfo/ReviewDialog';
 
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 import userImagePlaceholder from 'assets/img/profile-placeholder.png';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
-import SellerRatingOverview from 'components/ProductOverviewInfo/SellerRatingOverview';
 
 const ProductOverviewInfo = ({ product, placeBid }) => {
     const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
@@ -26,6 +27,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     const isInitialMount = useRef(true);
     const [errorAlerts, setErrorAlerts] = useState([]);
     const [activeTab, setActiveTab] = useState({ details: true, reviews: false });
+    const [showReviewDialog, setShowReviewDialog] = useState(false);
 
     useEffect(() => {
         const sessionId = new URLSearchParams(window.location.search).get(
@@ -59,6 +61,14 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     }, []);
 
     useEffect(() => {
+        const isReview = new URLSearchParams(window.location.search).get('review');
+        if (!!isReview && product.sold
+            && TokenService.getUserCredentials()?.id === product.highestBidder.id) {
+            setShowReviewDialog(true);
+        }
+    }, [product.sold, product.highestBidder]);
+
+    useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
         } else {
@@ -89,7 +99,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     }
 
     function showPayForm() {
-        return AuctionTimeUtil.auctionEnded(product.endDate) &&
+        return AuctionTimeUtil.auctionEnded(product.endDate) && TokenService.getUserCredentials()?.id &&
             TokenService.getUserCredentials()?.id === product.highestBidder?.id
     }
 
@@ -126,8 +136,33 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
         }
     }
 
+    function handleSkipRating() {
+        console.log("SKIP RATING");
+        handleDialogClose();
+    }
+
+    function handleSubmitRating(rating) {
+        console.log("RATING: ", rating);
+        handleDialogClose();
+    }
+
+    function handleDialogClose() {
+        setShowReviewDialog(false);
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
+            <Dialog
+                open={showReviewDialog}
+                onClose={handleDialogClose}
+            >
+                <ReviewDialog
+                    skipRating={handleSkipRating}
+                    submitRating={handleSubmitRating}
+                    sellerName={product.seller.fullName}
+                    sellerImage={product.seller.photoUrl}
+                />
+            </Dialog>
             <div className='product-overview-info-container'>
                 {
                     errorAlerts.map((err, i) =>
