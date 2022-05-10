@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, CircularProgress, Dialog, Stack, TextField, ThemeProvider } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import TokenService from 'services/TokenService';
 import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 import PaymentService from 'services/PaymentService';
 import useLoginService from 'hooks/useLoginService';
+import ReviewService from 'services/ReviewService';
 
 import CustomAlert from 'components/Alert/CustomAlert';
 import SellerRatingOverview from 'components/ProductOverviewInfo/SellerRatingOverview';
@@ -28,6 +30,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     const [errorAlerts, setErrorAlerts] = useState([]);
     const [activeTab, setActiveTab] = useState({ details: true, reviews: false });
     const [showReviewDialog, setShowReviewDialog] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const sessionId = new URLSearchParams(window.location.search).get(
@@ -64,9 +67,16 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
         const isReview = new URLSearchParams(window.location.search).get('review');
         if (!!isReview && product.sold
             && TokenService.getUserCredentials()?.id === product.highestBidder.id) {
-            setShowReviewDialog(true);
+            loginService.isUserLoggedIn()
+                .then(() => {
+                    setShowReviewDialog(true);
+                })
+                .catch(() => {
+                    loginService.reinitiateLogin();
+                });
         }
-    }, [product.sold, product.highestBidder]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (isInitialMount.current) {
@@ -137,13 +147,30 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     }
 
     function handleSkipRating() {
-        console.log("SKIP RATING");
         handleDialogClose();
     }
 
     function handleSubmitRating(rating) {
-        console.log("RATING: ", rating);
-        handleDialogClose();
+        ReviewService.postReview({
+            user: {
+                id: product.seller?.id
+            },
+            reviewer: {
+                id: TokenService.getUserCredentials()?.id
+            },
+            rating: rating
+        })
+            .then(response => {
+                console.log(response);
+                navigate(`/shop/product-overview/${product.id}`);
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                handleDialogClose();
+            });
     }
 
     function handleDialogClose() {
@@ -161,6 +188,8 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                     submitRating={handleSubmitRating}
                     sellerName={product.seller.fullName}
                     sellerImage={product.seller.photoUrl}
+                    userId={product.seller.id}
+                    reviewerId={TokenService.getUserCredentials()?.id}
                 />
             </Dialog>
             <div className='product-overview-info-container'>
