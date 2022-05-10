@@ -57,6 +57,7 @@ public class ProductService {
             product.setHighestBid(productBids.size() > 0 ? productBids.get(0).getAmount() : null);
             product.setNumberOfBids(productBids.size());
             product.setHighestBidder(productBids.size() > 0 ? productBids.get(0).getUser() : null);
+            product.getSeller().initReviewRatingData();
             return product;
         }
     }
