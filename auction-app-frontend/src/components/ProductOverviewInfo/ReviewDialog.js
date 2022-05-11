@@ -8,10 +8,14 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import userImagePlaceholder from 'assets/img/profile-placeholder.png';
 
 import 'assets/style/user-review-dialog.scss';
+import useLoginService from 'hooks/useLoginService';
+import CustomAlert from 'components/Alert/CustomAlert';
 
 const ReviewDialog = ({ skipRating, submitRating, sellerName, sellerImage, userId, reviewerId }) => {
     const [starsRating, setStarsRating] = useState(0);
     const [selectedStarsRating, setSelectedStarsRating] = useState(0);
+    const loginService = useLoginService();
+    const [errorAlerts, setErrorAlerts] = useState([]);
 
     useEffect(() => {
         ReviewService.getReviewRating(userId, reviewerId)
@@ -19,13 +23,27 @@ const ReviewDialog = ({ skipRating, submitRating, sellerName, sellerImage, userI
                 setSelectedStarsRating(response.data?.rating || 0);
             })
             .catch(err => {
-                console.log(err);
+                if (err.response.status === 403) {
+                    loginService.reinitiateLogin();
+                } else {
+                    setErrorAlerts([...errorAlerts, err.response.data]);
+                }
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <div className='review-dialog-container'>
+            {
+                errorAlerts.map((err, i) =>
+                    <CustomAlert
+                        key={i} color='error'
+                        error={err}
+                        showAlertDuration={60000}
+                        marginBottom='10px'
+                    />
+                )
+            }
             <h3 className='heading'>SELLER RATING</h3>
             <img
                 className='img-round'
