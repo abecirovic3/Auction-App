@@ -32,5 +32,7 @@ public class EmailJob extends QuartzJobBean {
         String recipient = jobDataMap.getString("recipient");
 
         emailService.send(subject, content, sender, recipient);
+
+        log.info("Email sent to {}", recipient);
     }
 }

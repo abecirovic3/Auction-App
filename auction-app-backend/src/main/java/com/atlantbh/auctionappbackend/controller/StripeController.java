@@ -9,6 +9,7 @@ import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.StripeObject;
 import com.stripe.net.Webhook;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "${application.api.prefix}/stripe")
 public class StripeController {
@@ -74,7 +76,7 @@ public class StripeController {
             // Handle the event
             if ("payment_intent.succeeded".equals(event.getType())) {
                 PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
-                System.out.println("Payment for product " + paymentIntent.getMetadata().get("product_id") + " succeeded.");
+                log.info("Payment for product {} succeded", paymentIntent.getMetadata().get("product_id"));
                 productService.setProductToSold(Long.parseLong(paymentIntent.getMetadata().get("product_id")));
                 emailJobSchedulerService.scheduleSellerReviewEmail(
                         paymentIntent.getMetadata().get("buyer_name"),

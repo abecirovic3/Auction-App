@@ -65,11 +65,12 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
 
     useEffect(() => {
         const isReview = new URLSearchParams(window.location.search).get('review');
-        if (!!isReview && product.sold
-            && TokenService.getUserCredentials()?.id === product.highestBidder.id) {
+        if (!!isReview && product.sold) {
             loginService.isUserLoggedIn()
                 .then(() => {
-                    setShowReviewDialog(true);
+                    if (TokenService.getUserCredentials()?.id === product.highestBidder.id) {
+                        setShowReviewDialog(true);
+                    }
                 })
                 .catch(() => {
                     loginService.reinitiateLogin();
@@ -161,12 +162,15 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
             rating: rating
         })
             .then(response => {
-                console.log(response);
                 navigate(`/shop/product-overview/${product.id}`);
                 window.location.reload();
             })
             .catch(err => {
-                console.log(err);
+                if (err.response.status === 403) {
+                    loginService.reinitiateLogin();
+                } else {
+                    setErrorAlerts([...errorAlerts, err.response.data]);
+                }
             })
             .finally(() => {
                 handleDialogClose();

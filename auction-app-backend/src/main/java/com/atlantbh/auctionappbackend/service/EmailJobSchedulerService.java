@@ -40,12 +40,14 @@ public class EmailJobSchedulerService {
                     "Review Seller",
                     emailService.buildSellerReviewEmail(
                             recipientName,
-                            clientBaseUrl + "/shop/product-overview/" + productId + "/review"),
+                            clientBaseUrl + "/shop/product-overview/" + productId + "?review=true"),
                     "auction.app.bs@gmail.com",
                     recipientEmail
             );
-            Trigger trigger = buildJobTrigger(jobDetail, LocalDateTime.now().plusMinutes(3L));
+            Trigger trigger = buildJobTrigger(jobDetail, LocalDateTime.now().plusMinutes(30L));
             scheduler.scheduleJob(jobDetail, trigger);
+
+            log.info("Email to {} scheduled successfully", recipientEmail);
         } catch (SchedulerException ex) {
             log.error("Error scheduling email", ex);
         }

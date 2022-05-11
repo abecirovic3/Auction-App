@@ -57,7 +57,7 @@ const SellerRatingOverview = ({ ratings }) => {
                         Object.keys(ratings).map(rating => {
                             let percentage = 0;
                             if (ratings[rating] !== 0) {
-                                percentage = Math.round((ratings[rating] / getNumberOfRatings())*100);
+                                percentage = Math.round((ratings[rating] / getNumberOfRatings()) * 100);
                             }
                             return (
                                 <div className='row' key={rating}>
