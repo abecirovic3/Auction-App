@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+# nodejs part of application
+  frontend:
+   build: ./auction-app-frontend
+   container_name: frontend-service
+   ports:
+    - '3000:3000'
+   command: npm run start
+   volumes:
+    - ./:/frontend
+# springboot and postgress part of application
+  backend:
+    build: ./auction-app-backend
+    container_name: springboot
+    env_file: ./.env
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev      
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:$SPRING_DATASOURCE_PORT/$POSTGRES_DB
+      - SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD
+    depends_on:
+      - postgresdb
+    volumes:
+      - ./:/usr/src/data
+  postgresdb: 
+    image: postgres:14-alpine
+    container_name: postgresdb
+    env_file: ./.env
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      -  "./postgresql:/var/lib/postgresql/data"
+volumes:
+  postgresql:
