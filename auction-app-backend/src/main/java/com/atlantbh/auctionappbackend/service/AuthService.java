@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.service;
 
 import com.atlantbh.auctionappbackend.domain.User;
+import com.atlantbh.auctionappbackend.projection.UserLoginProjection;
 import com.atlantbh.auctionappbackend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,14 @@ public class AuthService implements UserDetailsService {
 
     public User getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found in the database");
+        }
+        return user;
+    }
+
+    public UserLoginProjection getUserLoginCredentials(String email) {
+        UserLoginProjection user = userRepository.findByEmail(email, UserLoginProjection.class);
         if (user == null) {
             throw new UsernameNotFoundException("User not found in the database");
         }
