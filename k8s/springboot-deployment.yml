@@ -41,13 +41,25 @@ spec:
           failureThreshold: 3
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: dev
+          valueFrom:
+            secretKeyRef:
+              name: springboot-secret
+              key: nameValue
         - name: SPRING_DATASOURCE_URL
-          value: jdbc:postgresql://postgres-service:5432/auctionapp
+          valueFrom:
+            secretKeyRef:
+              name: springboot-secret
+              key: url
         - name: SPRING_DATASOURCE_USERNAME
-          value: postgres
+          valueFrom:
+            secretKeyRef:
+              name: springboot-secret
+              key: username
         - name: SPRING_DATASOURCE_PASSWORD
-          value: postgres
+          valueFrom:
+            secretKeyRef:
+              name: springboot-secret
+              key: password
 
 ---
 apiVersion: v1
