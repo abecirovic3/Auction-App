@@ -357,4 +357,12 @@ public class Product {
     public void setWishlistedByUser(boolean wishlistedByUser) {
         this.wishlistedByUser = wishlistedByUser;
     }
+
+    public Boolean getWishlistedByUser() {
+        return wishlistedByUser;
+    }
+
+    public void setWishlistedByUser(Boolean wishlistedByUser) {
+        this.wishlistedByUser = wishlistedByUser;
+    }
 }

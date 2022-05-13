@@ -69,7 +69,8 @@ public class ProductService {
     }
 
     private boolean isProductWishlistedByUser(Long productId, Long userId) {
-        List<ProductIdOnlyProjection> products = productRepository.findProductsByWishlistUsersId(userId);
+        List<ProductIdOnlyProjection> products =
+                productRepository.findProductsByWishlistUsersId(userId, ProductIdOnlyProjection.class);
         for (ProductIdOnlyProjection p : products) {
             if (p.getId().equals(productId)) {
                 return true;

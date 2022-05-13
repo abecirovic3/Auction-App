@@ -21,7 +21,7 @@ const ProductOverview = () => {
     const LoginService = useLoginService();
 
     useEffect(() => {
-        ProductService.getProductById(params.id)
+        ProductService.getProductById(params.id, TokenService.getUserCredentials()?.id)
             .then(response => {
                 setProduct(response.data);
             })

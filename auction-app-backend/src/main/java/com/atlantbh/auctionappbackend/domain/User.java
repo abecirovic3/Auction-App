@@ -357,4 +357,18 @@ public class User {
     public void setWishlistProducts(Set<Product> wishlistProducts) {
         this.wishlistProducts = wishlistProducts;
     }
+
+    public void addWishlistProduct(Product product) {
+        this.wishlistProducts.add(product);
+        product.getWishlistUsers().add(this);
+    }
+
+    public void removeWishlistProduct(Long productId) {
+        Product product =
+                this.wishlistProducts.stream().filter(p -> p.getId().equals(productId)).findFirst().orElse(null);
+        if (product != null) {
+            this.wishlistProducts.remove(product);
+            product.getWishlistUsers().remove(this);
+        }
+    }
 }

@@ -21,12 +21,28 @@ function getAllBids() {
     return api.get(`/user/${TokenService.getUserCredentials().id}/bids`);
 }
 
+function addProductToWishlist(productId) {
+    if (!productId) {
+        return new Promise((resolve, reject) => {
+            reject({
+                    response: {
+                        data: "Product id must be provided"
+                    }
+                }
+            );
+        });
+    } else {
+        return api.post(`/user/${TokenService.getUserCredentials().id}/wishlist?productId=${productId}`);
+    }
+}
+
 const UserService = {
     getAllProducts,
     getUserInfo,
     updateUserInfo,
     deleteAccount,
-    getAllBids
+    getAllBids,
+    addProductToWishlist
 };
 
 export default UserService;

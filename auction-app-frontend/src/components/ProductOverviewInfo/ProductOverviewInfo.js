@@ -8,6 +8,7 @@ import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 import PaymentService from 'services/PaymentService';
 import useLoginService from 'hooks/useLoginService';
 import ReviewService from 'services/ReviewService';
+import UserService from 'services/UserService';
 
 import CustomAlert from 'components/Alert/CustomAlert';
 import SellerRatingOverview from 'components/ProductOverviewInfo/SellerRatingOverview';
@@ -31,6 +32,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     const [activeTab, setActiveTab] = useState({ details: true, reviews: false });
     const [showReviewDialog, setShowReviewDialog] = useState(false);
     const navigate = useNavigate();
+    const [addedToWishlist, setAddedToWishlist] = useState(false);
 
     useEffect(() => {
         const sessionId = new URLSearchParams(window.location.search).get(
@@ -181,6 +183,20 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
         setShowReviewDialog(false);
     }
 
+    function handleAddToWishlist() {
+        UserService.addProductToWishlist(product.id)
+            .then(response => {
+                setAddedToWishlist(true);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    function showAddToWishlistButton() {
+        return TokenService.getUserCredentials()?.id && !product.wishlistedByUser;
+    }
+
     return (
         <ThemeProvider theme={MainTheme}>
             <Dialog
@@ -210,6 +226,17 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                 <Stack gap={4} >
                     <Stack gap={2} >
                         <h3 className='product-name'>{product.name}</h3>
+                        {addedToWishlist ?
+                            <h3>Added to wishlist</h3> :
+                            (showAddToWishlistButton() &&
+                                <Button
+                                    variant='outlined'
+                                    onClick={handleAddToWishlist}
+                                >
+                                    Wishlist
+                                </Button>
+                            )
+                        }
                         <div>
                             <p className='label price-label'>Start from</p>
                             <p className='value'>${product.startPrice}</p>

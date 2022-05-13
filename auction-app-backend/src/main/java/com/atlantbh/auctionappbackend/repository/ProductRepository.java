@@ -3,7 +3,6 @@ package com.atlantbh.auctionappbackend.repository;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
-import com.atlantbh.auctionappbackend.projection.ProductIdOnlyProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,6 +36,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllBySeller(User seller);
 
     List<ProductNameOnlyProjection> findByEndDateGreaterThan(LocalDateTime date, Pageable pageable);
-    
-    List<ProductIdOnlyProjection> findProductsByWishlistUsersId(Long userId);
+
+    <T> List<T> findProductsByWishlistUsersId(Long userId, Class<T> type);
+
+    @Query(nativeQuery = true, value = "SELECT pi.image_url FROM product_image pi WHERE pi.product_id = :id LIMIT 1")
+    String findProductImage(Long id);
 }

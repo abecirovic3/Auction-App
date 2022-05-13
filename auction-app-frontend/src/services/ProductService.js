@@ -47,8 +47,9 @@ function getCategoriesQuery(categoriesMap) {
     return '';
 }
 
-function getProductById(id) {
-    return api.get(`/products/${id}`);
+function getProductById(id, userId) {
+    const query = userId ? `?userId=${userId}` : '';
+    return api.get(`/products/${id}` + query);
 }
 
 function postProduct(product) {
