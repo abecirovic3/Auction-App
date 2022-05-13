@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -25,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "Product")
 @Table(name = "product")
@@ -113,6 +115,17 @@ public class Product {
 
     @Transient
     private User highestBidder;
+
+    @ManyToMany(cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "wishlistProducts")
+    @JsonIgnore
+    private Set<User> wishlistUsers;
+
+    @Transient
+    private Boolean wishlistedByUser;
 
     public Product() {
         // No args constructor needed by **framework**
@@ -327,5 +340,21 @@ public class Product {
 
     public void setSold(Boolean sold) {
         this.sold = sold;
+    }
+
+    public Set<User> getWishlistUsers() {
+        return wishlistUsers;
+    }
+
+    public void setWishlistUsers(Set<User> wishlistUsers) {
+        this.wishlistUsers = wishlistUsers;
+    }
+
+    public Boolean isWishlistedByUser() {
+        return wishlistedByUser;
+    }
+
+    public void setWishlistedByUser(boolean wishlistedByUser) {
+        this.wishlistedByUser = wishlistedByUser;
     }
 }

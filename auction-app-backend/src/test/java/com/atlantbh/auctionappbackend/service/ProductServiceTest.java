@@ -84,6 +84,7 @@ public class ProductServiceTest {
                         null,
                         "startDate",
                         "desc",
+                        null,
                         null
         );
 

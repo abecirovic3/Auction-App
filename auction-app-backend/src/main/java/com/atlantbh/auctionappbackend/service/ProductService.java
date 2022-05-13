@@ -4,6 +4,7 @@ import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
+import com.atlantbh.auctionappbackend.projection.ProductIdOnlyProjection;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
@@ -43,7 +44,7 @@ public class ProductService {
         this.streetService = streetService;
     }
 
-    public Product getProductOverview(Long id) {
+    public Product getProductOverview(Long id, Long userId) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(
@@ -58,20 +59,35 @@ public class ProductService {
             product.setNumberOfBids(productBids.size());
             product.setHighestBidder(productBids.size() > 0 ? productBids.get(0).getUser() : null);
             product.getSeller().initReviewRatingData();
+
+            if (userId != null) {
+                product.setWishlistedByUser(isProductWishlistedByUser(id, userId));
+            }
+
             return product;
         }
     }
 
+    private boolean isProductWishlistedByUser(Long productId, Long userId) {
+        List<ProductIdOnlyProjection> products = productRepository.findProductsByWishlistUsersId(userId);
+        for (ProductIdOnlyProjection p : products) {
+            if (p.getId().equals(productId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ProductsResponse getAll(
-                                                int page,
-                                                int size,
-                                                List<Long> categoryIds,
-                                                Double minPrice,
-                                                Double maxPrice,
-                                                String sortKey,
-                                                String sortDirection,
-                                                String search
-    ) {
+            int page,
+            int size,
+            List<Long> categoryIds,
+            Double minPrice,
+            Double maxPrice,
+            String sortKey,
+            String sortDirection,
+            String search,
+            Long userId) {
         boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
 
@@ -99,6 +115,12 @@ public class ProductService {
         Page<Product> pageProducts = productRepository.findAll(
                 categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, sort)
         );
+        
+        if (userId != null) {
+            for (Product p : pageProducts.getContent()) {
+                p.setWishlistedByUser(isProductWishlistedByUser(p.getId(), userId));
+            }
+        }
 
         String searchSuggestion = null;
         if (search != null && pageProducts.getTotalElements() == 0) {

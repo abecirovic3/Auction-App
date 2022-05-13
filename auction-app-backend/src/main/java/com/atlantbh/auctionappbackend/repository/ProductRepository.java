@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.repository;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
+import com.atlantbh.auctionappbackend.projection.ProductIdOnlyProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +37,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllBySeller(User seller);
 
     List<ProductNameOnlyProjection> findByEndDateGreaterThan(LocalDateTime date, Pageable pageable);
+    
+    List<ProductIdOnlyProjection> findProductsByWishlistUsersId(Long userId);
 }

@@ -135,7 +135,7 @@ public class PaymentService {
     public Map<String, String> createCheckoutSession(PayIntentRequest payIntentRequest) throws StripeException {
         Stripe.apiKey = stripeApiKey;
 
-        Product product = productService.getProductOverview(payIntentRequest.getProduct().getId());
+        Product product = productService.getProductOverview(payIntentRequest.getProduct().getId(), null);
 
         validateProduct(product, payIntentRequest);
 
