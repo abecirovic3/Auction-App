@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myconfig
+  namespace: default
+data:
+   POSTGRES_DB: auctionapp
+   SPRING_PROFILES_ACTIVE: dev
+   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-service:5432/auctionapp
+   REACT_BASE_APP_URL: http://auctionhelm-backend.racun.ninja/api/v1

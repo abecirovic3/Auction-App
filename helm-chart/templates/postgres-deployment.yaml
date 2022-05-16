@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Release.Name }}-db
+  labels:
+{{ include "helm-chart.labels" . | indent 4 }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+{{ include "helm-chart.selectorLabels" . | indent 6}}
+
+  template:
+    metadata:
+      labels:
+{{ include "helm-chart.selectorLabels" . | indent 8}}
+    spec:
+      containers:
+      - name: {{ .Values.containerPostgres.name }}
+        image: {{ .Values.image.repositoryDatabase }}
+        ports:
+        - containerPort: {{ .Values.serviceDatabase.targetPort }}
+        
+        envFrom:
+         - configMapRef:
+             name: myconfig
+         - secretRef:
+             name: helm-secret
+        
+        
+        volumeMounts:
+            - name: {{ .Values.volume.name }}
+              mountPath: {{ .Values.volume.mountPath }}
+      volumes:
+        - name: {{ .Values.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc

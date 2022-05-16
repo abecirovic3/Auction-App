@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Release.Name }}-springboot
+  labels:
+{{ include "helm-chart.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+{{ include "helm-chart.selectorLabels" . | indent 6}}
+  template:
+    metadata:
+      labels:
+{{ include "helm-chart.selectorLabels" . | indent 8}}
+    spec:
+      containers:
+      - name: {{ .Values.containerBackend.name }}
+        image: {{ .Values.image.repositoryBackend }}
+        resources:
+          requests:
+            memory: "300Mi"
+            cpu: "500m"
+          limits:
+            memory: "450Mi"
+            cpu: "700m"
+        ports:
+        - containerPort: {{ .Values.serviceBackend.targetPort }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.serviceBackend.port }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.serviceBackend.port }}
+        startupProbe:
+          tcpSocket:
+            port: {{ .Values.serviceBackend.port }}
+
+          initialDelaySeconds: 25
+          periodSeconds: 30
+          failureThreshold: 3
+        
+        envFrom:
+        - configMapRef:
+             name: myconfig
+        - secretRef:
+             name: helm-secret
