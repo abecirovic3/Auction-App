@@ -13,6 +13,9 @@ const theme = createTheme({
         },
         gray: {
             main: '#D8D8D8'
+        },
+        white: {
+            main: '#FFFFFF'
         }
     }
 });

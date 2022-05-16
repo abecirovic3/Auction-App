@@ -10,6 +10,7 @@ import { setProducts, setPage, setIsLastPage, setGridItemWidth, setSearchSuggest
 
 import ProductService from 'services/ProductService';
 import useShopService from 'hooks/useShopService';
+import TokenService from 'services/TokenService';
 
 import Product from 'components/Product/Product';
 import ActiveFiltersBar from 'components/Shop/ShopFilters/ActiveFiltersBar';
@@ -87,7 +88,15 @@ const ShopProductsGrid = () => {
 
     function fetchProducts(page, size, filters, sortKey, sortDirection, search, initFetch) {
         setLoading(true);
-        ProductService.getProducts(page, size, filters, sortKey, sortDirection, search)
+        ProductService.getProducts(
+            page,
+            size,
+            filters,
+            sortKey,
+            sortDirection,
+            search,
+            TokenService.getUserCredentials()?.id
+        )
             .then(response => {
                 if (initFetch) {
                     dispatch(setProducts(response.data.paginatedData.data));
