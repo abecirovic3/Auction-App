@@ -16,6 +16,7 @@ import ReviewDialog from 'components/ProductOverviewInfo/ReviewDialog';
 
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 import userImagePlaceholder from 'assets/img/profile-placeholder.png';
+import HeartIcon from '@mui/icons-material/FavoriteBorder';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
@@ -189,12 +190,17 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                 setAddedToWishlist(true);
             })
             .catch(err => {
-                console.log(err);
+                if (err.response?.status === 403) {
+                    loginService.reinitiateLogin();
+                } else {
+                    setErrorAlerts([...errorAlerts, err.response.data]);
+                }
             });
     }
 
     function showAddToWishlistButton() {
-        return TokenService.getUserCredentials()?.id && !product.wishlistedByUser;
+        return TokenService.getUserCredentials()?.id && !product.wishlistedByUser
+            && TokenService.getUserCredentials()?.id !== product.seller?.id;
     }
 
     return (
@@ -227,11 +233,13 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                     <Stack gap={2} >
                         <h3 className='product-name'>{product.name}</h3>
                         {addedToWishlist ?
-                            <h3>Added to wishlist</h3> :
+                            <h3 className='label'>Added to wishlist</h3> :
                             (showAddToWishlistButton() &&
                                 <Button
                                     variant='outlined'
                                     onClick={handleAddToWishlist}
+                                    className='wishlist-btn'
+                                    endIcon={<HeartIcon />}
                                 >
                                     Wishlist
                                 </Button>

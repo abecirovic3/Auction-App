@@ -12,11 +12,13 @@ import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 import wishlistHeart from 'assets/img/wishlist-heart.png';
 
 import 'assets/style/account-table.scss';
+import CustomAlert from 'components/Alert/CustomAlert';
 
 const AccountWishlist = () => {
     const loginService = useLoginService();
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
+    const [errorAlerts, setErrorAlerts] = useState([]);
 
     useEffect(() => {
         loginService.isUserLoggedIn()
@@ -26,7 +28,11 @@ const AccountWishlist = () => {
                         setProducts(response.data);
                     })
                     .catch(err => {
-                        console.log(err);
+                        if (err.response?.status === 403) {
+                            loginService.setUserLoggedOut();
+                        } else {
+                            setErrorAlerts([...errorAlerts, err.response.data]);
+                        }
                     });
             })
             .catch(() => {
@@ -50,7 +56,11 @@ const AccountWishlist = () => {
                         setProducts(products.filter(product => product.id !== productId));
                     })
                     .catch(err => {
-                        console.log(err);
+                        if (err.response?.status === 403) {
+                            loginService.setUserLoggedOut();
+                        } else {
+                            setErrorAlerts([...errorAlerts, err.response.data]);
+                        }
                     });
             })
             .catch(() => {
@@ -60,6 +70,16 @@ const AccountWishlist = () => {
 
     return (
         <div className='account-wishlist-container account-table-container'>
+            {
+                errorAlerts.map((err, i) =>
+                    <CustomAlert
+                        key={i} color='error'
+                        error={err}
+                        showAlertDuration={60000}
+                        marginBottom='10px'
+                    />
+                )
+            }
             <div className='table-container'>
                 <Table>
                     <TableHead>
