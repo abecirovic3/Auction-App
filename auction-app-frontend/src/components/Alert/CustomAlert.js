@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import AlertTheme from 'themes/AlertTheme';
 import 'assets/style/custom-alert.scss'
 
-const CustomAlert = ({ color, title, message, showAlertDuration, marginBottom }) => {
+const CustomAlert = ({ color, title, message, showAlertDuration, marginBottom, error }) => {
     const [showAlert, setShowAlert] = useState(true);
 
     useEffect(() => {
@@ -24,8 +24,18 @@ const CustomAlert = ({ color, title, message, showAlertDuration, marginBottom })
                         icon={false}
                         color={color}
                     >
-                        <p className='strong'>{title}</p>
-                        <p>{message}</p>
+                        {error ?
+                            Object.keys(error).map(key => (
+                                <>
+                                    <p className='strong'>{key}</p>
+                                    <p>{error[key]}</p>
+                                </>
+                            )) :
+                            <>
+                                <p className='strong'>{title}</p>
+                                <p>{message}</p>
+                            </>
+                        }
                     </Alert>
                 </Collapse>
             </div>

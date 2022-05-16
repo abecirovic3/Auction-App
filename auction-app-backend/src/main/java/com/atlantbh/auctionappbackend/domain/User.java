@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.domain;
 import com.atlantbh.auctionappbackend.constraint.EmailPreference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -60,6 +62,7 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must contain at least 8 characters")
     private String password;
 
     @Column(nullable = false)
@@ -68,17 +71,16 @@ public class User {
     @Past(message = "Date of birth is not valid")
     private LocalDate dateOfBirth;
 
-    // TODO: implement better phone number validation
-    @Size(min = 10, message = "Phone number is not valid")
+    @Pattern(regexp = "^(\\+\\d+\\s)?(\\(\\d+\\))?[\\s\\d.-]*$")
     private String phoneNumber;
 
     private String photoUrl;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<ProductUserBid> userBids;
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Product> products;
 
@@ -88,6 +90,10 @@ public class User {
             foreignKey = @ForeignKey(name = "street_id")
     )
     private Street street;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "card_id")
+    private Card card;
 
 
     public User() {
@@ -251,5 +257,13 @@ public class User {
 
     public void setStreet(Street street) {
         this.street = street;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

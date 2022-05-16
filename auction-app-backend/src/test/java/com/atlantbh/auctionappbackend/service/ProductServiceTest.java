@@ -37,17 +37,13 @@ public class ProductServiceTest {
     @Mock
     private PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
     @Mock
-    private StreetRepository streetRepository;
-    @Mock
-    private CityRepository cityRepository;
-    @Mock
-    private CountryRepository countryRepository;
+    private StreetService streetService;
 
     private ProductService productService;
 
     @BeforeEach
     void initUseCase() {
-        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation, streetRepository, cityRepository, countryRepository);
+        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation, streetService);
     }
 
     @Test

@@ -60,6 +60,14 @@ public class City {
     @Valid
     private Country country;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "state_id",
+            foreignKey = @ForeignKey(name = "state_id")
+    )
+    @Valid
+    private State state;
+
     @OneToMany(mappedBy = "city")
     @JsonIgnore
     private List<Street> streets;
@@ -98,5 +106,13 @@ public class City {
 
     public void setStreets(List<Street> streets) {
         this.streets = streets;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

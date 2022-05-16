@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -33,6 +33,21 @@ const Login = () => {
 
     const dispatch = useDispatch();
 
+    const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
+
+    useEffect(() => {
+        if (userLoggedIn) {
+            if (routeHistory[0] === '/register') {
+                navigate('/');
+            } else if (state?.beforeMyAccount) {
+                navigate('/account');
+            } else {
+                navigate(-1);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userLoggedIn]);
+
     function handleSubmit() {
         setLoading(true);
         AuthService.login(email, password, rememberMe)
@@ -40,13 +55,6 @@ const Login = () => {
                 response => {
                     setLoading(false);
                     dispatch(setLoggedIn(true));
-                    if (routeHistory[0] === '/register') {
-                        navigate('/');
-                    } else if (state?.beforeMyAccount) {
-                        navigate('/account');
-                    } else {
-                        navigate(-1);
-                    }
                 },
                 err => {
                     setLoading(false);

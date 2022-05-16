@@ -33,7 +33,7 @@ function useAddItemService() {
                 ...errorAlerts,
                 {
                     error: 'Imgur Error',
-                    message: err.response.data.error
+                    message: err.response.data.data.error
                 }
             ]));
         } else if (isFieldsError(err.response.data)) {

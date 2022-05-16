@@ -33,18 +33,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductUserBidRepository productUserBidRepository;
     private final PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
-    private final StreetRepository streetRepository;
-    private final CityRepository cityRepository;
-    private final CountryRepository countryRepository;
+    private final StreetService streetService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation, StreetRepository streetRepository, CityRepository cityRepository, CountryRepository countryRepository) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation,  StreetService streetService) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
         this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
-        this.streetRepository = streetRepository;
-        this.cityRepository = cityRepository;
-        this.countryRepository = countryRepository;
+        this.streetService = streetService;
     }
 
     public Product getProductOverview(Long id) {
@@ -165,43 +161,8 @@ public class ProductService {
             );
         }
 
-        product.setStreet(getProductStreet(product.getStreet()));
+        product.setStreet(streetService.findOrCreateLocation(product.getStreet()));
 
         return productRepository.save(product);
-    }
-
-    private Street getProductStreet(Street street) {
-        Optional<Street> streetOptional
-                = streetRepository.findFirstByNameAndZipcode(
-                street.getName(),
-                street.getZipcode()
-        );
-
-        if (streetOptional.isPresent()) {
-            return streetOptional.get();
-        } else {
-            City productCity = street.getCity();
-            Country productCountry = productCity.getCountry();
-
-            Optional<Country> countryOptional = countryRepository.findFirstByName(productCountry.getName());
-
-            if (countryOptional.isEmpty()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Country with name " + productCountry.getName() + " doesn't exist"
-                );
-            }
-
-            Optional<City> cityOptional
-                    = cityRepository.findFirstByNameAndCountry(productCity.getName(), countryOptional.get());
-            if (cityOptional.isPresent()) {
-                street.setCity(cityOptional.get());
-            } else {
-                productCity.setCountry(countryOptional.get());
-                street.setCity(cityRepository.save(productCity));
-            }
-
-            return streetRepository.save(street);
-        }
     }
 }
