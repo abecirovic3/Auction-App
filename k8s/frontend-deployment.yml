@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: endih.azurecr.io/nginx
+        image: endih.azurecr.io/frontendv2
         resources:
           requests:
             memory: "200Mi"
@@ -26,6 +26,9 @@ spec:
             cpu: "750m"
         ports:
         - containerPort: 80
+        env:
+        - name: REACT_APP_BASE_URL
+          value: http://springboot-service:8080/api/v1
         readinessProbe:
           tcpSocket:
             port: 80
