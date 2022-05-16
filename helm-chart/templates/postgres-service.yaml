@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceDatabase.name }}
+spec:
+  selector:
+{{ include "helm-chart.selectorLabels" . | indent 4 }}
+  ports:
+    - protocol: {{ .Values.serviceBackend.protocol }} 
+      port: {{ .Values.serviceDatabase.port }}
+      targetPort: {{ .Values.serviceDatabase.targetPort }} 
+  type: {{ .Values.serviceBackend.type }}

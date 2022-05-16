@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: {{ .Release.Name }}-frontend
+  labels:
+{{ include "helm-chart.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+{{ include "helm-chart.selectorLabels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "helm-chart.selectorLabels" . | indent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.containerFrontend.name }}
+        image: {{ .Values.image.repositoryFrontend }}
+        resources:
+          requests:
+            memory: "200Mi"
+            cpu: "500m"
+          limits:
+            memory: "250Mi"
+            cpu: "750m"
+        ports:
+        - containerPort: {{ .Values.serviceFrontend.targetPort }}
+        envFrom:
+        - configMapRef:
+             name: myconfig
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.serviceFrontend.port }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.serviceFrontend.port }}
+        startupProbe:
+          tcpSocket:
+            port: {{ .Values.serviceFrontend.port }}
+          initialDelaySeconds: 15
+          periodSeconds: 10 
+          failureThreshold: 3
