@@ -1,8 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, Container, Grid, Stack, TextField, ThemeProvider, Autocomplete } from '@mui/material';
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Stack,
+    TextField,
+    ThemeProvider,
+    Autocomplete,
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
-import { setAddress, setCity, setZipCode, setCountry } from 'features/addItem/addItemSlice';
+import {
+    setAddress,
+    setCity,
+    setZipCode,
+    setCountry,
+} from 'features/addItem/addItemSlice';
+
+import TokenService from 'services/TokenService';
+import PaymentService from 'services/PaymentService';
+import StripeService from 'services/StripeService';
+import useAddItemService from 'hooks/useAddItemService';
+
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 import MainTheme from 'themes/MainTheme';
 
@@ -13,9 +35,24 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
     const country = useSelector(state => state.addItem.country);
     const [countryInput, setCountryInput] = useState('');
 
+    const [loading, setLoading] = useState(false);
+
     const dispatch = useDispatch();
 
     const [errors, setErrors] = useState({});
+
+    const addItemService = useAddItemService();
+
+    useEffect(() => {
+        const streetData = TokenService.getUserCredentials().street;
+        if (streetData) {
+            dispatch(setAddress(streetData.name || ''));
+            dispatch(setZipCode(streetData.zipcode || ''));
+            dispatch(setCity(streetData.city?.name || ''));
+            dispatch(setCountry(streetData.city?.country?.name || ''));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     function handleSubmit() {
         if (validate()) {
@@ -42,9 +79,26 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
             err.country = 'Please select country';
         }
 
+        if (!StripeService.getStripeOnboardingFlag().onboardingComplete) {
+            err.payment = 'Please add payment info';
+        }
+
         setErrors(err);
 
         return Object.keys(err).length === 0;
+    }
+
+    function handleAddPaymentInfo() {
+        setLoading(true);
+        PaymentService.addPaymentInfo()
+            .then(response => {
+                window.open(response.data.url, '_blank');
+                setLoading(false);
+            })
+            .catch(err => {
+                addItemService.handleError(err);
+                setLoading(false);
+            });
     }
 
     return (
@@ -118,6 +172,30 @@ const AddLocationInfo = ({ countries, cancel, back, submit }) => {
                                     }}
                                 />
                             </Stack>
+                        </Stack>
+
+                        <Stack spacing={2}>
+                            <p
+                                style={{
+                                    borderBottom: `1px solid ${errors.payment ? 'red' : '#D8D8D8'}`,
+                                    paddingBottom: '5px',
+                                    color: errors.payment ? 'red' : 'black'
+                            }}
+                            >
+                                Payment
+                                {errors.payment && ' (Please add payment info)'}
+                            </p>
+                            <LoadingButton
+                                variant='contained'
+                                className='nav-buttons'
+                                startIcon={<CreditCardIcon />}
+                                onClick={handleAddPaymentInfo}
+                                loading={loading}
+                                loadingPosition='start'
+                            >
+                                Add Payment Info
+                            </LoadingButton>
+
                         </Stack>
 
                         <Box>

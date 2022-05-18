@@ -66,6 +66,16 @@ function updateUserCredentials(credentials) {
     }
 }
 
+function updateUserCardInfo(card) {
+    let {user, rememberUser} = getUser();
+    user.credentials.card = card;
+    if (rememberUser) {
+        localStorage.setItem('user', JSON.stringify(user));
+    } else {
+        sessionStorage.setItem('user', JSON.stringify(user));
+    }
+}
+
 const TokenService = {
     getLocalRefreshToken,
     getLocalAccessToken,
@@ -76,6 +86,7 @@ const TokenService = {
     setUser,
     removeUser,
     updateUserCredentials,
+    updateUserCardInfo,
 };
 
 export default TokenService;

@@ -105,7 +105,7 @@ export const {
     setZipCode,
     setCountry,
     setAddItemInitial,
-    setErrorAlerts
+    setErrorAlerts,
 } = addItemSlice.actions;
 
 export default addItemSlice.reducer;

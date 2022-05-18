@@ -341,7 +341,7 @@ const AccountProfile = () => {
                 const lastDayOfSelectedMonthDate = endOfMonth(new Date(cardInfo.expirationYear, (cardInfo.expirationMonth - 1)));
 
                 if (lastDayOfSelectedMonthDate < lastDayOfCurrentMonthDate) {
-                    err.cardInfo.expirationMonth = 'Expiration month must noz be in past';
+                    err.cardInfo.expirationMonth = 'Expiration month must not be in past';
                 }
             }
 

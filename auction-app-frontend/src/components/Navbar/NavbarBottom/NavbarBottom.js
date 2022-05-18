@@ -22,6 +22,7 @@ const NavbarBottom = () => {
         'login',
         'register',
         'forgot-password',
+        'stripe',
     ];
 
     useEffect(() => {

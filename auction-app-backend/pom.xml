@@ -91,7 +91,19 @@
 			<artifactId>flyway-maven-plugin</artifactId>
 			<version>8.5.3</version>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>20.116.0</version>
+		</dependency>
+<!--		Might interfere with jackson ??-->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>

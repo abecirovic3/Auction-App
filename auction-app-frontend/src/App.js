@@ -27,6 +27,8 @@ import AccountBids from 'components/UserAccount/AccountBids/AccountBids';
 import AccountSettings from 'components/UserAccount/AccountSettings/AccountSettings';
 import AccountWishlist from 'components/UserAccount/AccountWishlist/AccountWishlist';
 import AccountProfile from 'components/UserAccount/AccountProfile/AccountProfile';
+import StripeOnboardingRefresh from 'components/Stripe/OnboardingRefresh/StripeOnboardingRefresh';
+import StripeOnboardingReturn from 'components/Stripe/OnboardingReturn/StripeOnboardingReturn';
 
 function App() {
     const dispatch = useDispatch();
@@ -71,6 +73,8 @@ function App() {
                             <Route path='settings' element={<AccountSettings />} />
                         </Route>
                         <Route path='/account/add-item' element={<AddItem />} />
+                        <Route path='/stripe-onboarding-refresh' element={<StripeOnboardingRefresh />} />
+                        <Route path='/stripe-onboarding-return' element={<StripeOnboardingReturn />} />
                         <Route path='*' element={<NotFound/>}/>
                     </Routes>
                 </div>

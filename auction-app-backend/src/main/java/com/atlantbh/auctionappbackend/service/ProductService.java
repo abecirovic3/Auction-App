@@ -1,17 +1,11 @@
 package com.atlantbh.auctionappbackend.service;
 
-import com.atlantbh.auctionappbackend.domain.City;
-import com.atlantbh.auctionappbackend.domain.Country;
 import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
-import com.atlantbh.auctionappbackend.domain.Street;
-import com.atlantbh.auctionappbackend.repository.CityRepository;
-import com.atlantbh.auctionappbackend.repository.CountryRepository;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
-import com.atlantbh.auctionappbackend.repository.StreetRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +16,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -36,7 +31,7 @@ public class ProductService {
     private final StreetService streetService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation,  StreetService streetService) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation, StreetService streetService, UserService userService) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
         this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
@@ -56,6 +51,7 @@ public class ProductService {
                     productUserBidRepository.findByProduct(product, Sort.by("amount").descending());
             product.setHighestBid(productBids.size() > 0 ? productBids.get(0).getAmount() : null);
             product.setNumberOfBids(productBids.size());
+            product.setHighestBidder(productBids.size() > 0 ? productBids.get(0).getUser() : null);
             return product;
         }
     }
@@ -164,5 +160,10 @@ public class ProductService {
         product.setStreet(streetService.findOrCreateLocation(product.getStreet()));
 
         return productRepository.save(product);
+    }
+
+    @Transactional
+    public void setProductToSold(long productId) {
+        productRepository.updateSold(productId, true);
     }
 }

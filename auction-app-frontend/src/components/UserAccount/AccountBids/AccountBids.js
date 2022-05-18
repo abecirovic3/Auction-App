@@ -4,6 +4,7 @@ import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/m
 
 
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+import isPast from 'date-fns/isPast'
 
 import UserService from 'services/UserService';
 import useLoginService from 'hooks/useLoginService';
@@ -42,6 +43,25 @@ const AccountBids = () => {
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    function getTimeLeftMessage(endDate) {
+        if (isPast(new Date(endDate))) {
+            return 'Auction ended';
+        }
+        return formatDistanceToNowStrict(new Date(endDate));
+    }
+
+    function getButtonMessage(endDate, userBid, highestBid, isProductSold) {
+        if (!isPast(endDate)) {
+            return 'Bid';
+        }
+
+        if (userBid === highestBid && !isProductSold) {
+            return 'Pay';
+        }
+
+        return 'View';
+    }
 
     return (
         <div className='account-bids-container account-table-container'>
@@ -84,7 +104,7 @@ const AccountBids = () => {
                                         {bid.product?.name}
                                         <p className='product-hash'>#{bid.product?.id}</p>
                                     </TableCell>
-                                    <TableCell>{formatDistanceToNowStrict(new Date(bid.product?.endDate))}</TableCell>
+                                    <TableCell>{getTimeLeftMessage(bid.product?.endDate)}</TableCell>
                                     <TableCell>{bid.amount}</TableCell>
                                     <TableCell>{bid.product?.numberOfBids}</TableCell>
                                     <TableCell>{bid.product?.highestBid}</TableCell>
@@ -92,8 +112,18 @@ const AccountBids = () => {
                                         <Button
                                             className='table-btn'
                                             variant='outlined'
+                                            onClick={() => {
+                                                navigate(`/shop/product-overview/${bid.product?.id}`)
+                                            }}
                                         >
-                                            Bid
+                                            {
+                                                getButtonMessage(
+                                                    new Date(bid.product?.endDate),
+                                                    bid.amount,
+                                                    bid.product?.highestBid,
+                                                    bid.product?.sold
+                                                )
+                                            }
                                         </Button>
                                     </TableCell>
                                 </TableRow>

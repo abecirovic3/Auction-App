@@ -3,12 +3,9 @@ package com.atlantbh.auctionappbackend.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.atlantbh.auctionappbackend.domain.Product;
-import com.atlantbh.auctionappbackend.repository.CityRepository;
-import com.atlantbh.auctionappbackend.repository.CountryRepository;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
-import com.atlantbh.auctionappbackend.repository.StreetRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +35,14 @@ public class ProductServiceTest {
     private PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
     @Mock
     private StreetService streetService;
+    @Mock
+    private UserService userService;
 
     private ProductService productService;
 
     @BeforeEach
     void initUseCase() {
-        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation, streetService);
+        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation, streetService, userService);
     }
 
     @Test

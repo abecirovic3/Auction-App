@@ -26,6 +26,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("update Product p set p.highestBid = :bidValue where p.id = :id")
     void updateHighestBid(@Param(value = "id") long id, @Param(value = "bidValue") Double bidValue);
-    
+
+    @Modifying
+    @Query("update Product p set p.sold = :isSold where p.id = :id")
+    void updateSold(@Param(value = "id") long id, @Param(value = "isSold") boolean isSold);
+
     List<Product> findAllBySeller(User seller);
 }

@@ -106,8 +106,13 @@ public class Product {
     private String color;
     private Double highestBid;
 
+    private Boolean sold;
+
     @Transient
     private Integer numberOfBids;
+
+    @Transient
+    private User highestBidder;
 
     public Product() {
         // No args constructor needed by **framework**
@@ -306,5 +311,21 @@ public class Product {
 
     public void setStreet(Street street) {
         this.street = street;
+    }
+
+    public User getHighestBidder() {
+        return highestBidder;
+    }
+
+    public void setHighestBidder(User highestBidder) {
+        this.highestBidder = highestBidder;
+    }
+
+    public Boolean getSold() {
+        return sold;
+    }
+
+    public void setSold(Boolean sold) {
+        this.sold = sold;
     }
 }

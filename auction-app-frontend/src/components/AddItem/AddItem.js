@@ -10,6 +10,7 @@ import ProductService from 'services/ProductService';
 import TokenService from 'services/TokenService';
 import ImgurService from 'services/ImgurService';
 import CountryService from 'services/CountryService';
+import StripeService from 'services/StripeService';
 import useAddItemService from 'hooks/useAddItemService';
 
 import { setAddItemInitial, setImageDeleteInProgress } from 'features/addItem/addItemSlice';
@@ -69,6 +70,8 @@ const AddItem = () => {
     },[userLoggedIn]);
 
     useEffect(() => {
+        StripeService.setStripeOnboardingFlag(false);
+
         return () => {
             dispatch(setAddItemInitial());
         }
@@ -103,6 +106,7 @@ const AddItem = () => {
     function submit() {
         ProductService.postProduct(getProductData())
             .then(response => {
+                TokenService.updateUserCardInfo(response.data?.seller?.card);
                 navigate('/account/seller');
             })
             .catch(err => {
@@ -129,7 +133,9 @@ const AddItem = () => {
                     deleteHash: image.delete_hash
                 }
             }),
-            seller: TokenService.getUserCredentials(),
+            seller: {
+              id: TokenService.getUserCredentials().id
+            },
             street: {
                 name: address,
                 zipcode: zipCode,

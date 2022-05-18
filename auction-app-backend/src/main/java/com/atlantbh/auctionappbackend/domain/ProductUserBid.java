@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Entity(name = "ProductUserBid")
@@ -27,6 +28,7 @@ import java.util.Collections;
                         @ColumnResult(name = "user_highest_bid", type = Double.class),
                         @ColumnResult(name = "id", type = Long.class),
                         @ColumnResult(name = "name", type = String.class),
+                        @ColumnResult(name = "sold", type = Boolean.class),
                         @ColumnResult(name = "start_date", type = LocalDateTime.class),
                         @ColumnResult(name = "end_date", type = LocalDateTime.class),
                         @ColumnResult(name = "highest_bid", type = Double.class),
@@ -39,7 +41,7 @@ import java.util.Collections;
         name = "ProductUserBid.findMaxProductBidsByUser",
         resultClass = ProductUserBid.class,
         resultSetMapping = "productUserBidMapping",
-        query = "select max(pub.amount) as user_highest_bid, p.id, p.name, p.start_date, p.end_date, p.highest_bid," +
+        query = "select max(pub.amount) as user_highest_bid, p.id, p.name, p.sold, p.start_date, p.end_date, p.highest_bid," +
                 " (select count(pub1.id) from product_user_bid pub1 where pub1.product_id=p.id) as number_of_bids," +
                 " (select pi.image_url from product_image pi where pi.product_id=p.id limit 1) as image_url" +
                 " from product_user_bid pub, product p where pub.product_id = p.id and bidder_id=?1 group by p.id"
@@ -89,6 +91,7 @@ public class ProductUserBid {
                             Double userHighestBid,
                             Long productId,
                             String productName,
+                            Boolean sold,
                             LocalDateTime productStartDate,
                             LocalDateTime productEndDate,
                             Double productHighestBid,
@@ -99,6 +102,7 @@ public class ProductUserBid {
         this.product = new Product();
         this.product.setId(productId);
         this.product.setName(productName);
+        this.product.setSold(sold);
         this.product.setStartDate(productStartDate);
         this.product.setEndDate(productEndDate);
         this.product.setHighestBid(productHighestBid);
@@ -107,6 +111,8 @@ public class ProductUserBid {
             ProductImage productImage = new ProductImage();
             productImage.setImageUrl(imageUrl);
             this.product.setImages(Collections.singletonList(productImage));
+        } else {
+            this.product.setImages(new ArrayList<>());
         }
     }
 
