@@ -71,11 +71,11 @@ const HomeProductsTabContainer = () => {
 
         ProductService.getProducts(page, size, null, sortKey, sortDirection)
             .then(response => {
-                setIsLastPage(response.data.currentPage + 1 === response.data.totalPages);
+                setIsLastPage(response.data.paginatedData.currentPage + 1 === response.data.paginatedData.totalPages);
                 if (tabChanged) {
-                    setProducts(response.data.data);
+                    setProducts(response.data.paginatedData.data);
                 } else {
-                    setProducts([...products, ...response.data.data]);
+                    setProducts([...products, ...response.data.paginatedData.data]);
                 }
             })
             .catch(err => {

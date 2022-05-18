@@ -2,6 +2,7 @@ package com.atlantbh.auctionappbackend.repository;
 
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.User;
+import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,4 +34,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateSold(@Param(value = "id") long id, @Param(value = "isSold") boolean isSold);
 
     List<Product> findAllBySeller(User seller);
+
+    List<ProductNameOnlyProjection> findByEndDateGreaterThan(LocalDateTime date, Pageable pageable);
 }

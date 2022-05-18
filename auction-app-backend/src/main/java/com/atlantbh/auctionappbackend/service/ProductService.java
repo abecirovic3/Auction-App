@@ -3,13 +3,17 @@ package com.atlantbh.auctionappbackend.service;
 import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
+import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
+import com.atlantbh.auctionappbackend.response.ProductsResponse;
+import com.atlantbh.auctionappbackend.utils.EditDistanceCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +61,7 @@ public class ProductService {
         }
     }
 
-    public PaginatedResponse<Product> getAll(
+    public ProductsResponse getAll(
                                                 int page,
                                                 int size,
                                                 List<Long> categoryIds,
@@ -94,12 +99,79 @@ public class ProductService {
                 categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, sort)
         );
 
-        return new PaginatedResponse<>(
-                pageProducts.getContent(),
-                pageProducts.getNumber(),
-                pageProducts.getTotalElements(),
-                pageProducts.getTotalPages()
+        String searchSuggestion = null;
+        if (search != null && pageProducts.getTotalElements() == 0) {
+            searchSuggestion = getSearchSuggestion(search);
+        }
+
+        return new ProductsResponse(
+                new PaginatedResponse<>(
+                        pageProducts.getContent(),
+                        pageProducts.getNumber(),
+                        pageProducts.getTotalElements(),
+                        pageProducts.getTotalPages()
+                ),
+                searchSuggestion
         );
+    }
+
+    /**
+     * This method is used to find an alternative string based on the provided one.
+     * The idea is as follows: Products are fetched from DB in small batches. We sort the products by
+     * name and use pagination to form these batches. The variable size defines the batch/page size.
+     * After a batch is fetched we check if the provided String value would be included in that batch.
+     * If yes we move on to find a String which has the smallest distance to the provided one,
+     * and if the distance is less than toleranceDistance we return that String. If the provided String is not between
+     * the lower and upper bound of the fetched batch, we fetch the next batch,
+     * and do so until the provided String value is lexicographically before the lower bound
+     * of the fetched batch. To calculate the smallest distance we use the utility class EditDistanceCalculator
+     * The size and toleranceDistance variables should be used for fine-tuning.
+     * @param searchedValue searched string
+     * @return String suggested search
+     */
+    private String getSearchSuggestion(String searchedValue) {
+        int page = 0;
+        int size = 20;
+        int toleranceDistance = 5;
+
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC, "name").ignoreCase();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(order));
+
+        List<ProductNameOnlyProjection> products
+                = productRepository.findByEndDateGreaterThan(LocalDateTime.now(), pageable);
+
+        while (products.size() != 0) {
+            pageable = pageable.next();
+
+            if (products.get(0).getName().compareToIgnoreCase(searchedValue) > 0) {
+                return null;
+            }
+
+            if (searchedValue.compareToIgnoreCase(products.get(0).getName()) > 0
+                    && searchedValue.compareToIgnoreCase(products.get(products.size() - 1).getName()) < 0) {
+
+                int minDistance
+                        = EditDistanceCalculator.calculateLevenshteinDistance(searchedValue, products.get(0).getName());
+                String res = products.get(0).getName();
+
+                int distance;
+                for (ProductNameOnlyProjection p : products) {
+                    distance = EditDistanceCalculator.calculateLevenshteinDistance(searchedValue, p.getName());
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        res = p.getName();
+                    }
+                }
+                if (minDistance < toleranceDistance) {
+                    return res;
+                } else {
+                    return null;
+                }
+            }
+            products = productRepository.findByEndDateGreaterThan(LocalDateTime.now(), pageable);
+        }
+        return null;
     }
 
     private List<Order> getSortOrders(String sortKey, String sortDirection) {
