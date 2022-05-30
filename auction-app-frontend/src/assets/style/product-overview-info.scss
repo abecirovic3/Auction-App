@@ -38,6 +38,12 @@
     padding: 25px;
   }
 
+  .img-round {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+  }
+
   .bid-placement-container {
     display: flex;
     flex-direction: row;
@@ -48,8 +54,7 @@
       opacity: 50%;
     }
 
-    .MuiInputBase-root,
-    .MuiButton-root {
+    .MuiInputBase-root {
       border-radius: 0;
       height: 3em;
     }
@@ -62,14 +67,53 @@
     .bid-input-field {
       width: 60%;
     }
+  }
 
-    .place-bid-btn {
-      gap: 30px;
-      font-size: 18px;
-      font-weight: 700;
-      color: #252525;
-      border: 3px solid base.$primary-color;
-      width: 35%;
+  .form-btn {
+    gap: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #252525;
+    border: 2px solid base.$primary-color;
+    width: 35%;
+    border-radius: 0;
+    height: 3em;
+  }
+
+  .form-btn:hover {
+    border: 3px solid base.$primary-color;
+  }
+
+  .pay-form-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .seller-info-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+
+      .label {
+        font-weight: 400;
+        color: #9B9B9B;
+      }
+    }
+
+    .sold-message {
+      padding: 5px;
+      color: base.$primary-color;
+      border: 2px dashed base.$primary-color;
+    }
+
+    .processing-payment-message {
+      color: orange;
+    }
+
+    .payment-failed {
+      color: red;
     }
   }
 
@@ -103,5 +147,28 @@
       font-size: 16px;
       font-weight: 400;
     }
+
+    .seller-review-heading {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      p {
+        display: inline;
+      }
+    }
+  }
+
+  .wishlist-btn {
+    border-radius: 0;
+    border-color: base.$border-color;
+    text-transform: capitalize;
+    color: #252525;
+    font-size: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: 30%;
   }
 }

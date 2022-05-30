@@ -3,7 +3,7 @@ package com.atlantbh.auctionappbackend.controller;
 import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
-import com.atlantbh.auctionappbackend.service.UserService;
+import com.atlantbh.auctionappbackend.service.AuthService;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class AuthControllerTest {
     private String apiPrefix;
 
     @MockBean
-    private UserService userService;
+    private AuthService authService;
     @MockBean
     private Algorithm signAlgorithm;
     @MockBean
@@ -65,7 +65,7 @@ public class AuthControllerTest {
 
     @Test
     public void testRegisterUserSuccess() throws Exception {
-        when(userService.registerUser(any())).thenReturn(user);
+        when(authService.registerUser(any())).thenReturn(user);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post(apiPrefix + "/auth/register")

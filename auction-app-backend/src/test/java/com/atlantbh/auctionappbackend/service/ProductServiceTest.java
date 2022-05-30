@@ -6,7 +6,7 @@ import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
-import com.atlantbh.auctionappbackend.response.PaginatedResponse;
+import com.atlantbh.auctionappbackend.response.ProductsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,18 +29,20 @@ import static org.mockito.Mockito.when;
 public class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
-
     @Mock
     private ProductUserBidRepository productUserBidRepository;
-
     @Mock
     private PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
+    @Mock
+    private StreetService streetService;
+    @Mock
+    private UserService userService;
 
     private ProductService productService;
 
     @BeforeEach
     void initUseCase() {
-        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation);
+        productService = new ProductService(productRepository, productUserBidRepository, priceRangeRepositoryImplementation, streetService, userService);
     }
 
     @Test
@@ -73,7 +75,7 @@ public class ProductServiceTest {
 
         when(productRepository.findAll(any(), anyBoolean(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
 
-        PaginatedResponse<Product> paginatedResponse
+        ProductsResponse productsResponse
                 = productService.getAll(
                         0,
                         4,
@@ -82,12 +84,13 @@ public class ProductServiceTest {
                         null,
                         "startDate",
                         "desc",
+                        null,
                         null
         );
 
-        assertThat(paginatedResponse.getCurrentPage()).isEqualTo(0);
-        assertThat(paginatedResponse.getData().size()).isEqualTo(2);
-        assertThat(paginatedResponse.getTotalPages()).isEqualTo(2);
+        assertThat(productsResponse.getPaginatedData().getCurrentPage()).isEqualTo(0);
+        assertThat(productsResponse.getPaginatedData().getData().size()).isEqualTo(2);
+        assertThat(productsResponse.getPaginatedData().getTotalPages()).isEqualTo(2);
     }
 
 }

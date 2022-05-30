@@ -3,21 +3,28 @@ package com.atlantbh.auctionappbackend.service;
 import com.atlantbh.auctionappbackend.domain.PriceRange;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
+import com.atlantbh.auctionappbackend.projection.ProductNameOnlyProjection;
+import com.atlantbh.auctionappbackend.projection.ProductIdOnlyProjection;
 import com.atlantbh.auctionappbackend.repository.PriceRangeRepositoryImplementation;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
 import com.atlantbh.auctionappbackend.response.PaginatedResponse;
+import com.atlantbh.auctionappbackend.response.ProductsResponse;
+import com.atlantbh.auctionappbackend.utils.EditDistanceCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,15 +34,17 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductUserBidRepository productUserBidRepository;
     private final PriceRangeRepositoryImplementation priceRangeRepositoryImplementation;
+    private final StreetService streetService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation) {
+    public ProductService(ProductRepository productRepository, ProductUserBidRepository productUserBidRepository, PriceRangeRepositoryImplementation priceRangeRepositoryImplementation, StreetService streetService, UserService userService) {
         this.productRepository = productRepository;
         this.productUserBidRepository = productUserBidRepository;
         this.priceRangeRepositoryImplementation = priceRangeRepositoryImplementation;
+        this.streetService = streetService;
     }
 
-    public Product getProductOverview(Long id) {
+    public Product getProductOverview(Long id, Long userId) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(
@@ -48,20 +57,38 @@ public class ProductService {
                     productUserBidRepository.findByProduct(product, Sort.by("amount").descending());
             product.setHighestBid(productBids.size() > 0 ? productBids.get(0).getAmount() : null);
             product.setNumberOfBids(productBids.size());
+            product.setHighestBidder(productBids.size() > 0 ? productBids.get(0).getUser() : null);
+            product.getSeller().initReviewRatingData();
+
+            if (userId != null) {
+                product.setWishlistedByUser(isProductWishlistedByUser(id, userId));
+            }
+          
             return product;
         }
     }
 
-    public PaginatedResponse<Product> getAll(
-                                                int page,
-                                                int size,
-                                                List<Long> categoryIds,
-                                                Double minPrice,
-                                                Double maxPrice,
-                                                String sortKey,
-                                                String sortDirection,
-                                                String search
-    ) {
+    private boolean isProductWishlistedByUser(Long productId, Long userId) {
+        List<ProductIdOnlyProjection> products =
+                productRepository.findProductsByWishlistUsersId(userId, ProductIdOnlyProjection.class);
+        for (ProductIdOnlyProjection p : products) {
+            if (p.getId().equals(productId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ProductsResponse getAll(
+            int page,
+            int size,
+            List<Long> categoryIds,
+            Double minPrice,
+            Double maxPrice,
+            String sortKey,
+            String sortDirection,
+            String search,
+            Long userId) {
         boolean categoriesAvailable = categoryIds != null;
         List<Order> sortOrders = getSortOrders(sortKey, sortDirection);
 
@@ -89,13 +116,86 @@ public class ProductService {
         Page<Product> pageProducts = productRepository.findAll(
                 categoryIds, categoriesAvailable, minPrice, maxPrice, search, PageRequest.of(page, size, sort)
         );
+        
+        if (userId != null) {
+            for (Product p : pageProducts.getContent()) {
+                p.setWishlistedByUser(isProductWishlistedByUser(p.getId(), userId));
+            }
+        }
 
-        return new PaginatedResponse<>(
-                pageProducts.getContent(),
-                pageProducts.getNumber(),
-                pageProducts.getTotalElements(),
-                pageProducts.getTotalPages()
+        String searchSuggestion = null;
+        if (search != null && pageProducts.getTotalElements() == 0) {
+            searchSuggestion = getSearchSuggestion(search);
+        }
+
+        return new ProductsResponse(
+                new PaginatedResponse<>(
+                        pageProducts.getContent(),
+                        pageProducts.getNumber(),
+                        pageProducts.getTotalElements(),
+                        pageProducts.getTotalPages()
+                ),
+                searchSuggestion
         );
+    }
+
+    /**
+     * This method is used to find an alternative string based on the provided one.
+     * The idea is as follows: Products are fetched from DB in small batches. We sort the products by
+     * name and use pagination to form these batches. The variable size defines the batch/page size.
+     * After a batch is fetched we check if the provided String value would be included in that batch.
+     * If yes we move on to find a String which has the smallest distance to the provided one,
+     * and if the distance is less than toleranceDistance we return that String. If the provided String is not between
+     * the lower and upper bound of the fetched batch, we fetch the next batch,
+     * and do so until the provided String value is lexicographically before the lower bound
+     * of the fetched batch. To calculate the smallest distance we use the utility class EditDistanceCalculator
+     * The size and toleranceDistance variables should be used for fine-tuning.
+     * @param searchedValue searched string
+     * @return String suggested search
+     */
+    private String getSearchSuggestion(String searchedValue) {
+        int page = 0;
+        int size = 20;
+        int toleranceDistance = 5;
+
+        Sort.Order order = new Sort.Order(Sort.Direction.ASC, "name").ignoreCase();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(order));
+
+        List<ProductNameOnlyProjection> products
+                = productRepository.findByEndDateGreaterThan(LocalDateTime.now(), pageable);
+
+        while (products.size() != 0) {
+            pageable = pageable.next();
+
+            if (products.get(0).getName().compareToIgnoreCase(searchedValue) > 0) {
+                return null;
+            }
+
+            if (searchedValue.compareToIgnoreCase(products.get(0).getName()) > 0
+                    && searchedValue.compareToIgnoreCase(products.get(products.size() - 1).getName()) < 0) {
+
+                int minDistance
+                        = EditDistanceCalculator.calculateLevenshteinDistance(searchedValue, products.get(0).getName());
+                String res = products.get(0).getName();
+
+                int distance;
+                for (ProductNameOnlyProjection p : products) {
+                    distance = EditDistanceCalculator.calculateLevenshteinDistance(searchedValue, p.getName());
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        res = p.getName();
+                    }
+                }
+                if (minDistance < toleranceDistance) {
+                    return res;
+                } else {
+                    return null;
+                }
+            }
+            products = productRepository.findByEndDateGreaterThan(LocalDateTime.now(), pageable);
+        }
+        return null;
     }
 
     private List<Order> getSortOrders(String sortKey, String sortDirection) {
@@ -143,5 +243,23 @@ public class ProductService {
 
     public PriceRange getProductPriceRange() {
         return priceRangeRepositoryImplementation.getProductPriceRange();
+    }
+
+    public Product createProduct(Product product) {
+        if (product.getEndDate().isBefore(product.getStartDate())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Auction end must be after auction start"
+            );
+        }
+
+        product.setStreet(streetService.findOrCreateLocation(product.getStreet()));
+
+        return productRepository.save(product);
+    }
+
+    @Transactional
+    public void setProductToSold(long productId) {
+        productRepository.updateSold(productId, true);
     }
 }

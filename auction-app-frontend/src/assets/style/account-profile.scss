@@ -1,0 +1,89 @@
+@use "base";
+
+.account-profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .save-btn {
+    align-self: flex-end;
+  }
+
+  .profile-btn {
+    border: 2px solid base.$primary-color;
+    border-radius: 0;
+    color: #252525;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .profile-btn:hover {
+    border: 2px solid base.$primary-color;
+  }
+
+  .change-photo-btn {
+    width: 360px;
+  }
+
+  .container-heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #FCFCFC;
+    border-bottom: 1px solid #E3E3E3;
+
+    h3 {
+      padding: 16px 32px 16px 32px;
+      font-weight: 400;
+      font-size: 18px;
+      color: #252525;
+    }
+  }
+
+  .heading-error {
+    border-bottom: 1px solid red;
+  }
+
+  .personal-info-container,
+  .card-info-container,
+  .location-info-container {
+    border: 1px solid #E3E3E3;
+  }
+
+  .personal-info-container {
+    margin-top: 10px;
+  }
+
+  .content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .change-photo-container {
+    flex-basis: 30%;
+
+    .photo {
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      overflow: hidden;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .circular-progress {
+      margin: 165px;
+    }
+  }
+
+  .data-container {
+    flex-basis: 60%;
+  }
+
+  .spacer {
+    flex-basis: 30%;
+  }
+}

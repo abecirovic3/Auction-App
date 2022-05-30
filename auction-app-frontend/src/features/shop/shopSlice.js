@@ -7,7 +7,8 @@ export const shopSlice = createSlice({
         page: 0,
         isLastPage: false,
         gridItemWidth: 4,
-        errorAlerts: []
+        errorAlerts: [],
+        searchSuggestion: null
     },
     reducers: {
         setProducts: (state, action) => {
@@ -24,6 +25,9 @@ export const shopSlice = createSlice({
         },
         setErrorAlerts: (state, action) => {
             state.errorAlerts = action.payload
+        },
+        setSearchSuggestion: (state, action) => {
+            state.searchSuggestion = action.payload
         }
     },
 });
@@ -33,7 +37,8 @@ export const {
     setPage,
     setIsLastPage,
     setGridItemWidth,
-    setErrorAlerts
+    setErrorAlerts,
+    setSearchSuggestion
 } = shopSlice.actions;
 
 export default shopSlice.reducer;

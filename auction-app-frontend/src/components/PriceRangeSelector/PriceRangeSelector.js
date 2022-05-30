@@ -2,9 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { InputAdornment, Slider, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-    setPriceRange
-} from 'features/productFilters/productFiltersSlice';
+import { setPriceRange } from 'features/productFilters/productFiltersSlice';
 
 import ProductPriceRangeService from 'services/ProductPriceRangeService';
 import useShopService from 'hooks/useShopService';
@@ -26,9 +24,15 @@ const PriceRangeSelector = () => {
                 const min = response.data.minPrice;
                 const max = response.data.maxPrice;
                 setMinMaxPrice([min, max]);
-                setPriceSlider([min, max]);
-                setMinPriceField(min);
-                setMaxPriceField(max);
+                if (filters.minPrice != null && filters.maxPrice != null) {
+                    setPriceSlider([filters.minPrice, filters.maxPrice]);
+                    setMinPriceField(filters.minPrice);
+                    setMaxPriceField(filters.maxPrice);
+                } else {
+                    setPriceSlider([min, max]);
+                    setMinPriceField(min);
+                    setMaxPriceField(max);
+                }
             })
             .catch(err => {
                 shopService.handleError(err);

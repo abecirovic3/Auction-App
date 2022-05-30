@@ -3,7 +3,7 @@ package com.atlantbh.auctionappbackend.controller;
 import com.atlantbh.auctionappbackend.domain.User;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
-import com.atlantbh.auctionappbackend.service.UserService;
+import com.atlantbh.auctionappbackend.service.AuthService;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,13 +37,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path = "${application.api.prefix}/auth")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
     private final Algorithm signAlgorithm;
     private final JwtConfig jwtConfig;
 
     @Autowired
-    public AuthController(UserService userService, Algorithm signAlgorithm, JwtConfig jwtConfig) {
-        this.userService = userService;
+    public AuthController(AuthService authService, Algorithm signAlgorithm, JwtConfig jwtConfig) {
+        this.authService = authService;
         this.signAlgorithm = signAlgorithm;
         this.jwtConfig = jwtConfig;
     }
@@ -51,7 +51,7 @@ public class AuthController {
     @PostMapping(path = "/register")
     public ResponseEntity<User> processRegister(@RequestBody @Valid User user) {
         return new ResponseEntity<>(
-                userService.registerUser(user),
+                authService.registerUser(user),
                 HttpStatus.OK
         );
     }
@@ -86,7 +86,7 @@ public class AuthController {
             try {
                 String refreshToken = JwtUtil.getTokenFromHeader(jwtConfig.getTokenPrefix(), authorizationHeader);
                 String email = JwtUtil.verifyToken(signAlgorithm, refreshToken).getSubject();
-                User user = userService.getUserByEmail(email);
+                User user = authService.getUserByEmail(email);
                 String accessToken = JwtUtil.createToken(
                         signAlgorithm,
                         user.getEmail(),

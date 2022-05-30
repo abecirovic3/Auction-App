@@ -1,0 +1,16 @@
+@use "base";
+
+.account-seller-container {
+  .btn-tab {
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 0;
+    box-sizing: border-box;
+    box-shadow: none;
+    text-transform: none;
+  }
+
+  .btn-inactive {
+    border: 1px solid base.$border-color;
+  }
+}

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -27,6 +28,10 @@ public class CategoryService {
         for (Category c : categories) {
             c.setSubCategories(categoryRepository.findAllSubCategoriesWithProductCountBySuperCategory(c.getId()));
         }
-        return categories;
+        return categories.stream().filter(category -> !category.getSubCategories().isEmpty()).collect(Collectors.toList());
+    }
+
+    public List<Category> getAllCategoriesPure() {
+        return categoryRepository.findAllBySuperCategoryIsNull();
     }
 }

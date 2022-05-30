@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/abecirovic3/Auction-App">
-    <img src="https://i.imgur.com/DBnqHR8.png" alt="Logo" width="80" height="80">
+    <img src="https://i.imgur.com/azpeC0F.png" alt="Logo" width="83" height="94">
   </a>
 
   <h3 align="center">Auction App</h3>
@@ -68,6 +68,14 @@ To start the app, in the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+In order to use the image upload services you will need to have a valid <a href="https://imgur.com/" target="_blank"> Imgur </a> Client-ID. To get a Client-ID you will need to register your app. You can do so by following <a href="https://apidocs.imgur.com/" target="_blank"> these </a> instructions. After you have your Client-ID, you can than run the app like this:
+
+```sh
+REACT_APP_IMGUR_API_KEY=<YOUR CLIENT-ID> npm start
+```
+
+Or you can set the `REACT_APP_IMGUR_API_KEY` environment variable.
+
 
 ### Backend Prerequisites
 
@@ -80,8 +88,9 @@ To run the app you can either use <a href="https://maven.apache.org/" target="bl
 If Maven is setup on your system, in the project root directory run the command:
 
 ```sh
-   mvn spring-boot:run
-   ```
+mvn spring-boot:run
+```
+
 If everything went well the server should start and the connection to the database should be established.
 
 To check available routes open [http://localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)

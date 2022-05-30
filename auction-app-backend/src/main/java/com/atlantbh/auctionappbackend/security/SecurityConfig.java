@@ -4,7 +4,7 @@ import com.atlantbh.auctionappbackend.api.ApiConfig;
 import com.atlantbh.auctionappbackend.api.AuthWhitelistConfig;
 import com.atlantbh.auctionappbackend.filter.JwtAuthenticationFilter;
 import com.atlantbh.auctionappbackend.filter.JwtAuthorizationFilter;
-import com.atlantbh.auctionappbackend.service.UserService;
+import com.atlantbh.auctionappbackend.service.AuthService;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtConfig jwtConfig;
     private final ApiConfig apiConfig;
     private final Algorithm signAlgorithm;
-    private final UserService userService;
+    private final AuthService authService;
 
     @Autowired
     public SecurityConfig(
@@ -36,14 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             JwtConfig jwtConfig,
                             ApiConfig apiConfig,
                             Algorithm signAlgorithm,
-                            UserService userService
+                            AuthService authService
     ) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtConfig = jwtConfig;
         this.apiConfig = apiConfig;
         this.signAlgorithm = signAlgorithm;
-        this.userService = userService;
+        this.authService = authService;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter =
-                new JwtAuthenticationFilter(authenticationManagerBean(), signAlgorithm, jwtConfig, userService);
+                new JwtAuthenticationFilter(authenticationManagerBean(), signAlgorithm, jwtConfig, authService);
         jwtAuthenticationFilter.setFilterProcessesUrl(apiConfig.getPrefix() + "/auth/login");
 
         http.csrf().disable();

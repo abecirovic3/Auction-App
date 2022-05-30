@@ -7,9 +7,9 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, StyledEngineProvider  } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setLoggedIn } from 'features/login/loginSlice';
 import AuthService from 'services/AuthService';
@@ -22,6 +22,7 @@ import 'assets/style/form.scss'
 const Login = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
+    const routeHistory = useSelector(state => state.routeHistory.routes);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -32,6 +33,21 @@ const Login = () => {
 
     const dispatch = useDispatch();
 
+    const userLoggedIn = useSelector((state) => state.login.userLoggedIn);
+
+    useEffect(() => {
+        if (userLoggedIn) {
+            if (routeHistory[0] === '/register') {
+                navigate('/');
+            } else if (state?.beforeMyAccount) {
+                navigate('/account');
+            } else {
+                navigate(-1);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userLoggedIn]);
+
     function handleSubmit() {
         setLoading(true);
         AuthService.login(email, password, rememberMe)
@@ -39,11 +55,6 @@ const Login = () => {
                 response => {
                     setLoading(false);
                     dispatch(setLoggedIn(true));
-                    if (state?.loginAfterRegister) {
-                        navigate('/');
-                    } else {
-                        navigate(-1);
-                    }
                 },
                 err => {
                     setLoading(false);
@@ -70,6 +81,14 @@ const Login = () => {
                         color='warning'
                         title='You have been logged out!'
                         message='Please login again to proceed'
+                        showAlertDuration={7000}
+                    />
+                }
+                {state?.beforeMyAccount &&
+                    <CustomAlert
+                        color='info'
+                        title='Login required'
+                        message='Please login to proceed'
                         showAlertDuration={7000}
                     />
                 }
@@ -120,6 +139,7 @@ const Login = () => {
 
                             <Stack spacing={2}>
                                 <LoadingButton
+                                    className='MuiButton-standard-height'
                                     loading={loading}
                                     loadingPosition='end'
                                     endIcon={<div/>}

@@ -1,0 +1,30 @@
+@use "base";
+
+.user-account-container {
+  .user-account-content-container {
+    width: base.$main-width;
+    margin: 40px auto auto auto;
+
+    .tab-selector {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .tab-btn,
+    .add-item-btn {
+      border-radius: 0;
+      font-size: 18px;
+    }
+
+    .tab-btn {
+      text-transform: capitalize;
+      width: 130px;
+    }
+
+    .add-item-btn {
+      width: 200px;
+    }
+  }
+}

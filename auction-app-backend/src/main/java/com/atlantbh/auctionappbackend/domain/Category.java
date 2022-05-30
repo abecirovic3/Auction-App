@@ -1,5 +1,6 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -19,10 +20,22 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import java.util.List;
 
 @Entity(name = "Category")
-@Table(name = "category")
+@Table(
+        name = "category",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "category_name_unique",
+                        columnNames = {
+                                "name",
+                                "super_category_id"
+                        }
+                )
+        }
+)
 @SqlResultSetMapping(
         name = "categoryProductCountMapping",
         classes = @ConstructorResult(
@@ -60,11 +73,11 @@ public class Category {
             name = "super_category_id",
             foreignKey = @ForeignKey(name = "super_category_id")
     )
-    @JsonIgnore
+    @JsonBackReference(value = "category-category-reference")
     private Category superCategory;
 
     @OneToMany(mappedBy = "superCategory")
-    @JsonManagedReference
+    @JsonManagedReference(value = "category-category-reference")
     private List<Category> subCategories;
 
     @Column(nullable = false)

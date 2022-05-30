@@ -21,7 +21,7 @@ const ProductOverview = () => {
     const LoginService = useLoginService();
 
     useEffect(() => {
-        ProductService.getProductById(params.id)
+        ProductService.getProductById(params.id, TokenService.getUserCredentials()?.id)
             .then(response => {
                 setProduct(response.data);
             })
@@ -62,7 +62,14 @@ const ProductOverview = () => {
 
     return (
         <div className='product-overview-container'>
-            {errorAlert && <CustomAlert color='error' title={errorAlert.error} message={errorAlert.message} showAlertDuration={60000}  />}
+            {errorAlert &&
+                <CustomAlert
+                    color='error'
+                    title={errorAlert.error}
+                    message={errorAlert.message}
+                    showAlertDuration={60000}
+                />
+            }
 
             {product &&
                 <>

@@ -9,11 +9,13 @@ import ShopFilters from 'components/Shop/ShopFilters/ShopFilters';
 import ShopProductsGrid from 'components/Shop/ShopProductsGrid/ShopProductsGrid';
 import CustomAlert from 'components/Alert/CustomAlert';
 import BreadCrumbsBar from 'components/BreadCrumbsBar/BreadCrumbsBar';
+import SearchSuggestionBar from 'components/SearchSuggestionBar/SearchSuggestionBar';
 
 import 'assets/style/shop-page.scss';
 
 const Shop = () => {
     const errorAlerts = useSelector(state => state.shop.errorAlerts);
+    const searchSuggestion = useSelector(state => state.shop.searchSuggestion);
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -37,6 +39,9 @@ const Shop = () => {
                         marginBottom='10px'
                     />
                 ))
+            }
+            {searchSuggestion &&
+                <SearchSuggestionBar suggestion={searchSuggestion} />
             }
             {location.pathname.includes('/search') &&
                 <BreadCrumbsBar />

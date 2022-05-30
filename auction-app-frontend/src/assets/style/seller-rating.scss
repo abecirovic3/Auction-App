@@ -1,0 +1,66 @@
+@use "base";
+
+.seller-rating-overview-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .average-rating {
+    flex-basis: 50%;
+    text-align: center;
+
+    .avg-rating-value {
+      font-size: 48px;
+      color: #252525;
+    }
+
+    .ratings-count {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      .count-message {
+        font-weight: 400;
+        color: #252525;
+      }
+    }
+  }
+  .rating-bars {
+    flex-basis: 50%;
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bar-rating {
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+      justify-items: center;
+      width: 15%;
+
+      h3 {
+        display: inline;
+        color: #252525;
+      }
+    }
+
+    .bar-outline {
+      height: 20px;
+      border: 1px solid base.$primary-color;
+      padding: 2px;
+      width: 85%;
+      margin-bottom: 8px;
+    }
+    
+    .bar {
+      height: 20px;
+      background-color: base.$primary-color;
+    }
+  }
+}

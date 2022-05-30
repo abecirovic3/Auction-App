@@ -1,0 +1,57 @@
+.review-dialog-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .heading {
+    background-color: #FAFAFA;
+    padding: 10px;
+  }
+
+  .img-round {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+  }
+
+  .name-label {
+    color: #7A7A7A;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  h2 {
+    color: #252525;
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
+  .stars,
+  .button-bar {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .stars {
+    width: 50%;
+  }
+
+  .button-bar {
+    width: 85%;
+    margin-bottom: 30px;
+
+    .MuiButton-root {
+      border-radius: 0;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .skip-btn {
+      border-color: #9B9B9B;
+      color: #252525;
+    }
+  }
+}

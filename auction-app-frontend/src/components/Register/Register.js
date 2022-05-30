@@ -139,6 +139,7 @@ const Register = () => {
 
                             <Stack spacing={2}>
                                 <LoadingButton
+                                    className='MuiButton-standard-height'
                                     loading={loading}
                                     loadingPosition='end'
                                     endIcon={<div/>}

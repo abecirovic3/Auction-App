@@ -1,8 +1,11 @@
 package com.atlantbh.auctionappbackend.domain;
 
+import com.atlantbh.auctionappbackend.constraint.AuctionStartDatePreference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -10,13 +13,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.Valid;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "Product")
 @Table(name = "product")
@@ -35,25 +45,33 @@ public class Product {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Product name is required")
     private String name;
 
     @Column(nullable = false, columnDefinition="TEXT")
+    @NotBlank(message = "Product description is required")
     private String description;
 
     @Column(nullable = false)
+    @NotNull(message = "Start price is required")
+    @Positive(message = "Start price must be positive")
     private Double startPrice;
 
     @Column(nullable = false)
+    @NotNull(message = "Start date is required")
+    @AuctionStartDatePreference(message = "Auction start cannot be in the past")
     private LocalDateTime startDate;
 
     @Column(nullable = false)
+    @NotNull(message = "End date is required")
+    @FutureOrPresent(message = "Auction end cannot be in the past")
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "product")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "product-image-reference")
     private List<ProductImage> images;
     
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<ProductUserBid> productBids;
 
@@ -63,6 +81,7 @@ public class Product {
             foreignKey = @ForeignKey(name = "seller_id"),
             nullable = false
     )
+    @NotNull(message = "Seller is required")
     private User seller;
 
     @ManyToOne
@@ -72,14 +91,41 @@ public class Product {
             nullable = false
     )
     @JsonIgnore
+    @NotNull(message = "Category is required")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "street_id",
+            foreignKey = @ForeignKey(name = "street_id"),
+            nullable = false
+    )
+    @NotNull(message = "Street is required")
+    @Valid
+    private Street street;
 
     private Integer size;
     private String color;
     private Double highestBid;
 
+    private Boolean sold;
+
     @Transient
     private Integer numberOfBids;
+
+    @Transient
+    private User highestBidder;
+
+    @ManyToMany(cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "wishlistProducts")
+    @JsonIgnore
+    private Set<User> wishlistUsers;
+
+    @Transient
+    private Boolean wishlistedByUser;
 
     public Product() {
         // No args constructor needed by **framework**
@@ -251,6 +297,7 @@ public class Product {
         return category;
     }
 
+    @JsonProperty
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -269,5 +316,53 @@ public class Product {
 
     public void setNumberOfBids(Integer numberOfBids) {
         this.numberOfBids = numberOfBids;
+    }
+
+    public Street getStreet() {
+        return street;
+    }
+
+    public void setStreet(Street street) {
+        this.street = street;
+    }
+
+    public User getHighestBidder() {
+        return highestBidder;
+    }
+
+    public void setHighestBidder(User highestBidder) {
+        this.highestBidder = highestBidder;
+    }
+
+    public Boolean getSold() {
+        return sold;
+    }
+
+    public void setSold(Boolean sold) {
+        this.sold = sold;
+    }
+
+    public Set<User> getWishlistUsers() {
+        return wishlistUsers;
+    }
+
+    public void setWishlistUsers(Set<User> wishlistUsers) {
+        this.wishlistUsers = wishlistUsers;
+    }
+
+    public Boolean isWishlistedByUser() {
+        return wishlistedByUser;
+    }
+
+    public void setWishlistedByUser(boolean wishlistedByUser) {
+        this.wishlistedByUser = wishlistedByUser;
+    }
+
+    public Boolean getWishlistedByUser() {
+        return wishlistedByUser;
+    }
+
+    public void setWishlistedByUser(Boolean wishlistedByUser) {
+        this.wishlistedByUser = wishlistedByUser;
     }
 }
