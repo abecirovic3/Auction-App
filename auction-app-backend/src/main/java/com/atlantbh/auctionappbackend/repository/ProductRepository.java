@@ -36,4 +36,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllBySeller(User seller);
 
     List<ProductNameOnlyProjection> findByEndDateGreaterThan(LocalDateTime date, Pageable pageable);
+
+    <T> List<T> findProductsByWishlistUsersId(Long userId, Class<T> type);
+
+    @Query(nativeQuery = true, value = "SELECT pi.image_url FROM product_image pi WHERE pi.product_id = :id LIMIT 1")
+    String findProductImage(Long id);
 }

@@ -8,6 +8,7 @@ import AuctionTimeUtil from 'utils/AuctionTimeUtil';
 import PaymentService from 'services/PaymentService';
 import useLoginService from 'hooks/useLoginService';
 import ReviewService from 'services/ReviewService';
+import UserService from 'services/UserService';
 
 import CustomAlert from 'components/Alert/CustomAlert';
 import SellerRatingOverview from 'components/ProductOverviewInfo/SellerRatingOverview';
@@ -15,6 +16,7 @@ import ReviewDialog from 'components/ProductOverviewInfo/ReviewDialog';
 
 import RightArrow from '@mui/icons-material/ArrowForwardIosOutlined';
 import userImagePlaceholder from 'assets/img/profile-placeholder.png';
+import HeartIcon from '@mui/icons-material/FavoriteBorder';
 
 import MainTheme from 'themes/MainTheme';
 import 'assets/style/product-overview-info.scss';
@@ -31,6 +33,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     const [activeTab, setActiveTab] = useState({ details: true, reviews: false });
     const [showReviewDialog, setShowReviewDialog] = useState(false);
     const navigate = useNavigate();
+    const [addedToWishlist, setAddedToWishlist] = useState(false);
 
     useEffect(() => {
         const sessionId = new URLSearchParams(window.location.search).get(
@@ -180,6 +183,25 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     function handleDialogClose() {
         setShowReviewDialog(false);
     }
+  
+    function handleAddToWishlist() {
+        UserService.addProductToWishlist(product.id)
+            .then(response => {
+                setAddedToWishlist(true);
+            })
+            .catch(err => {
+                if (err.response?.status === 403) {
+                    loginService.reinitiateLogin();
+                } else {
+                    setErrorAlerts([...errorAlerts, err.response.data]);
+                }
+            });
+    }
+
+    function showAddToWishlistButton() {
+        return TokenService.getUserCredentials()?.id && !product.wishlistedByUser
+            && TokenService.getUserCredentials()?.id !== product.seller?.id;
+    }
 
     return (
         <ThemeProvider theme={MainTheme}>
@@ -210,6 +232,19 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
                 <Stack gap={4} >
                     <Stack gap={2} >
                         <h3 className='product-name'>{product.name}</h3>
+                        {addedToWishlist ?
+                            <h3 className='label'>Added to wishlist</h3> :
+                            (showAddToWishlistButton() &&
+                                <Button
+                                    variant='outlined'
+                                    onClick={handleAddToWishlist}
+                                    className='wishlist-btn'
+                                    endIcon={<HeartIcon />}
+                                >
+                                    Wishlist
+                                </Button>
+                            )
+                        }
                         <div>
                             <p className='label price-label'>Start from</p>
                             <p className='value'>${product.startPrice}</p>

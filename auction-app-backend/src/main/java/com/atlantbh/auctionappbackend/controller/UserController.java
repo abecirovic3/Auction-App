@@ -3,6 +3,7 @@ package com.atlantbh.auctionappbackend.controller;
 import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.domain.User;
+import com.atlantbh.auctionappbackend.projection.ProductWishlistDTO;
 import com.atlantbh.auctionappbackend.request.UserUpdateRequest;
 import com.atlantbh.auctionappbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,6 +72,32 @@ public class UserController {
     public ResponseEntity<List<ProductUserBid>> getAllBids(@PathVariable Long id) {
         return new ResponseEntity<>(
                 userService.getAllBids(id),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping(path = "/{id}/wishlist")
+    public ResponseEntity<Void> addToWishlist(
+            @PathVariable Long id,
+            @RequestParam() Long productId
+    ) {
+        userService.addToWishlist(id, productId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "/{id}/wishlist")
+    public ResponseEntity<Void> removeFromWishlist(
+            @PathVariable Long id,
+            @RequestParam() Long productId
+    ) {
+        userService.removeFromWishlist(id, productId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path = "/{id}/wishlist")
+    public ResponseEntity<List<ProductWishlistDTO>> getAllWishlistProducts(@PathVariable Long id) {
+        return new ResponseEntity<>(
+                userService.getAllWishlistProducts(id),
                 HttpStatus.OK
         );
     }

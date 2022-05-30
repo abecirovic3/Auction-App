@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,6 +29,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Entity(name = "User")
 @Table(
@@ -111,6 +114,20 @@ public class User {
 
     @Transient
     private Map<Byte, Long> ratingCounters;
+
+    @ManyToMany(
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }
+    )
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    @JsonIgnore
+    Set<Product> wishlistProducts;
 
     public User() {
         // No args constructor needed by **framework**
@@ -331,6 +348,28 @@ public class User {
                 byte rating = review.getRating();
                 ratingCounters.put(rating, ratingCounters.get(rating) + 1);
             }
+        }
+    }
+
+    public Set<Product> getWishlistProducts() {
+        return wishlistProducts;
+    }
+
+    public void setWishlistProducts(Set<Product> wishlistProducts) {
+        this.wishlistProducts = wishlistProducts;
+    }
+
+    public void addWishlistProduct(Product product) {
+        this.wishlistProducts.add(product);
+        product.getWishlistUsers().add(this);
+    }
+
+    public void removeWishlistProduct(Long productId) {
+        Product product =
+                this.wishlistProducts.stream().filter(p -> p.getId().equals(productId)).findFirst().orElse(null);
+        if (product != null) {
+            this.wishlistProducts.remove(product);
+            product.getWishlistUsers().remove(this);
         }
     }
 }

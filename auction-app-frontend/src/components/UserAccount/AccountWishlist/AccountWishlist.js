@@ -1,13 +1,85 @@
+import { useEffect, useState } from 'react';
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import imagePlaceholder from 'assets/img/imagePlaceholder.png';
+import { useNavigate } from 'react-router-dom';
 
+import isPast from 'date-fns/isPast';
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+
+import useLoginService from 'hooks/useLoginService';
+import UserService from 'services/UserService';
+
+import imagePlaceholder from 'assets/img/imagePlaceholder.png';
 import wishlistHeart from 'assets/img/wishlist-heart.png';
 
 import 'assets/style/account-table.scss';
+import CustomAlert from 'components/Alert/CustomAlert';
 
 const AccountWishlist = () => {
+    const loginService = useLoginService();
+    const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
+    const [errorAlerts, setErrorAlerts] = useState([]);
+
+    useEffect(() => {
+        loginService.isUserLoggedIn()
+            .then(() => {
+                UserService.getAllWishlistedProducts()
+                    .then(response => {
+                        setProducts(response.data);
+                    })
+                    .catch(err => {
+                        if (err.response?.status === 403) {
+                            loginService.setUserLoggedOut();
+                        } else {
+                            setErrorAlerts([...errorAlerts, err.response.data]);
+                        }
+                    });
+            })
+            .catch(() => {
+                loginService.setUserLoggedOut();
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    function getTimeLeftMessage(endDate) {
+        if (isPast(new Date(endDate))) {
+            return 'Auction ended';
+        }
+        return formatDistanceToNowStrict(new Date(endDate));
+    }
+
+    function handleDeleteFromWishlist(productId) {
+        loginService.isUserLoggedIn()
+            .then(() => {
+                UserService.removeProductFromWishlist(productId)
+                    .then(response => {
+                        setProducts(products.filter(product => product.id !== productId));
+                    })
+                    .catch(err => {
+                        if (err.response?.status === 403) {
+                            loginService.setUserLoggedOut();
+                        } else {
+                            setErrorAlerts([...errorAlerts, err.response.data]);
+                        }
+                    });
+            })
+            .catch(() => {
+                loginService.setUserLoggedOut();
+            });
+    }
+
     return (
         <div className='account-wishlist-container account-table-container'>
+            {
+                errorAlerts.map((err, i) =>
+                    <CustomAlert
+                        key={i} color='error'
+                        error={err}
+                        showAlertDuration={60000}
+                        marginBottom='10px'
+                    />
+                )
+            }
             <div className='table-container'>
                 <Table>
                     <TableHead>
@@ -21,50 +93,62 @@ const AccountWishlist = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow>
-                            <TableCell>
-                                <img
-                                    height='80px'
-                                    width='80px'
-                                    src={imagePlaceholder}
-                                    alt="cover"
-                                />
-                            </TableCell>
-                            <TableCell>
-                                Name
-                                <p className='product-hash'>#12345</p>
-                            </TableCell>
-                            <TableCell>12h</TableCell>
-                            <TableCell>120</TableCell>
-                            <TableCell>
-                                <Button
-                                    className='table-btn'
-                                    variant='contained'
-                                    color='gray'
-                                    fullWidth
-                                >
-                                    Remove
-                                </Button>
-                            </TableCell>
-                            <TableCell>
-                                <Button
-                                    className='table-btn'
-                                    variant='outlined'
-                                    fullWidth
-                                >
-                                    Bid
-                                </Button>
-                            </TableCell>
-                        </TableRow>
+                        {
+                            products.map(product => (
+                                <TableRow key={product.id}>
+                                    <TableCell>
+                                        <img
+                                            height='80px'
+                                            width='80px'
+                                            src={product.coverImageUrl || imagePlaceholder}
+                                            alt="cover"
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        {product.name}
+                                        <p className='product-hash'>#{product.id}</p>
+                                    </TableCell>
+                                    <TableCell>{getTimeLeftMessage(product.endDate)}</TableCell>
+                                    <TableCell>{product.highestBid || '/'}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            className='table-btn'
+                                            variant='contained'
+                                            color='gray'
+                                            fullWidth
+                                            onClick={() => {handleDeleteFromWishlist(product.id)}}
+                                        >
+                                            Remove
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            className='table-btn'
+                                            variant='outlined'
+                                            fullWidth
+                                            onClick={ () => {
+                                                navigate(`/shop/product-overview/${product.id}`)
+                                            }}
+                                        >
+                                            {!isPast(new Date(product.end_date)) ?
+                                                'Bid' :
+                                                'View'
+                                            }
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
                     </TableBody>
                 </Table>
-                {
+                {products.length === 0 &&
                     <div className='no-data-info-container'>
                         <img src={wishlistHeart} alt='hammer '/>
                         <h3 className='message'>Your wishlist is empty! Start browsing the shop.</h3>
                         <Button
                             className='start-btn'
                             variant='outlined'
+                            onClick={() => {navigate('/shop')}}
                         >
                             Visit Shop
                         </Button>

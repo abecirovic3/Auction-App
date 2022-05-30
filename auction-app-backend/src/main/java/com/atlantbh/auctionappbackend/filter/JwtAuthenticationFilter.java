@@ -1,6 +1,7 @@
 package com.atlantbh.auctionappbackend.filter;
 
 import com.atlantbh.auctionappbackend.domain.User;
+import com.atlantbh.auctionappbackend.projection.UserLoginProjection;
 import com.atlantbh.auctionappbackend.security.JwtConfig;
 import com.atlantbh.auctionappbackend.service.AuthService;
 import com.atlantbh.auctionappbackend.utils.JwtUtil;
@@ -86,7 +87,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
-        User responseUser = authService.getUserByEmail(user.getUsername());
+        UserLoginProjection responseUser = authService.getUserLoginCredentials(user.getUsername());
 
         String accessToken = JwtUtil.createToken(
                 signAlgorithm,

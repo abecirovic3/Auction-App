@@ -5,6 +5,8 @@ import com.atlantbh.auctionappbackend.domain.Product;
 import com.atlantbh.auctionappbackend.domain.ProductUserBid;
 import com.atlantbh.auctionappbackend.domain.Street;
 import com.atlantbh.auctionappbackend.domain.User;
+import com.atlantbh.auctionappbackend.projection.ProductWishlistDTO;
+import com.atlantbh.auctionappbackend.projection.ProductWishlistProjection;
 import com.atlantbh.auctionappbackend.repository.CardRepository;
 import com.atlantbh.auctionappbackend.repository.ProductRepository;
 import com.atlantbh.auctionappbackend.repository.ProductUserBidRepository;
@@ -14,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -112,5 +116,50 @@ public class UserService {
 
     public List<ProductUserBid> getAllBids(Long id) {
         return productUserBidRepository.findMaxProductBidsByUser(id);
+    }
+
+    public void addToWishlist(Long id, Long productId) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "User with id " + id + " doesn't exist"
+        ));
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Product with id " + id + " doesn't exist"
+        ));
+
+        user.addWishlistProduct(product);
+
+        userRepository.save(user);
+    }
+
+    public void removeFromWishlist(Long id, Long productId) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "User with id " + id + " doesn't exist"
+        ));
+
+        productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Product with id " + id + " doesn't exist"
+        ));
+
+        user.removeWishlistProduct(productId);
+
+        userRepository.save(user);
+    }
+
+    public List<ProductWishlistDTO> getAllWishlistProducts(Long id) {
+        List<ProductWishlistProjection> products =
+                productRepository.findProductsByWishlistUsersId(id, ProductWishlistProjection.class);
+
+        List<ProductWishlistDTO> resProducts = new LinkedList<>();
+
+        for (ProductWishlistProjection p : products) {
+            resProducts.add(new ProductWishlistDTO(p, productRepository.findProductImage(p.getId())));
+        }
+
+        return resProducts;
     }
 }

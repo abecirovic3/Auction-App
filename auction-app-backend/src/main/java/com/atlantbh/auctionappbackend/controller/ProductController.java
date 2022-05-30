@@ -34,9 +34,12 @@ public class ProductController {
     }
 
     @GetMapping(path = "/products/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+    public ResponseEntity<Product> getProduct(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long userId
+    ) {
         return new ResponseEntity<>(
-                productService.getProductOverview(id),
+                productService.getProductOverview(id, userId),
                 HttpStatus.OK
         );
     }
@@ -50,11 +53,12 @@ public class ProductController {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "name") String sortKey,
             @RequestParam(defaultValue = "asc") String sortDirection,
-            @RequestParam(defaultValue = "") String search
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(required = false) Long userId
     ) {
         return new ResponseEntity<>(
                 productService.getAll(
-                        page, size, categories, minPrice, maxPrice, sortKey, sortDirection, search
+                        page, size, categories, minPrice, maxPrice, sortKey, sortDirection, search, userId
                 ),
                 HttpStatus.OK
         );

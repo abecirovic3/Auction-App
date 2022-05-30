@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button } from '@mui/material';
+import { Button, ThemeProvider } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import ProductService from 'services/ProductService';
@@ -7,6 +7,7 @@ import ProductService from 'services/ProductService';
 import Product from 'components/Product/Product';
 import CustomAlert from 'components/Alert/CustomAlert';
 
+import MainTheme from 'themes/MainTheme';
 import 'assets/style/home-page-product-tabs.scss';
 import 'assets/style/infinite-scroll-grid.scss';
 
@@ -99,54 +100,56 @@ const HomeProductsTabContainer = () => {
     }
 
     return (
-        <div className='home-product-tabs-container'>
-            <div className='home-product-tabs-content-container'>
-                <div className='tab-selector'>
-                    <Button
-                        onClick={() => {handleTabChange('newArrivals')}}
-                        className={activeTab.newArrivals ? 'tab-selector-btn-active' : 'tab-selector-btn'}
-                    >
-                        New Arrivals
-                    </Button>
-                    <Button
-                        onClick={() => {handleTabChange('lastChance')}}
-                        className={activeTab.lastChance ? 'tab-selector-btn-active' : 'tab-selector-btn'}
-                    >
-                        Last Chance
-                    </Button>
+        <ThemeProvider theme={MainTheme}>
+            <div className='home-product-tabs-container'>
+                <div className='home-product-tabs-content-container'>
+                    <div className='tab-selector'>
+                        <Button
+                            onClick={() => {handleTabChange('newArrivals')}}
+                            className={activeTab.newArrivals ? 'tab-selector-btn-active' : 'tab-selector-btn'}
+                        >
+                            New Arrivals
+                        </Button>
+                        <Button
+                            onClick={() => {handleTabChange('lastChance')}}
+                            className={activeTab.lastChance ? 'tab-selector-btn-active' : 'tab-selector-btn'}
+                        >
+                            Last Chance
+                        </Button>
+                    </div>
+
+                    {
+                        alert &&
+                        <CustomAlert
+                            color='error'
+                            title={alert.error}
+                            message={alert.message}
+                            showAlertDuration={60000}
+                        />
+                    }
+
+                    {tabLoading ?
+                        <p className='loading-label'>Loading...</p>
+                        :
+                        <InfiniteScroll
+                            className='infinite-scroll-grid'
+                            next={handleProductsScroll}
+                            hasMore={!isLastPage}
+                            loader={<p className='loading-label'>Loading...</p>}
+                            dataLength={products.length}
+                        >
+                            {
+                                products.map(product => (
+                                    <div key={product.id} className='grid-item'>
+                                        <Product product={product} />
+                                    </div>
+                                ))
+                            }
+                        </InfiniteScroll>
+                    }
                 </div>
-
-                {
-                    alert &&
-                    <CustomAlert
-                        color='error'
-                        title={alert.error}
-                        message={alert.message}
-                        showAlertDuration={60000}
-                    />
-                }
-
-                {tabLoading ?
-                    <p className='loading-label'>Loading...</p>
-                    :
-                    <InfiniteScroll
-                        className='infinite-scroll-grid'
-                        next={handleProductsScroll}
-                        hasMore={!isLastPage}
-                        loader={<p className='loading-label'>Loading...</p>}
-                        dataLength={products.length}
-                    >
-                        {
-                            products.map(product => (
-                                <div key={product.id} className='grid-item'>
-                                    <Product product={product} />
-                                </div>
-                            ))
-                        }
-                    </InfiniteScroll>
-                }
             </div>
-        </div>
+        </ThemeProvider>
     );
 };
 

@@ -73,7 +73,7 @@ public class ProductControllerTest {
         PaginatedResponse<Product> paginatedResponse = new PaginatedResponse<>(products, 0, 2, 2);
         ProductsResponse productsResponse = new ProductsResponse(paginatedResponse, null);
 
-        when(productService.getAll(anyInt(), anyInt(), any(), any(), any(), any(), any(), any())).thenReturn(productsResponse);
+        when(productService.getAll(anyInt(), anyInt(), any(), any(), any(), any(), any(), any(), any())).thenReturn(productsResponse);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get(apiPrefix + "/products")
