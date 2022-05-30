@@ -172,6 +172,8 @@ public class PaymentService {
                         .setPaymentIntentData(
                                 SessionCreateParams.PaymentIntentData.builder()
                                         .putMetadata("product_id", product.getId().toString())
+                                        .putMetadata("buyer_name", buyer.getFullName())
+                                        .putMetadata("buyer_email", buyer.getEmail())
                                         .setSetupFutureUsage(SessionCreateParams.PaymentIntentData.SetupFutureUsage.ON_SESSION)
                                         .setOnBehalfOf(product.getSeller().getStripeAccId())
                                         .setTransferData(

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,13 +17,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity(name = "User")
 @Table(
@@ -101,6 +105,12 @@ public class User {
     @JsonIgnore
     private String stripeCusId;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<UserReview> userReviews;
+
+    @Transient
+    private Map<Byte, Long> ratingCounters;
 
     public User() {
         // No args constructor needed by **framework**
@@ -291,5 +301,36 @@ public class User {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public List<UserReview> getUserReviews() {
+        return userReviews;
+    }
+
+    public void setUserReviews(List<UserReview> userReviews) {
+        this.userReviews = userReviews;
+    }
+
+    public Map<Byte, Long> getRatingCounters() {
+        return ratingCounters;
+    }
+
+    public void setRatingCounters(Map<Byte, Long> ratingCounters) {
+        this.ratingCounters = ratingCounters;
+    }
+
+    public void initReviewRatingData() {
+        if (userReviews != null) {
+            ratingCounters = new HashMap<>();
+            ratingCounters.put((byte) 1, 0L);
+            ratingCounters.put((byte) 2, 0L);
+            ratingCounters.put((byte) 3, 0L);
+            ratingCounters.put((byte) 4, 0L);
+            ratingCounters.put((byte) 5, 0L);
+            for (UserReview review : userReviews) {
+                byte rating = review.getRating();
+                ratingCounters.put(rating, ratingCounters.get(rating) + 1);
+            }
+        }
     }
 }
