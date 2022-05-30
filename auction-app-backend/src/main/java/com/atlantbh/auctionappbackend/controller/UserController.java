@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<User> getUserInfo(@PathVariable Long id) {
+    public ResponseEntity<User> get(@PathVariable Long id) {
         return new ResponseEntity<>(
                 userService.getUserInfo(id),
                 HttpStatus.OK
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<User> updateUserInfo(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest user) {
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest user) {
         return new ResponseEntity<>(
                 userService.updateUserInfo(id, user),
                 HttpStatus.OK
@@ -62,11 +63,9 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteUserAccount(@PathVariable Long id) {
-        return new ResponseEntity<>(
-                userService.deleteUser(id),
-                HttpStatus.OK
-        );
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(path = "/{id}/bids")

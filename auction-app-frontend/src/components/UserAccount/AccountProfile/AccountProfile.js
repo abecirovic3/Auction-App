@@ -417,7 +417,7 @@ const AccountProfile = () => {
                     <div className='change-photo-container'>
                         <div className='photo'>
                             {processingRequest ?
-                                <CircularProgress style={{margin: '165px'}} size={60} /> :
+                                <CircularProgress className={'circular-progress'} size={60} /> :
                                 <img
                                     width='100%'
                                     height='100%'
@@ -540,8 +540,7 @@ const AccountProfile = () => {
 
             <div className='card-info-container'>
                 <div
-                    className='container-heading'
-                    style={Object.keys(errors.cardInfo).length ? {borderBottom: '1px solid red'} : {}}
+                    className={`container-heading ${Object.keys(errors.cardInfo).length ? 'heading-error' : ''}`}
                 >
                     <IconButton onClick={() => {setCardInfoExpand(!cardInfoExpand)}}>
                         {cardInfoExpand ?
@@ -635,8 +634,7 @@ const AccountProfile = () => {
 
             <div className='location-info-container'>
                 <div
-                    className='container-heading'
-                    style={Object.keys(errors.locationInfo).length ? {borderBottom: '1px solid red'} : {}}
+                    className={`container-heading ${Object.keys(errors.cardInfo).length ? 'heading-error' : ''}`}
                 >
                     <IconButton onClick={() => {setLocationInfoExpand(!locationInfoExpand)}}>
                         {locationInfoExpand ?

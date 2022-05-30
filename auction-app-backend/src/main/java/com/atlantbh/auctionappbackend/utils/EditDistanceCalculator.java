@@ -14,13 +14,13 @@ public class EditDistanceCalculator {
             dist2[0] = i + 1;
 
             for (int j = 0; j < str1.length(); j++) {
-                int delCost = dist1[j+1] + 1;
+                int delCost = dist1[j + 1] + 1;
                 int insCost = dist2[j] + 1;
                 int subCost = dist1[j];
                 if (Character.toLowerCase(str1.charAt(j)) != Character.toLowerCase(str2.charAt(i))) {
                     subCost += 1;
                 }
-                dist2[j+1] = minCost(delCost, insCost, subCost);
+                dist2[j + 1] = minCost(delCost, insCost, subCost);
             }
 
             temp = dist1;

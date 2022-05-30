@@ -123,8 +123,6 @@ public class PaymentService {
 
         Account account = Account.retrieve(user.getStripeAccId());
 
-        account.getDetailsSubmitted();
-
         Map<String, Boolean> res = new HashMap<>();
         res.put("charges-enabled", account.getChargesEnabled());
         res.put("details-submitted", account.getDetailsSubmitted());
@@ -167,9 +165,9 @@ public class PaymentService {
                                         .setQuantity(1L)
                                         .build())
                         .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setSuccessUrl("http://localhost:3000/shop/product-overview/"
+                        .setSuccessUrl(clientBaseUrl + "/shop/product-overview/"
                                 + product.getId() + "?session_id={CHECKOUT_SESSION_ID}")
-                        .setCancelUrl("http://localhost:3000/shop/product-overview/" + product.getId())
+                        .setCancelUrl(clientBaseUrl + "/shop/product-overview/" + product.getId())
                         .setCustomer(customer.getId())
                         .setPaymentIntentData(
                                 SessionCreateParams.PaymentIntentData.builder()

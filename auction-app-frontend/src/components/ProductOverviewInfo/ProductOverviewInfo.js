@@ -183,7 +183,7 @@ const ProductOverviewInfo = ({ product, placeBid }) => {
     function handleDialogClose() {
         setShowReviewDialog(false);
     }
-
+  
     function handleAddToWishlist() {
         UserService.addProductToWishlist(product.id)
             .then(response => {

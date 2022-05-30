@@ -63,7 +63,7 @@ public class ProductService {
             if (userId != null) {
                 product.setWishlistedByUser(isProductWishlistedByUser(id, userId));
             }
-
+          
             return product;
         }
     }
@@ -139,9 +139,24 @@ public class ProductService {
         );
     }
 
+    /**
+     * This method is used to find an alternative string based on the provided one.
+     * The idea is as follows: Products are fetched from DB in small batches. We sort the products by
+     * name and use pagination to form these batches. The variable size defines the batch/page size.
+     * After a batch is fetched we check if the provided String value would be included in that batch.
+     * If yes we move on to find a String which has the smallest distance to the provided one,
+     * and if the distance is less than toleranceDistance we return that String. If the provided String is not between
+     * the lower and upper bound of the fetched batch, we fetch the next batch,
+     * and do so until the provided String value is lexicographically before the lower bound
+     * of the fetched batch. To calculate the smallest distance we use the utility class EditDistanceCalculator
+     * The size and toleranceDistance variables should be used for fine-tuning.
+     * @param searchedValue searched string
+     * @return String suggested search
+     */
     private String getSearchSuggestion(String searchedValue) {
         int page = 0;
         int size = 20;
+        int toleranceDistance = 5;
 
         Sort.Order order = new Sort.Order(Sort.Direction.ASC, "name").ignoreCase();
 
@@ -158,7 +173,7 @@ public class ProductService {
             }
 
             if (searchedValue.compareToIgnoreCase(products.get(0).getName()) > 0
-                    && searchedValue.compareToIgnoreCase(products.get(products.size()-1).getName()) < 0) {
+                    && searchedValue.compareToIgnoreCase(products.get(products.size() - 1).getName()) < 0) {
 
                 int minDistance
                         = EditDistanceCalculator.calculateLevenshteinDistance(searchedValue, products.get(0).getName());
@@ -172,7 +187,7 @@ public class ProductService {
                         res = p.getName();
                     }
                 }
-                if (minDistance < 5) {
+                if (minDistance < toleranceDistance) {
                     return res;
                 } else {
                     return null;
